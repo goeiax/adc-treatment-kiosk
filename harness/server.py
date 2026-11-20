@@ -13,6 +13,18 @@ BLOBS = {
     'ee6c442cd6c4bd99082a416bc4005ed0': ('poster-melasma.jpg', 'image/jpeg'),
     '4cd0714aaddf131c4d38ddd7fcdd3bc3': ('poster-flek.jpg', 'image/jpeg'),
     'b6bf88aacb1e802d5fab266bfbf5a84f': ('poster-acne.jpg', 'image/jpeg'),
+    # doctor photos for the hearts panel
+    '247f6bc85315b2a51c393b6e12487f36': ('doctors/yogi-faldian.jpg', 'image/jpeg'),
+    'f0776784520b821cad94cded1cc602c5': ('doctors/renata-yuliasari.jpg', 'image/jpeg'),
+    'b5223bfbcda959e4498c7775f9a0cbf9': ('doctors/erda-avriyanti.jpg', 'image/jpeg'),
+    '4dd3dc98b6ba6b007545e658e10bde56': ('doctors/kamelia-utami.jpg', 'image/jpeg'),
+    '91976c1f7d5f6bccfba42ccaa2e720f7': ('doctors/nadila-ayu-karisa.jpg', 'image/jpeg'),
+    '1b88fd0324bde746dc497308eeaf35ef': ('doctors/syafira-andiani.jpg', 'image/jpeg'),
+    '372e16860a70bb38ea5a7bffff3917df': ('doctors/keshia-amalia.jpg', 'image/jpeg'),
+    '4323e2f39e0d98dd62e74c3efea09bc8': ('doctors/stephanie-widjaja.jpg', 'image/jpeg'),
+    '2112ac3124f17a343624a9c234b0b39d': ('doctors/nita-nurul-rachman.jpg', 'image/jpeg'),
+    'dd62fca52ba90e26d4dbf9660d412b12': ('doctors/shiela-stefani.jpg', 'image/jpeg'),
+    'd4f4260f22fa0116dd0215005d02cb9f': ('doctors/annisa-fauziah.jpg', 'image/jpeg'),
 }
 SKEL = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>'
 
