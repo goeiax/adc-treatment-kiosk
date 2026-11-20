@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "layar-info-perawatan-adc.html"
+        ],
+        "createdAt": "2026-10-24T11:34:08.845Z",
+        "reason": "Claude, per source: the only src-less imgs (#meAvatar, #tfPhotoImg) ship hidden and get src from JS when data exists"
+      }
+    ]
+  }
+}

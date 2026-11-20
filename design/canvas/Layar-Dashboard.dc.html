@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Layar Info Perawatan ADC (dashboard)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=Archivo+Narrow:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#212121}a:hover{color:#ab8c52}
+button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:left;touch-action:manipulation}
+.hs{scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 1080px; height: 1920px; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; background: #f5f2ec; color: #212121; font-family: 'Archivo Narrow', 'Archivo', sans-serif; letter-spacing: 0.025em; touch-action: manipulation;">
+
+  <!-- ZONA A · konten utama -->
+  <div style="position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: #f5f2ec;">
+
+    <!-- Screen saver: video berjalan saat layar tidak digunakan -->
+    <sc-if value="{{ showSaver }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ wake }}" aria-label="Sentuh layar untuk melihat perawatan" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; height: 100%; background: #212121; overflow: hidden;">
+        <img src="{{ clip.poster }}" alt="{{ clip.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: {{ clip.fit }}; object-position: 50% 20%;">
+        <span style="position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background: linear-gradient(to top, rgba(33,33,33,0.9) 0%, rgba(33,33,33,0.55) 55%, rgba(33,33,33,0) 100%);"></span>
+        <span style="position: absolute; top: 32px; left: 32px; display: inline-flex; align-items: center; padding: 16px 20px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="ADC Aesthetic Derma Centre" style="width: 260px; max-width: 100%; height: auto; display: block;">
+        </span>
+        <span style="position: relative; display: flex; flex-direction: column; gap: 16px; padding: 0 40px 40px 40px; color: #ffffff;">
+          <span style="display: flex; align-items: center; gap: 12px; font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: #e9d2c2;">
+            <span>Video penjelasan</span>
+            <span style="width: 4px; height: 4px; border-radius: 999px; background: #e9d2c2;"></span>
+            <span style="font-variant-numeric: tabular-nums;">{{ clip.num }} / {{ clipCount }}</span>
+            <sc-if value="{{ clip.ai }}" hint-placeholder-val="{{ true }}">
+              <span style="margin-left: 8px; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.5); font-size: 13px; line-height: 16px; color: #ffffff;">Karakter virtual (AI)</span>
+            </sc-if>
+          </span>
+          <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 52px; line-height: 60px; letter-spacing: 0;">{{ clip.title }}</span>
+          <span style="font-size: 20px; line-height: 28px; color: rgba(255,255,255,0.86); max-width: 820px;">{{ clip.desc }}</span>
+          <span style="display: block; height: 4px; background: rgba(255,255,255,0.3); overflow: hidden; margin-top: 8px;">
+            <span style="display: block; height: 100%; width: {{ clipPct }}; background: #ffffff;"></span>
+          </span>
+          <span style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
+            <span style="display: inline-flex; gap: 8px;">
+              <sc-for list="{{ clipDots }}" as="d" hint-placeholder-count="4">
+                <span style="width: 10px; height: 10px; border-radius: 999px; background: {{ d.bg }}; border: 1.5px solid #ffffff;"></span>
+              </sc-for>
+            </span>
+            <span style="display: inline-flex; align-items: center; justify-content: center; min-height: 64px; padding: 0 36px; background: #fcfbf9; color: #212121; font-size: 16px; line-height: 20px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Sentuh layar untuk melihat perawatan</span>
+          </span>
+        </span>
+      </button>
+    </sc-if>
+
+    <!-- Pemutar video layar penuh -->
+    <sc-if value="{{ showPlayer }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; inset: 0; display: flex; flex-direction: column; background: #212121; color: #ffffff;">
+        <img src="{{ video.poster }}" alt="{{ video.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: {{ video.fit }}; object-position: 50% 20%;">
+        <div style="position: relative; display: flex; align-items: center; justify-content: space-between; padding: 32px;">
+          <span style="display: inline-flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(33,33,33,0.75); font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em;">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"></circle><path d="M10 8.5v7l5.5-3.5z"></path></svg>
+            <span>Sedang diputar · {{ video.dur }}</span>
+          </span>
+          <button onClick="{{ closePlayer }}" aria-label="Tutup video" style="display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; background: #fcfbf9; color: #212121; font-size: 16px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+            <span>Tutup</span>
+          </button>
+        </div>
+        <div style="position: relative; margin-top: auto; padding: 120px 40px 40px 40px; background: linear-gradient(to top, rgba(33,33,33,0.92), rgba(33,33,33,0));">
+          <div style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0;">{{ video.title }}</div>
+          <div style="margin-top: 12px; font-size: 20px; line-height: 28px; color: rgba(255,255,255,0.86);">{{ video.desc }}</div>
+          <div style="margin-top: 24px; height: 4px; background: rgba(255,255,255,0.3);"><div style="height: 100%; width: 32%; background: #ffffff;"></div></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Dashboard perawatan -->
+    <sc-if value="{{ showDash }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 24px; height: 100%; box-sizing: border-box; padding: 40px 40px 24px 40px;">
+
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="ADC Aesthetic Derma Centre" style="width: 300px; max-width: 100%; height: auto; display: block; align-self: flex-start;">
+            <h1 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 52px; line-height: 56px; letter-spacing: 0;">Info perawatan</h1>
+            <p style="margin: 0; font-size: 18px; line-height: 26px; color: #545454;">Modern Technology for Modern People. Sentuh perawatan untuk melihat penjelasan dan videonya.</p>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-bottom: 4px;">
+            <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 36px; line-height: 40px; font-weight: 400; font-variant-numeric: tabular-nums;">{{ timeStr }}</span>
+            <span style="font-size: 13px; line-height: 16px; color: #545454;">{{ dateStr }}</span>
+          </div>
+        </div>
+
+        <!-- Tab halaman -->
+        <div role="tablist" aria-label="Halaman layar" style="display: flex; gap: 32px; border-bottom: 1px solid #d1cdc4; flex: 0 0 auto;">
+          <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="2">
+            <button role="tab" aria-selected="{{ tb.sel }}" onClick="{{ tb.pick }}" style="min-height: 56px; padding: 0 4px; font-size: 20px; line-height: 24px; font-weight: {{ tb.weight }}; letter-spacing: 0.05em; color: {{ tb.fg }}; box-shadow: inset 0 -3px 0 {{ tb.bar }};">{{ tb.label }}</button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ showTreat }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; min-height: 0;">
+        <!-- Panel video -->
+        <div style="display: flex; gap: 24px; padding: 16px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ play }}" aria-label="Putar video penjelasan" style="position: relative; flex: 0 0 400px; width: 400px; height: 225px; overflow: hidden; background: #eae6dd;">
+              <img src="{{ video.poster }}" alt="{{ video.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%;">
+              <span style="position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;">
+                <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg>
+              </span>
+              <span style="position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #ffffff; font-size: 13px; line-height: 16px; font-variant-numeric: tabular-nums;">{{ video.dur }}</span>
+            </button>
+            <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 0;">
+              <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan</span>
+              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: 0;">{{ video.title }}</span>
+              <span style="font-size: 18px; line-height: 26px; color: #545454;">{{ video.desc }}</span>
+              <sc-if value="{{ video.ai }}" hint-placeholder-val="{{ false }}">
+                <span style="align-self: flex-start; padding: 4px 10px; background: #e9d2c2; font-size: 13px; line-height: 16px;">Karakter virtual (AI)</span>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noVideo }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: center; justify-content: center; flex: 0 0 400px; width: 400px; height: 225px; background: #eae6dd; color: #545454;">
+              <svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="13" height="12" rx="1"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px;">
+              <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan</span>
+              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 24px; line-height: 30px; font-weight: 500; letter-spacing: 0;">Belum ada video untuk perawatan ini</span>
+              <span style="font-size: 18px; line-height: 26px; color: #545454;">Dokter kami akan menjelaskannya langsung saat konsultasi.</span>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- Kategori -->
+        <div class="hs" style="display: flex; gap: 8px; overflow-x: auto; flex: 0 0 auto; padding-bottom: 2px;">
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="10">
+            <button onClick="{{ c.pick }}" style="flex: 0 0 auto; min-height: 48px; padding: 0 20px; background: {{ c.bg }}; color: {{ c.fg }}; border: 1px solid {{ c.border }}; font-size: 18px; line-height: 22px; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap;">{{ c.label }}</button>
+          </sc-for>
+        </div>
+
+        <!-- Daftar perawatan -->
+        <div class="hs" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-content: start; overflow-y: auto; flex: 1 1 auto; min-height: 0; padding: 2px;">
+          <sc-for list="{{ items }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.pick }}" style="display: flex; flex-direction: column; gap: 8px; min-height: 152px; padding: 24px; box-sizing: border-box; background: #fcfbf9; box-shadow: {{ t.ring }};">
+              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">{{ t.name }}</span>
+              <span style="font-size: 16px; line-height: 22px; color: #545454;">{{ t.desc }}</span>
+              <span style="margin-top: auto; font-size: 14px; line-height: 18px; color: #545454; font-variant-numeric: tabular-nums;">{{ t.priceLine }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <!-- Detail perawatan terpilih -->
+        <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+            <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: 0;">{{ sel.name }}</span>
+            <span style="padding: 4px 10px; background: #e9d2c2; font-size: 13px; line-height: 16px;">{{ sel.catLabel }}</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Sesi</span><span style="font-size: 18px; line-height: 24px; font-weight: 500;">{{ sel.sessions }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Durasi</span><span style="font-size: 18px; line-height: 24px; font-weight: 500;">{{ sel.duration }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Downtime</span><span style="font-size: 18px; line-height: 24px; font-weight: 500;">{{ sel.downtime }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Mulai dari</span><span style="font-size: 18px; line-height: 24px; font-weight: 500; font-variant-numeric: tabular-nums;">{{ sel.price }}</span></div>
+          </div>
+          <div style="font-size: 16px; line-height: 22px; color: #545454;"><span style="color: #212121; font-weight: 500;">Setelah perawatan: </span>{{ sel.after }}</div>
+        </div>
+
+        </div>
+        </sc-if>
+
+        <!-- Halaman buatan admin -->
+        <sc-if value="{{ showPage }}" hint-placeholder-val="{{ false }}">
+          <div class="hs" style="display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 2px;">
+            <sc-for list="{{ page.blocks }}" as="b" hint-placeholder-count="4">
+              <sc-if value="{{ b.isImage }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ b.src }}" alt="{{ b.alt }}" style="display: block; width: 100%; height: 480px; object-fit: cover; object-position: 50% 45%; flex: 0 0 auto;">
+              </sc-if>
+              <sc-if value="{{ b.isHeading }}" hint-placeholder-val="{{ false }}">
+                <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 36px; line-height: 44px; letter-spacing: 0;">{{ b.text }}</h2>
+              </sc-if>
+              <sc-if value="{{ b.isText }}" hint-placeholder-val="{{ false }}">
+                <p style="margin: 0; font-size: 20px; line-height: 30px; color: #545454; max-width: 880px;">{{ b.text }}</p>
+              </sc-if>
+              <sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}">
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+                  <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="4">
+                    <div style="display: flex; gap: 12px; padding: 20px 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-size: 18px; line-height: 26px;">
+                      <span style="flex: 0 0 auto; width: 8px; height: 8px; margin-top: 9px; background: #212121;"></span>
+                      <span>{{ it.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isNote }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 20px 24px; background: #e9d2c2; font-size: 18px; line-height: 26px;">{{ b.text }}</div>
+              </sc-if>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- Footer -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: auto;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 24px; background: #e9d2c2; color: #212121; font-size: 18px; line-height: 22px; font-weight: 500; letter-spacing: 0.05em;">
+              <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-3.9A8 8 0 1 1 8.2 19z"></path><path d="M9.5 9.5c.3 2 2 3.7 4 4l1.2-1.2 2 1-.6 1.7c-3.6.3-7.5-3.5-7.8-7.1L10 7l1 2z"></path></svg>
+              <span>Buat janji via WhatsApp <span style="font-weight: 600; font-variant-numeric: tabular-nums;">+62 821-3014-4778</span></span>
+            </div>
+            <button onClick="{{ sleep }}" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 24px; background: #c0bcb4; border: 1px solid #545454; color: #212121; font-size: 14px; line-height: 18px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Kembali ke video</button>
+            <span style="margin-left: auto; font-size: 13px; line-height: 18px; color: #545454; text-align: right;">Sen–Jum 09.00–20.00 · Sab 09.00–18.00<br>Jl. Ir. H. Juanda No. 88, Bandung</span>
+          </div>
+          <p style="margin: 0; font-size: 12px; line-height: 16px; color: #545454;">Harga adalah perkiraan untuk perawatan standar dan dapat berbeda sesuai area. Hasil setiap pasien dapat berbeda tergantung kondisi masing-masing. Konsultasikan dengan dokter kami.</p>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ZONA B · band promo (terpisah dari konten utama) -->
+  <sc-if value="{{ showPromo }}" hint-placeholder-val="{{ true }}">
+    <div style="position: relative; flex: 0 0 540px; height: 540px; box-sizing: border-box; display: flex; gap: 32px; padding: 40px 40px 32px 40px; border-top: 1px solid #d1cdc4; background: #eae6dd; overflow: hidden;">
+      <div style="display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; min-width: 0;">
+        <span style="font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">{{ promo.eyebrow }}</span>
+        <div style="position: relative;">
+          <span style="position: absolute; left: -12px; top: -8px; width: 588px; height: 105px; background: #e9d2c2"></span>
+          <h2 style="position: relative; margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 40px; line-height: 48px; letter-spacing: 0;">{{ promo.title }} <span style="font-style: italic;">{{ promo.accent }}</span></h2>
+        </div>
+        <p style="margin: 0; font-size: 18px; line-height: 26px; color: #545454; max-width: 600px;">{{ promo.lede }}</p>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <span style="padding: 8px 12px; background: #fcfbf9; font-size: 15px; line-height: 20px; font-weight: 500;">{{ promo.chip }}</span>
+          <span style="font-size: 13px; line-height: 16px; color: #545454;">{{ promo.valid }}</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto;">
+          <div style="display: inline-flex; gap: 8px;">
+            <sc-for list="{{ promoDots }}" as="d" hint-placeholder-count="4">
+              <span style="width: 10px; height: 10px; border-radius: 999px; background: {{ d.bg }}; border: 1.5px solid #212121;"></span>
+            </sc-for>
+          </div>
+          <div style="display: inline-flex; gap: 8px;">
+            <button onClick="{{ promoPrev }}" aria-label="Promo sebelumnya" style="width: 52px; height: 52px; background: #c0bcb4; border: 1px solid #545454; display: inline-flex; align-items: center; justify-content: center; color: #212121;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"></path></svg></button>
+            <button onClick="{{ promoNext }}" aria-label="Promo berikutnya" style="width: 52px; height: 52px; background: #c0bcb4; border: 1px solid #545454; display: inline-flex; align-items: center; justify-content: center; color: #212121;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"></path></svg></button>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; flex: 0 0 360px; width: 360px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; box-sizing: border-box; text-align: center;">
+        <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">{{ promo.valueLabel }}</span>
+        <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; font-size: 40px; line-height: 48px; letter-spacing: 0; font-variant-numeric: tabular-nums;">{{ promo.value }}</span>
+        <span style="font-size: 16px; line-height: 22px; color: #545454;">{{ promo.valueNote }}</span>
+        <span style="margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 16px; background: #e9d2c2; font-size: 14px; line-height: 18px;">
+          <span style="font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Tanya resepsionis</span>
+          <span style="font-variant-numeric: tabular-nums;">atau WhatsApp +62 821-3014-4778</span>
+        </span>
+      </div>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #d1cdc4;"><div style="height: 100%; width: {{ promoPct }}; background: #212121;"></div></div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{
+  "startView": {"editor": "enum", "options": ["video", "dashboard", "halaman"], "default": "dashboard", "section": "Tampilan"},
+  "showPromoBand": {"editor": "boolean", "default": true, "section": "Tampilan"},
+  "idleSeconds": {"editor": "int", "default": 90, "min": 10, "max": 600, "unit": "s", "section": "Waktu"},
+  "slideSeconds": {"editor": "int", "default": 8, "min": 3, "max": 60, "unit": "s", "section": "Waktu"},
+  "$preview": {"width": 1080, "height": 1920}
+}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.CATS = [
+      { id: 'laser', label: 'Laser' }, { id: 'facial', label: 'Facial' }, { id: 'hair', label: 'Hair' },
+      { id: 'inj', label: 'Injectables' }, { id: 'mn', label: 'Microneedling' }, { id: 'body', label: 'Body health' },
+      { id: 'lift', label: 'Contouring & face lifting' }, { id: 'bodyc', label: 'Body contouring' },
+      { id: 'intima', label: 'Intima' }, { id: 'bleph', label: 'Blepharoplasty' }
+    ];
+    var DD = 'Ditentukan dokter';
+    var AD = 'Mengikuti anjuran dokter setelah tindakan.';
+    this.CLIPS = [
+      { id: 'v1', title: 'PicoSure Pro: apa yang terjadi saat laser bekerja', desc: 'Cara kerja laser picosecond, rasa saat tindakan, dan perawatan setelahnya.', dur: '1:10', secs: 70, poster: '/_blob/9b88038b9016ab1758c63bbd30c8f065', fit: 'contain', ai: false, alt: 'Pasien dan dokter di ruang perawatan PicoSure Pro' },
+      { id: 'v2', title: 'Kasus Kulit #1: Melasma', desc: 'Elle menjelaskan apa itu melasma, kenapa muncul kembali, dan bagaimana dokter menyusun programnya.', dur: '0:42', secs: 42, poster: '/_blob/287d899870863bb281d2386f6d49c55e', fit: 'cover', ai: true, alt: 'Elle, karakter virtual ADC, di lobi klinik' },
+      { id: 'v3', title: 'Flek hitam: kenapa muncul dan apa pilihannya', desc: 'Penyebab flek hitam dan pilihan perawatan yang dibahas bersama dokter.', dur: '0:56', secs: 56, poster: '/_blob/1a0aaf8e3f8130d8456bcc2f82653cb4', fit: 'cover', ai: true, alt: 'Elle, karakter virtual ADC, menjelaskan flek hitam' },
+      { id: 'v4', title: 'Jerawat: empat faktor penyebabnya', desc: 'Empat faktor di balik jerawat dan kenapa penanganannya dimulai dari diagnosis.', dur: '0:30', secs: 30, poster: '/_blob/287d899870863bb281d2386f6d49c55e', fit: 'cover', ai: true, alt: 'Elle, karakter virtual ADC, menjelaskan jerawat' }
+    ];
+    this.TREATS = [
+      { id: 'picosure', cat: 'laser', name: 'PicoSure Pro', desc: 'Laser picosecond untuk flek, melasma, dan bekas jerawat.', price: 'Rp4.500.000', sessions: '3–5 sesi', duration: '±45 mnt anestesi + 15–20 mnt laser', downtime: 'Kemerahan ringan, hilang dalam hitungan jam', after: 'Skincare lembut, hindari sinar matahari, sunscreen setiap hari, tanpa makeup 3 hari.', video: 'v1' },
+      { id: 'excelv', cat: 'laser', name: 'Excel-V', desc: 'Laser vaskular untuk kemerahan dan pembuluh darah halus.', price: 'Rp2.500.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'fractional', cat: 'laser', name: 'Fractional Laser by Lutronic', desc: 'Perbaikan tekstur dan peremajaan kulit.', price: 'Rp1.900.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'dpc', cat: 'facial', name: 'Deep Pore Cleansing', desc: 'Pembersihan pori mendalam, perawatan dasar rutin.', price: 'Rp450.000', sessions: DD, duration: DD, downtime: 'Minimal', after: AD, video: 'v4' },
+      { id: 'peeling', cat: 'facial', name: 'Peeling', desc: 'Glow peel untuk kulit lebih halus dan cerah.', price: 'Rp675.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: 'v4' },
+      { id: 'dpcombo', cat: 'facial', name: 'Deep Pore Combo', desc: 'Deep Pore Cleansing dipadukan dengan peeling.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: 'v4' },
+      { id: 'ipl', cat: 'hair', name: 'IPL Hair Removal', desc: 'Terapi cahaya untuk mengurangi rambut tubuh.', price: 'Rp299.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'hgl', cat: 'hair', name: 'Hair Growth Laser', desc: 'Penanganan kerontokan rambut.', price: 'Rp500.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'phg', cat: 'hair', name: 'Premium Hair Growth Treatment', desc: 'Perawatan pertumbuhan rambut (serum terpisah).', price: 'Rp1.500.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'sb', cat: 'inj', name: 'Skin Boosters', desc: 'Injeksi untuk hidrasi dan peremajaan kulit.', price: 'Rp3.500.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'botox', cat: 'inj', name: 'Botox', desc: 'Untuk kerutan dinamis.', price: 'Rp3.500.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'fli', cat: 'inj', name: 'Fat Loss Injection', desc: 'Injeksi untuk lemak lokal.', price: 'Rp900.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'mnrf', cat: 'mn', name: 'Microneedling RF by Exion', desc: 'Stimulasi kolagen dengan radiofrekuensi, wajah dan tubuh.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'dp4', cat: 'mn', name: 'Dermapen 4', desc: 'Stimulasi kolagen untuk tekstur kulit.', price: 'Rp1.250.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'slim', cat: 'body', name: 'Slimming Program', desc: 'Program penurunan berat dengan dokter Sp.GK.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: 'Tidak ada', after: AD, video: null },
+      { id: 'meta', cat: 'body', name: 'Metabolic Health Treatment', desc: 'Penanganan kesehatan metabolik bersama dokter Sp.GK.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: 'Tidak ada', after: AD, video: null },
+      { id: 'pcos', cat: 'body', name: 'PMOS (PCOS) Promil Treatment', desc: 'Program promil untuk PCOS bersama dokter Sp.GK.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: 'Tidak ada', after: AD, video: null },
+      { id: 'fd', cat: 'body', name: 'Food Detective Test', desc: 'Tes intoleransi makanan.', price: 'Tanya resepsionis', sessions: '1 kali', duration: DD, downtime: 'Tidak ada', after: AD, video: null },
+      { id: 'ulth', cat: 'lift', name: 'Ultherapy PRIME', desc: 'Lifting non-bedah berbasis MFU-V.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'lifu', cat: 'lift', name: 'Ultra Lifting', desc: 'Pengencangan dengan focused ultrasound.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'exion', cat: 'lift', name: 'Exion', desc: 'Peremajaan kulit wajah dengan Exion.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'exilisf', cat: 'lift', name: 'Exilis Ultra 360', desc: 'Pengencangan kulit wajah.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'exipro', cat: 'bodyc', name: 'ExiPro', desc: 'Body slimming dengan ExiPro.', price: 'Rp650.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'xwave', cat: 'bodyc', name: 'X-Wave', desc: 'Terapi gelombang untuk selulit.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'exilisb', cat: 'bodyc', name: 'Exilis Ultra 360 Body', desc: 'Pengencangan kulit tubuh.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'emsella', cat: 'intima', name: 'Emsella', desc: 'Terapi kursi untuk otot dasar panggul.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: 'Tidak ada', after: AD, video: null },
+      { id: 'bella', cat: 'intima', name: 'Bella Laser', desc: 'Laser area intim oleh dokter.', price: 'Tanya resepsionis', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'iplb', cat: 'intima', name: 'IPL Hair Removal & Brightening', desc: 'Hair removal dan brightening area intim.', price: 'Rp499.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'femme', cat: 'intima', name: 'Exilis Ultra Femme', desc: 'Perawatan area intim dengan Exilis Ultra Femme.', price: 'Rp500.000', sessions: DD, duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'eyebag', cat: 'bleph', name: 'Eye Bag Removal', desc: 'Tindakan bedah minor, diawali konsultasi dokter.', price: 'Tanya resepsionis', sessions: '1 kali', duration: DD, downtime: DD, after: AD, video: null },
+      { id: 'eyelid', cat: 'bleph', name: 'Eye Lid', desc: 'Tindakan bedah minor, diawali konsultasi dokter.', price: 'Tanya resepsionis', sessions: '1 kali', duration: DD, downtime: DD, after: AD, video: null }
+    ];
+    this.PROMOS = [
+      { eyebrow: 'Promo Oktober', title: 'Ultherapy PRIME', accent: 'dengan skinbooster gratis', lede: 'Satu sesi skinbooster gratis untuk Ultherapy PRIME 500, 600 atau 700 shots.', chip: 'Ultherapy PRIME', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Bonus', value: 'Gratis', valueNote: '1 sesi skinbooster' },
+      { eyebrow: 'Paket perawatan', title: 'Paket PicoSure Glow', accent: 'enam sesi', lede: 'Enam sesi PicoSure Glow dengan Signature Facial gratis. Paket berlaku 6 bulan sejak pembelian.', chip: 'PicoSure Pro', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Harga paket', value: 'Rp21.600.000', valueNote: '6 sesi + Signature Facial' },
+      { eyebrow: 'Bulan ulang tahun', title: 'Selamat ulang tahun', accent: 'dari ADC', lede: 'Voucher Rp100.000 untuk perawatan di bulan ulang tahun Anda, minimum transaksi Rp1.000.000.', chip: 'Semua perawatan', valid: 'Berlaku sepanjang bulan ulang tahun', valueLabel: 'Voucher', value: 'Rp100.000', valueNote: 'min. transaksi Rp1.000.000' },
+      { eyebrow: 'Program referral', title: 'Ajak teman,', accent: 'dapat voucher', lede: 'Voucher Rp200.000 untuk Anda saat teman yang Anda ajak melakukan perawatan pertamanya di ADC.', chip: 'Program referral', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Voucher', value: 'Rp200.000', valueNote: 'untuk setiap teman baru' }
+    ];
+    // Halaman yang sudah dipublikasikan admin; tampil sebagai tab setelah "Perawatan".
+    this.PAGES = [
+      { id: 'tentang', label: 'Tentang ADC', blocks: [
+        { type: 'image', src: '/_blob/e9144e316dd7486cc1c0c899f4dfb498', alt: 'Lounge Aesthetic Derma Centre di Dago, Bandung' },
+        { type: 'heading', text: 'Klinik estetika medis di Dago, Bandung' },
+        { type: 'text', text: 'Perawatan di ADC ditangani dokter spesialis kulit (Sp.DVE) dan dokter spesialis gizi klinik (Sp.GK), dengan teknologi yang dipilih sesuai kebutuhan kulit Anda.' },
+        { type: 'list', items: ['PicoSure Pro Star Award Asia Pacific 2024', 'Klinik pertama di Bandung dengan Ultherapy PRIME', 'Jl. Ir. H. Juanda No. 88, Bandung', 'Sen–Jum 09.00–20.00 · Sab 09.00–18.00'] },
+        { type: 'note', text: 'Ingin tahu perawatan yang sesuai? Tanyakan ke resepsionis untuk jadwal konsultasi dokter.' }
+      ] }
+    ];
+    var now = new Date();
+    var sv = props.startView || 'dashboard';
+    this.state = {
+      tab: sv === 'halaman' ? 'tentang' : 'perawatan',
+      idle: sv === 'video',
+      playing: false,
+      clip: 0, clipT: 0,
+      promo: 0, promoT: 0, promoHold: 0,
+      cat: 'laser', sel: 'picosure',
+      sinceTap: 0,
+      now: now
+    };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => this.tick(), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+  tick() {
+    var s = this.state;
+    var idleSecs = this.props.idleSeconds || 90;
+    var slideSecs = this.props.slideSeconds || 8;
+    var next = { now: new Date() };
+    if (s.idle) {
+      var t = s.clipT + 1;
+      if (t >= this.CLIPS[s.clip].secs) { next.clip = (s.clip + 1) % this.CLIPS.length; next.clipT = 0; }
+      else next.clipT = t;
+    } else {
+      var st = s.sinceTap + 1;
+      if (st >= idleSecs) { next.idle = true; next.playing = false; next.sinceTap = 0; next.clipT = 0; next.tab = 'perawatan'; }
+      else next.sinceTap = st;
+    }
+    if (s.promoHold > 0) next.promoHold = s.promoHold - 1;
+    else {
+      var pt = s.promoT + 1;
+      if (pt >= slideSecs) { next.promo = (s.promo + 1) % this.PROMOS.length; next.promoT = 0; }
+      else next.promoT = pt;
+    }
+    this.setState(next);
+  }
+  renderVals() {
+    var s = this.state;
+    var slideSecs = this.props.slideSeconds || 8;
+    var clip = this.CLIPS[s.clip];
+    var selT = this.TREATS.find((t) => t.id === s.sel) || this.TREATS[0];
+    var video = selT.video ? this.CLIPS.find((c) => c.id === selT.video) : null;
+    var catOf = this.CATS.find((c) => c.id === selT.cat);
+    var promo = this.PROMOS[s.promo];
+    var CARD = '0 2px 8px rgba(0,0,0,0.06)';
+    var pg = this.PAGES.find((p) => p.id === s.tab);
+    var tabList = [{ id: 'perawatan', label: 'Perawatan' }].concat(this.PAGES.map((p) => ({ id: p.id, label: p.label })));
+    return {
+      showSaver: s.idle,
+      showPlayer: !s.idle && s.playing,
+      showDash: !s.idle && !s.playing,
+      showTreat: !pg,
+      showPage: !!pg,
+      tabs: tabList.map((t) => ({
+        label: t.label,
+        sel: t.id === s.tab,
+        weight: t.id === s.tab ? 600 : 500,
+        fg: t.id === s.tab ? '#212121' : '#545454',
+        bar: t.id === s.tab ? '#212121' : 'transparent',
+        pick: () => this.setState({ tab: t.id, sinceTap: 0 })
+      })),
+      page: pg ? { label: pg.label, blocks: pg.blocks.map((b) => ({
+        isImage: b.type === 'image', isHeading: b.type === 'heading', isText: b.type === 'text',
+        isList: b.type === 'list', isNote: b.type === 'note',
+        src: b.src || '', alt: b.alt || '', text: b.text || '',
+        items: (b.items || []).map((x) => ({ text: x }))
+      })) } : { label: '', blocks: [] },
+      showPromo: this.props.showPromoBand !== false,
+      clip: Object.assign({}, clip, { num: s.clip + 1 }),
+      clipCount: this.CLIPS.length,
+      clipPct: Math.min(100, Math.round((s.clipT / clip.secs) * 100)) + '%',
+      clipDots: this.CLIPS.map((c, i) => ({ bg: i === s.clip ? '#ffffff' : 'transparent' })),
+      timeStr: s.now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'),
+      dateStr: s.now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+      cats: this.CATS.map((c) => ({
+        label: c.label,
+        bg: c.id === s.cat ? '#212121' : 'transparent',
+        fg: c.id === s.cat ? '#ffffff' : '#212121',
+        border: c.id === s.cat ? '#212121' : '#d1cdc4',
+        pick: () => { var first = this.TREATS.find((t) => t.cat === c.id); this.setState({ cat: c.id, sel: first ? first.id : s.sel, sinceTap: 0 }); }
+      })),
+      items: this.TREATS.filter((t) => t.cat === s.cat).map((t) => ({
+        name: t.name, desc: t.desc,
+        priceLine: t.price === 'Tanya resepsionis' ? 'Harga: tanya resepsionis' : 'Mulai dari ' + t.price,
+        ring: t.id === s.sel ? '0 0 0 2px #212121, ' + CARD : CARD,
+        pick: () => this.setState({ sel: t.id, sinceTap: 0 })
+      })),
+      sel: Object.assign({}, selT, { catLabel: catOf ? catOf.label : '' }),
+      hasVideo: !!video,
+      noVideo: !video,
+      video: video || clip,
+      promo: promo,
+      promoDots: this.PROMOS.map((p, i) => ({ bg: i === s.promo ? '#212121' : 'transparent' })),
+      promoPct: Math.min(100, Math.round((s.promoT / slideSecs) * 100)) + '%',
+      wake: () => this.setState({ idle: false, playing: false, sinceTap: 0 }),
+      sleep: () => this.setState({ idle: true, playing: false, clipT: 0, tab: 'perawatan' }),
+      play: () => this.setState({ playing: true, sinceTap: 0 }),
+      closePlayer: () => this.setState({ playing: false, sinceTap: 0 }),
+      promoPrev: () => this.setState({ promo: (s.promo + this.PROMOS.length - 1) % this.PROMOS.length, promoT: 0, promoHold: 20, sinceTap: 0 }),
+      promoNext: () => this.setState({ promo: (s.promo + 1) % this.PROMOS.length, promoT: 0, promoHold: 20, sinceTap: 0 })
+    };
+  }
+}
+</script>
+</body>
+</html>

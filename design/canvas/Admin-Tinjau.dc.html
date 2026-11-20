@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Admin ADC · Tinjau dan publikasikan</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=Archivo+Narrow:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#212121}
+button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:left}
+input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+.lk:hover{color:#ab8c52 !important}
+.bp:hover{color:#ab8c52 !important}
+.bs:hover{border-color:#ab8c52 !important}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; width: 100%; min-height: 1200px; box-sizing: border-box; background: #f5f2ec; color: #212121; font-family: 'Archivo Narrow', 'Archivo', sans-serif; letter-spacing: 0.025em;">
+
+  <aside style="flex: 1 1 260px; max-width: 300px; display: flex; flex-direction: column; gap: 32px; padding: 32px 24px; box-sizing: border-box; background: #fcfbf9; border-right: 1px solid #d1cdc4;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="ADC Aesthetic Derma Centre" style="width: 250px; max-width: 100%; height: auto; display: block;">
+      <span style="font-size: 13px; line-height: 16px; letter-spacing: 0.05em; color: #545454;">Admin layar klinik</span>
+    </div>
+    <nav aria-label="Menu admin" style="display: flex; flex-direction: column; gap: 4px;">
+      <a class="lk" href="Admin-Dashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; color: #212121; text-decoration: none; font-size: 16px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="8" height="8"></rect><rect x="13" y="3" width="8" height="8"></rect><rect x="3" y="13" width="8" height="8"></rect><rect x="13" y="13" width="8" height="8"></rect></svg><span>Ringkasan</span></a>
+      <a class="lk" href="Admin-Perawatan-Form.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; color: #212121; text-decoration: none; font-size: 16px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c0 5-4 9-9 9 5 0 9 4 9 9 0-5 4-9 9-9-5 0-9-4-9-9z"></path></svg><span>Perawatan</span></a>
+      <a class="lk" href="Admin-Promo.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; color: #212121; text-decoration: none; font-size: 16px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9z"></path><circle cx="8" cy="8" r="1.4"></circle></svg><span>Promo</span></a>
+      <a class="lk" href="Admin-Video.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; color: #212121; text-decoration: none; font-size: 16px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="13" height="12"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg><span>Video &amp; screen saver</span></a>
+      <a class="lk" href="Admin-Halaman.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; color: #212121; text-decoration: none; font-size: 16px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"></path><path d="M9 11h7M9 15h7"></path></svg><span>Halaman</span></a>
+      <a class="lk" href="Admin-Tinjau.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; background: #eae6dd; color: #212121; text-decoration: none; font-size: 16px; font-weight: 600; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg><span style="flex: 1 1 auto;">Tinjau &amp; publikasikan</span><span style="min-width: 22px; padding: 0 6px; background: #e9d2c2; font-size: 13px; line-height: 22px; text-align: center; font-weight: 600;">{{ pendingCount }}</span></a>
+      <a class="lk" href="Main.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; color: #212121; text-decoration: none; font-size: 16px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="2" width="10" height="20"></rect><path d="M10 19h4"></path></svg><span>Pratinjau layar</span></a>
+    </nav>
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="width: 40px; height: 40px; border-radius: 999px; background: #e9d2c2; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;">ST</span>
+        <span style="display: flex; flex-direction: column;"><span style="font-size: 16px; font-weight: 500;">Staf resepsionis</span><span style="font-size: 13px; color: #545454;">Admin</span></span>
+      </div>
+      <a class="lk" href="#" style="font-size: 14px; color: #545454;">Keluar</a>
+    </div>
+  </aside>
+
+  <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 32px; padding: 40px 48px 48px 48px; box-sizing: border-box;">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Layar tayang: versi {{ liveVersion }} · {{ liveWhen }}</span>
+        <h1 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 36px; line-height: 44px; letter-spacing: 0;">Tinjau &amp; publikasikan</h1>
+      </div>
+      <span style="font-size: 15px; line-height: 22px; color: #545454; max-width: 460px;">Perubahan dari semua menu menunggu di sini. Pasien hanya melihatnya setelah Anda publikasikan.</span>
+    </div>
+
+    <sc-if value="{{ showBanner }}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: #e9d2c2; font-size: 16px; line-height: 22px;">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex: 0 0 auto;"><path d="M5 12l5 5L20 7"></path></svg>
+        <span>{{ banner }}</span>
+      </div>
+    </sc-if>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start;">
+      <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Perubahan menunggu</h2>
+          <span style="font-size: 13px; color: #545454;">{{ includedCount }} dari {{ pendingCount }} dipilih</span>
+        </div>
+
+        <sc-if value="{{ noChanges }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 32px 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-size: 16px; line-height: 22px; color: #545454;">Tidak ada perubahan yang menunggu. Layar sudah sama dengan draf terbaru.</div>
+        </sc-if>
+
+        <sc-for list="{{ changes }}" as="c" hint-placeholder-count="4">
+          <div style="display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; background: #fcfbf9; box-shadow: {{ c.ring }};">
+            <input type="checkbox" checked="{{ c.include }}" onChange="{{ c.toggle }}" aria-label="Sertakan perubahan ini" style="flex: 0 0 auto; width: 20px; height: 20px; margin: 2px 0 0 0; accent-color: #212121;">
+            <div style="display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="padding: 2px 8px; background: #eae6dd; font-size: 13px; line-height: 18px; font-weight: 500;">{{ c.kind }}</span>
+                <span style="padding: 2px 8px; border: 1px solid #d1cdc4; font-size: 13px; line-height: 18px;">{{ c.action }}</span>
+                <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 18px; line-height: 24px; font-weight: 500; letter-spacing: 0;">{{ c.title }}</span>
+              </div>
+              <span style="font-size: 16px; line-height: 22px; color: #545454;">{{ c.detail }}</span>
+              <span style="font-size: 13px; line-height: 16px; color: #545454;">{{ c.who }} · {{ c.when }}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: 0 0 auto;">
+              <button class="bs" onClick="{{ c.select }}" aria-pressed="{{ c.sel }}" style="min-height: 32px; padding: 0 12px; background: #c0bcb4; border: 1px solid #545454; font-size: 11px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Lihat di pratinjau</button>
+              <a class="lk" href="{{ c.href }}" style="font-size: 14px;">Buka untuk diubah</a>
+            </div>
+          </div>
+        </sc-for>
+
+        <section style="display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Pemeriksaan otomatis</h2>
+          <sc-for list="{{ checks }}" as="k" hint-placeholder-count="4">
+            <div style="display: flex; gap: 12px; align-items: flex-start; padding: {{ k.pad }}; border: 1px solid {{ k.border }}; font-size: 15px; line-height: 22px;">
+              <sc-if value="{{ k.ok }}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex: 0 0 auto; margin-top: 2px;"><path d="M5 12l5 5L20 7"></path></svg></sc-if>
+              <sc-if value="{{ k.warn }}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c85c42" stroke-width="2" style="flex: 0 0 auto; margin-top: 2px;"><path d="M12 3l10 18H2z"></path><path d="M12 10v5M12 18v.5"></path></svg></sc-if>
+              <span style="flex: 1 1 auto;">{{ k.text }}</span>
+              <sc-if value="{{ k.warn }}" hint-placeholder-val="{{ false }}"><a class="lk" href="Admin-Promo.dc.html" style="flex: 0 0 auto; font-size: 14px;">Buka promo</a></sc-if>
+            </div>
+          </sc-for>
+          <span style="font-size: 13px; line-height: 18px; color: #545454;">Peringatan tidak menghentikan publikasi, tetapi sebaiknya diperbaiki dulu.</span>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #fcfbf9; box-shadow: 0 0 0 2px #212121, 0 2px 8px rgba(0,0,0,0.06);">
+          <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Keputusan</h2>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="catatan" style="font-size: 14px; line-height: 18px; font-weight: 500;">Catatan untuk penulis (opsional)</label>
+            <textarea id="catatan" rows="2" value="{{ note }}" onChange="{{ setNote }}" placeholder="mis. Tolong ganti foto dengan versi yang lebih terang." style="padding: 12px; border: 1px solid #d1cdc4; background: #f5f2ec; font-size: 16px; line-height: 24px; resize: vertical;"></textarea>
+          </div>
+          <label style="display: flex; align-items: flex-start; gap: 12px; font-size: 16px; line-height: 22px;">
+            <input type="checkbox" checked="{{ confirmed }}" onChange="{{ toggleConfirm }}" style="flex: 0 0 auto; width: 20px; height: 20px; margin: 1px 0 0 0; accent-color: #212121;">
+            <span>Saya sudah memeriksa pratinjau dan isi {{ includedCount }} perubahan yang dipilih.</span>
+          </label>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="bp" onClick="{{ publish }}" aria-disabled="{{ cantPublish }}" style="display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 24px; background: {{ pubBg }}; color: {{ pubFg }}; cursor: {{ pubCursor }}; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12l5 5L20 7"></path></svg><span>Publikasikan {{ includedCount }} perubahan ke layar</span></button>
+            <button class="bs" onClick="{{ sendBack }}" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; background: #c0bcb4; border: 1px solid #545454; color: #212121; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Kembalikan ke draf</button>
+          </div>
+          <span style="font-size: 13px; line-height: 18px; color: #545454;">Perubahan yang tidak dipilih tetap menunggu di sini. Layar diperbarui dalam sekitar satu menit setelah dipublikasikan.</span>
+        </section>
+      </div>
+
+      <div style="flex: 1 1 380px; max-width: 420px; display: flex; flex-direction: column; gap: 24px;">
+        <section style="display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Pratinjau layar</h2>
+          <div role="group" aria-label="Versi pratinjau" style="display: flex;">
+            <button onClick="{{ showAfter }}" aria-pressed="{{ isAfter }}" style="flex: 1 1 0; min-height: 40px; padding: 0 12px; background: {{ afterBg }}; color: {{ afterFg }}; border: 1px solid #212121; font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-align: center;">Setelah dipublikasikan</button>
+            <button onClick="{{ showLive }}" aria-pressed="{{ isLive }}" style="flex: 1 1 0; min-height: 40px; padding: 0 12px; background: {{ liveBg }}; color: {{ liveFg }}; border: 1px solid #212121; border-left: 0; font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-align: center;">Tayang sekarang</button>
+          </div>
+
+          <!-- Mini kiosk 9:16 -->
+          <div style="align-self: center; width: 360px; height: 640px; display: flex; flex-direction: column; background: #f5f2ec; box-shadow: 0 0 0 1px #d1cdc4, 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;">
+            <div style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 14px 14px 8px 14px; overflow: hidden;">
+              <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="" style="width: 100px; height: auto; display: block;">
+              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 18px; line-height: 22px; letter-spacing: 0;">Info perawatan</span>
+              <div style="display: flex; gap: 12px; border-bottom: 1px solid #d1cdc4; font-size: 9px; line-height: 12px; letter-spacing: 0.05em;">
+                <sc-for list="{{ pTabs }}" as="t" hint-placeholder-count="2">
+                  <span style="padding: 4px 0; color: {{ t.fg }}; font-weight: {{ t.weight }}; box-shadow: inset 0 -2px 0 {{ t.bar }};">{{ t.label }}</span>
+                </sc-for>
+              </div>
+              <sc-if value="{{ pShowPage }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 8px; padding: 6px; box-shadow: 0 0 0 2px #212121;">
+                  <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 13px; line-height: 16px; letter-spacing: 0;">Persiapan sebelum perawatan laser</span>
+                  <span style="font-size: 8px; line-height: 12px; color: #545454;">Beberapa langkah sederhana membantu kulit Anda siap untuk perawatan laser seperti PicoSure Pro.</span>
+                  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; font-size: 7.5px; line-height: 10px;">
+                    <span style="padding: 6px; background: #fcfbf9; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">Hentikan retinol dan AHA 3–7 hari sebelum tindakan.</span>
+                    <span style="padding: 6px; background: #fcfbf9; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">Hindari paparan matahari dan produk tanning.</span>
+                    <span style="padding: 6px; background: #fcfbf9; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">Beri tahu dokter jika baru melakukan skinbooster, Botox atau filler.</span>
+                    <span style="padding: 6px; background: #fcfbf9; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">Jerawat aktif yang berat mungkin ditangani lebih dulu.</span>
+                  </div>
+                  <span style="padding: 6px 8px; background: #e9d2c2; font-size: 7.5px; line-height: 10px;">Dokter akan menyesuaikan persiapan dengan kondisi kulit Anda saat konsultasi.</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ pShowTreat }}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; gap: 4px; font-size: 8px;">
+                  <span style="padding: 3px 6px; border: 1px solid #d1cdc4;">Laser</span>
+                  <span style="padding: 3px 6px; background: #212121; color: #ffffff;">Facial</span>
+                  <span style="padding: 3px 6px; border: 1px solid #d1cdc4;">Hair</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px;">
+                  <div style="display: flex; flex-direction: column; gap: 3px; padding: 8px; background: #fcfbf9; box-shadow: {{ pDpcRing }};">
+                    <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 9px; line-height: 12px; letter-spacing: 0;">Deep Pore Cleansing</span>
+                    <span style="font-size: 7px; line-height: 9px; color: #545454;">Pembersihan pori mendalam, perawatan dasar rutin.</span>
+                    <sc-if value="{{ pDpcVideo }}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; padding: 1px 4px; background: #e9d2c2; font-size: 6.5px;">Ada video penjelasan</span></sc-if>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 3px; padding: 8px; background: #fcfbf9; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                    <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 9px; line-height: 12px; letter-spacing: 0;">Peeling</span>
+                    <span style="font-size: 7px; line-height: 9px; color: #545454;">Glow peel untuk kulit lebih halus dan cerah.</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 3px; padding: 8px; background: #fcfbf9; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                    <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 9px; line-height: 12px; letter-spacing: 0;">Deep Pore Combo</span>
+                    <span style="font-size: 7px; line-height: 9px; color: #545454;">Deep Pore Cleansing dipadukan dengan peeling.</span>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+            <div style="flex: 0 0 180px; display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-top: 1px solid #d1cdc4; background: #eae6dd; box-sizing: border-box; box-shadow: {{ pBandRing }};">
+              <span style="font-size: 7px; letter-spacing: 0.05em; color: #545454;">Band promo · slide pertama</span>
+              <span style="align-self: flex-start; padding: 0 3px; background: #e9d2c2; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 13px; line-height: 16px; letter-spacing: 0;">{{ pBandTitle }}</span>
+              <span style="font-size: 7.5px; line-height: 10px; color: #545454;">{{ pBandLede }}</span>
+            </div>
+          </div>
+          <a class="lk" href="Layar-Halaman.dc.html" style="align-self: center; font-size: 14px;">Buka pratinjau layar penuh</a>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Riwayat publikasi</h2>
+          <sc-for list="{{ history }}" as="h" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid #d1cdc4;">
+              <div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-width: 0;">
+                <span style="font-size: 16px; line-height: 22px; font-weight: 500;">Versi {{ h.v }} <span style="font-weight: 400; color: #545454;">· {{ h.note }}</span></span>
+                <span style="font-size: 13px; line-height: 16px; color: #545454;">{{ h.when }} · {{ h.who }}</span>
+              </div>
+              <sc-if value="{{ h.live }}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 8px; background: #e9d2c2; font-size: 13px; line-height: 18px;">Tayang</span></sc-if>
+              <sc-if value="{{ h.old }}" hint-placeholder-val="{{ true }}"><button class="bs" onClick="{{ h.restore }}" style="min-height: 32px; padding: 0 12px; background: #c0bcb4; border: 1px solid #545454; font-size: 11px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Kembalikan</button></sc-if>
+            </div>
+          </sc-for>
+          <span style="font-size: 13px; line-height: 18px; color: #545454;">Mengembalikan versi lama juga masuk ke daftar tinjauan dulu, tidak langsung tayang.</span>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      changes: [
+        { id: 'page', kind: 'Halaman', action: 'Baru', title: 'Sebelum perawatan laser', detail: 'Tab baru "Sebelum laser" setelah Tentang ADC, ikut diputar di screen saver.', who: 'Staf resepsionis', when: 'Hari ini, 14.20', include: true, href: 'Admin-Halaman-Editor.dc.html' },
+        { id: 'promoNew', kind: 'Promo', action: 'Mulai tayang', title: 'Paket hair loss November', detail: 'Masuk band promo sebagai slide pertama.', who: 'Marketing', when: 'Hari ini, 11.20', include: true, href: 'Admin-Promo.dc.html' },
+        { id: 'promoEnd', kind: 'Promo', action: 'Diakhiri', title: 'Ultherapy PRIME dengan skinbooster gratis', detail: 'Keluar dari band promo karena masa berlaku berakhir 31 Okt 2026.', who: 'Marketing', when: 'Hari ini, 11.18', include: true, href: 'Admin-Promo.dc.html' },
+        { id: 'treat', kind: 'Perawatan', action: 'Diubah', title: 'Deep Pore Cleansing', detail: 'Video ditautkan: "Jerawat: empat faktor penyebabnya".', who: 'Staf resepsionis', when: 'Kemarin, 16.40', include: true, href: 'Admin-Perawatan-Form.dc.html' }
+      ],
+      live: {},
+      sel: 'page',
+      mode: 'after',
+      confirmed: false,
+      note: '',
+      banner: '',
+      liveVersion: 12,
+      liveWhen: '24 Okt 2026, 14.10',
+      history: [
+        { v: 12, note: 'Layar mulai dipakai', when: '24 Okt 2026, 14.10', who: 'Marketing' },
+        { v: 11, note: 'Uji coba isi dan video', when: '23 Okt 2026, 17.02', who: 'Marketing' },
+        { v: 10, note: 'Draf awal', when: '22 Okt 2026, 10.15', who: 'Marketing' }
+      ]
+    };
+  }
+  stamp() {
+    var d = new Date();
+    var m = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    return d.getDate() + ' ' + m[d.getMonth()] + ' ' + d.getFullYear() + ', ' + ('0' + d.getHours()).slice(-2) + '.' + ('0' + d.getMinutes()).slice(-2);
+  }
+  renderVals() {
+    var s = this.state;
+    var inc = s.changes.filter((c) => c.include);
+    var cant = !s.confirmed || inc.length === 0;
+    var pending = {};
+    s.changes.forEach((c) => { if (c.include) pending[c.id] = true; });
+    var after = s.mode === 'after';
+    var has = (id) => !!s.live[id] || (after && !!pending[id]);
+    var selC = s.changes.find((c) => c.id === s.sel);
+    var selId = selC ? selC.id : null;
+    var pageOn = has('page');
+    var showPage = pageOn && after && selId === 'page';
+    var tabs = [{ label: 'Perawatan', on: !showPage }, { label: 'Tentang ADC', on: false }];
+    if (pageOn) tabs.push({ label: 'Sebelum laser', on: showPage });
+    var band = has('promoNew')
+      ? { t: 'Paket hair loss November', l: 'Paket Hair Growth Laser dengan Plazion gratis.' }
+      : (has('promoEnd')
+        ? { t: 'Paket PicoSure Glow enam sesi', l: 'Enam sesi PicoSure Glow dengan Signature Facial gratis.' }
+        : { t: 'Ultherapy PRIME dengan skinbooster gratis', l: 'Satu sesi skinbooster gratis untuk Ultherapy PRIME 500, 600 atau 700 shots.' });
+    var RING = '0 0 0 2px #212121';
+    var CARD = '0 1px 3px rgba(0,0,0,0.06)';
+    var history = s.history.map((h, i) => ({
+      v: h.v, note: h.note, when: h.when, who: h.who, live: i === 0, old: i > 0,
+      restore: () => {
+        if (s.changes.find((c) => c.id === 'restore' + h.v)) return;
+        this.setState({ changes: s.changes.concat([{ id: 'restore' + h.v, kind: 'Versi', action: 'Kembalikan', title: 'Versi ' + h.v, detail: 'Mengembalikan seluruh isi layar ke versi ' + h.v + ' (' + h.when + ').', who: 'Staf resepsionis', when: 'Baru saja', include: false, href: 'Admin-Tinjau.dc.html' }]), banner: '' });
+      }
+    }));
+    return {
+      pendingCount: s.changes.length,
+      includedCount: inc.length,
+      noChanges: s.changes.length === 0,
+      liveVersion: s.liveVersion,
+      liveWhen: s.liveWhen,
+      showBanner: !!s.banner,
+      banner: s.banner,
+      changes: s.changes.map((c, i) => ({
+        kind: c.kind, action: c.action, title: c.title, detail: c.detail, who: c.who, when: c.when, href: c.href,
+        include: c.include,
+        sel: c.id === selId,
+        ring: c.id === selId ? '0 0 0 2px #212121, 0 2px 8px rgba(0,0,0,0.06)' : '0 2px 8px rgba(0,0,0,0.06)',
+        toggle: () => { var arr = s.changes.slice(); arr[i] = Object.assign({}, c, { include: !c.include }); this.setState({ changes: arr, confirmed: false }); },
+        select: () => this.setState({ sel: c.id, mode: 'after' })
+      })),
+      checks: [
+        { ok: true, warn: false, text: 'Tidak ada kata yang dilarang untuk iklan kesehatan di perubahan yang dipilih.' },
+        { ok: false, warn: true, text: 'Dua promo yang masih tayang sudah lewat masa berlaku 31 Okt 2026: Paket PicoSure Glow enam sesi dan Program referral.' },
+        { ok: true, warn: false, text: 'Video dengan Elle memakai label "Karakter virtual (AI)".' },
+        { ok: true, warn: false, text: 'Label tab "Sebelum laser" muat di layar (13 dari 18 karakter).' }
+      ].map((k) => Object.assign(k, { border: k.warn ? '#c85c42' : 'transparent', pad: k.warn ? '12px' : '0' })),
+      note: s.note,
+      setNote: (e) => this.setState({ note: e.target.value }),
+      confirmed: s.confirmed,
+      toggleConfirm: () => this.setState({ confirmed: !s.confirmed }),
+      cantPublish: cant,
+      pubBg: cant ? '#c0bcb4' : '#212121',
+      pubFg: cant ? '#545454' : '#ffffff',
+      pubCursor: cant ? 'not-allowed' : 'pointer',
+      publish: () => {
+        if (cant) return;
+        var live = Object.assign({}, s.live);
+        inc.forEach((c) => { live[c.id] = true; });
+        var when = this.stamp();
+        var v = s.liveVersion + 1;
+        var rest = s.changes.filter((c) => !c.include);
+        this.setState({
+          live: live, changes: rest, confirmed: false, note: '', mode: 'live',
+          sel: rest.length ? rest[0].id : null,
+          liveVersion: v, liveWhen: when,
+          history: [{ v: v, note: inc.length + ' perubahan', when: when, who: 'Staf resepsionis' }].concat(s.history),
+          banner: 'Versi ' + v + ' dipublikasikan ' + when + '. Layar di ruang tunggu diperbarui dalam sekitar satu menit.'
+        });
+      },
+      sendBack: () => {
+        if (inc.length === 0) return;
+        var rest = s.changes.filter((c) => !c.include);
+        this.setState({
+          changes: rest, confirmed: false, note: '',
+          sel: rest.length ? rest[0].id : null,
+          banner: inc.length + ' perubahan dikembalikan ke draf' + (s.note.trim() ? ' dengan catatan untuk penulis.' : '.')
+        });
+      },
+      isAfter: after, isLive: !after,
+      afterBg: after ? '#212121' : 'transparent', afterFg: after ? '#ffffff' : '#212121',
+      liveBg: !after ? '#212121' : 'transparent', liveFg: !after ? '#ffffff' : '#212121',
+      showAfter: () => this.setState({ mode: 'after' }),
+      showLive: () => this.setState({ mode: 'live' }),
+      pTabs: tabs.map((t) => ({ label: t.label, fg: t.on ? '#212121' : '#545454', weight: t.on ? 600 : 400, bar: t.on ? '#212121' : 'transparent' })),
+      pShowPage: showPage,
+      pShowTreat: !showPage,
+      pDpcVideo: has('treat'),
+      pDpcRing: after && selId === 'treat' ? RING : CARD,
+      pBandRing: after && (selId === 'promoNew' || selId === 'promoEnd') ? 'inset 0 0 0 2px #212121' : 'none',
+      pBandTitle: band.t,
+      pBandLede: band.l,
+      history: history
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1099 @@
+<title>Layar Info Perawatan ADC</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500;600&display=swap">
+<style>
+  /* Layout: two routes in one page. #kiosk is a fixed 1080×1920 portrait stage scaled to the viewport (zone A content above a 540px promo band). #admin is a 260px sidebar + fluid main. Tokens: ADC Doctor Hearts design system. */
+  :root {
+    --surface-100: #f7efec; --surface-200: #f1e3df; --surface-300: #ead6d1;
+    --ink: #3a3132; --ink-muted: #6b5f61;
+    --wine-600: #8e2f3b; --wine-700: #74242f; --on-wine: #ffffff; --rose-200: #e9c6c3;
+    --hairline: #e2cfca; --control-border: rgba(58,49,50,0.42);
+    --shadow-card: 0 1px 2px rgba(58,49,50,0.06), 0 4px 14px rgba(58,49,50,0.06);
+    --logo-filter: none;
+    --font-display: "Cormorant Garamond", "Book Antiqua", Palatino, Georgia, serif;
+    --font-sans: "Jost", "Segoe UI", system-ui, sans-serif;
+    --space-1: 4px; --space-2: 8px; --space-3: 14px; --space-4: 24px; --space-5: 32px;
+    --radius-sm: 10px; --radius-md: 16px; --radius-pill: 999px;
+    --scrim: rgba(30,24,25,0.88); --scrim-mid: rgba(30,24,25,0.55); --scrim-0: rgba(30,24,25,0);
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --surface-100: #1e1819; --surface-200: #2a2123; --surface-300: #36292c;
+    --ink: #f4ecea; --ink-muted: #bcafb1;
+    --wine-600: #de7883; --wine-700: #eb96a0; --on-wine: #1e1819; --rose-200: #53363b;
+    --hairline: #3d3033; --control-border: rgba(244,236,234,0.42); --shadow-card: 0 1px 2px rgba(0,0,0,0.4); --logo-filter: invert(1); color-scheme: dark;
+  } }
+  :root[data-theme="dark"] {
+    --surface-100: #1e1819; --surface-200: #2a2123; --surface-300: #36292c;
+    --ink: #f4ecea; --ink-muted: #bcafb1;
+    --wine-600: #de7883; --wine-700: #eb96a0; --on-wine: #1e1819; --rose-200: #53363b;
+    --hairline: #3d3033; --control-border: rgba(244,236,234,0.42); --shadow-card: 0 1px 2px rgba(0,0,0,0.4); --logo-filter: invert(1); color-scheme: dark;
+  }
+  ::placeholder { color: var(--ink-muted); opacity: 1; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--surface-100); color: var(--ink); font-family: var(--font-sans); font-size: 15px; line-height: 1.4;
+    padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); }
+  body.route-admin { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); height: auto; }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: left; touch-action: manipulation; }
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--wine-600); outline-offset: 2px; }
+  input, select, textarea { font: inherit; color: inherit; }
+  a { color: var(--wine-600); }
+  .logo { display: block; height: 28px; width: auto; filter: var(--logo-filter); }
+  .logo path, .logo rect, .logo polygon { fill: #000; }
+  .hs { scrollbar-width: none; } .hs::-webkit-scrollbar { display: none; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 13px; line-height: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+  .display { font-family: var(--font-display); font-weight: 500; letter-spacing: 0.01em; }
+
+  /* ---------- KIOSK ---------- */
+  /* the waiting-room screen always shows the approved light look, whatever theme the kiosk PC runs */
+  #kiosk { position: fixed; inset: 0; background: #3a3132; overflow: hidden; color-scheme: light;
+    --surface-100: #f7efec; --surface-200: #f1e3df; --surface-300: #ead6d1; --ink: #3a3132; --ink-muted: #6b5f61;
+    --wine-600: #8e2f3b; --wine-700: #74242f; --on-wine: #ffffff; --rose-200: #e9c6c3; --hairline: #e2cfca; --control-border: rgba(58,49,50,0.42);
+    --shadow-card: 0 1px 2px rgba(58,49,50,0.06), 0 4px 14px rgba(58,49,50,0.06); --logo-filter: none; }
+  #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; display: flex; flex-direction: column;
+    overflow: hidden; background: var(--surface-100); color: var(--ink); touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+  #zoneA { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--surface-100); }
+  .fill { position: absolute; inset: 0; }
+  /* screen saver */
+  #saver { background: #1e1819; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; height: 100%; overflow: hidden; }
+  #saverVideo, #playerVideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; background: #1e1819; }
+  .saver-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 520px; background: linear-gradient(to top, var(--scrim) 0%, var(--scrim-mid) 55%, var(--scrim-0) 100%); }
+  /* "whole" mode: a portrait clip already carries its own title, AI label and subtitles, so the overlay text leaves and only the controls stay */
+  #saver.whole .saver-text { display: none; }
+  #saver.whole .saver-scrim { height: 150px; }
+  #saver.whole .cta-pill { min-height: 56px; }
+  #saver.whole .saver-foot { padding-bottom: 28px; }
+  .edge-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(233,198,195,0.35); }
+  .edge-bar i { display: block; height: 100%; width: 0; background: #8e2f3b; transition: width 1s linear; }
+  .saver-logo { position: absolute; top: 32px; left: 32px; display: inline-flex; align-items: center; padding: 12px 18px; border-radius: var(--radius-pill); background: #f7efec; }
+  .saver-logo .logo { filter: none; }
+  .saver-text { position: relative; display: flex; flex-direction: column; gap: 14px; padding: 0 40px 22px; color: #fff; }
+  .saver-meta { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 18px; letter-spacing: 0.08em; text-transform: uppercase; color: #e9c6c3; }
+  .dot4 { width: 4px; height: 4px; border-radius: 999px; background: #e9c6c3; }
+  .ai-tag { margin-left: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.45); font-size: 13px; letter-spacing: 0.02em; }
+  .saver-title { font-family: var(--font-display); font-weight: 500; font-size: 52px; line-height: 56px; letter-spacing: 0.01em; text-wrap: balance; }
+  .saver-desc { font-size: 18px; line-height: 26px; color: rgba(255,255,255,0.82); max-width: 820px; }
+  .saver-foot { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 0 40px 40px; }
+  .dots { display: inline-flex; gap: 8px; }
+  .dots i { width: 10px; height: 10px; border-radius: 999px; border: 1.6px solid #e9c6c3; background: transparent; }
+  .dots i.on { background: #e9c6c3; }
+  .cta-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 64px; padding: 0 36px; border-radius: var(--radius-pill); background: #8e2f3b; color: #fff;
+    font-size: 18px; line-height: 22px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  /* player */
+  #player { background: #1e1819; color: #fff; display: flex; flex-direction: column; }
+  .player-top { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 28px 32px; }
+  .player-badge { display: inline-flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 999px; background: rgba(30,24,25,0.7); font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .player-hint { font-size: 14px; line-height: 20px; color: rgba(255,255,255,0.82); padding: 10px 14px; border-radius: 999px; background: rgba(30,24,25,0.55); }
+  .player-close { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 22px; border-radius: 999px; background: #f7efec; color: #3a3132; font-size: 16px; font-weight: 500; }
+  .player-bottom { position: relative; margin-top: auto; padding: 120px 40px 40px; background: linear-gradient(to top, rgba(30,24,25,0.9), rgba(30,24,25,0)); display: flex; flex-direction: column; align-items: flex-start; }
+  #player.whole .player-bottom { display: none; }
+  .player-bottom .ai-tag { margin: 14px 0 0; }
+  .player-title { font-family: var(--font-display); font-weight: 500; font-size: 44px; line-height: 48px; }
+  .player-desc { margin-top: 10px; font-size: 17px; line-height: 24px; color: rgba(255,255,255,0.82); }
+  /* dashboard */
+  #dash { display: flex; flex-direction: column; gap: 28px; height: 100%; box-sizing: border-box; padding: 32px 32px 24px; }
+  .dash-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .dash-head h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 46px; line-height: 46px; letter-spacing: 0.01em; text-transform: uppercase; }
+  .dash-head h1 em { font-style: normal; color: var(--wine-600); }
+  .dash-head p { margin: 0; font-size: 17px; line-height: 24px; color: var(--ink-muted); }
+  .clock { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-bottom: 4px; }
+  .clock b { font-size: 20px; line-height: 24px; font-weight: 500; }
+  .clock span { font-size: 14px; line-height: 18px; color: var(--ink-muted); }
+  .vthumb { position: relative; flex: 0 0 400px; width: 400px; height: 225px; border-radius: var(--radius-sm); overflow: hidden; background: var(--surface-300); }
+  .vthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .vthumb .play { position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 999px; background: var(--wine-600); color: var(--on-wine); display: inline-flex; align-items: center; justify-content: center; }
+  .vthumb .dur { position: absolute; right: 10px; bottom: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(30,24,25,0.7); color: #fff; font-size: 14px; line-height: 18px; }
+  .cats { display: flex; flex-wrap: wrap; gap: 8px; flex: 0 0 auto; }
+  .cats button { flex: 0 0 auto; min-height: 56px; padding: 0 22px; border-radius: 999px; background: var(--surface-200); color: var(--ink); font-size: 16px; line-height: 20px; font-weight: 500; white-space: nowrap; }
+  .cats button.on { background: var(--wine-600); color: var(--on-wine); }
+  /* touch feedback: a pressed control darkens one step, no motion needed */
+  .cats button:not(.on):active, .tcard:active, .ghost:active, .pnav button:active { background: var(--surface-300); }
+  .hero-video:active .vthumb .play, .player-close:active { background: var(--wine-700); }
+  .tgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-content: start; overflow-y: auto; flex: 1 1 auto; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--rose-200) transparent; }
+  .tgrid::-webkit-scrollbar { width: 6px; } .tgrid::-webkit-scrollbar-thumb { background: var(--rose-200); border-radius: 999px; }
+  .tcard { display: flex; flex-direction: column; gap: 8px; min-height: 128px; padding: 22px 24px; box-sizing: border-box; border-radius: var(--radius-md); background: var(--surface-200); box-shadow: var(--shadow-card); }
+  .tcard.on { box-shadow: 0 0 0 2px var(--wine-600); }
+  .tcard .n { font-size: 18px; line-height: 24px; font-weight: 500; }
+  .tcard .d { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .tcard .p { margin-top: 4px; font-size: 15px; line-height: 20px; font-weight: 500; color: var(--ink); }
+  .tcard img { width: 100%; height: 120px; object-fit: cover; border-radius: var(--radius-sm); }
+  /* hero: the selected treatment leads; the card list below it supports */
+  .hero { display: flex; gap: 32px; padding: 28px 32px; border-radius: var(--radius-md); background: var(--surface-200); box-shadow: var(--shadow-card); }
+  .hero-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .hero-top h2 { margin: 0; font-size: 34px; line-height: 40px; font-weight: 500; text-wrap: balance; overflow-wrap: anywhere; }
+  .hero-top h2.long { font-size: 28px; line-height: 34px; }
+  .hero-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; }
+  .hero-price span { font-size: 14px; line-height: 20px; color: var(--ink-muted); white-space: nowrap; }
+  .hero-concerns { margin: 0; font-size: 16px; line-height: 24px; color: var(--ink); }
+  .hero-concerns b { font-weight: 500; }
+  .hero-price b { font-family: var(--font-display); font-weight: 600; font-size: 40px; line-height: 44px; color: var(--wine-600); }
+  .hero-price.ask b { font-family: var(--font-sans); font-weight: 500; font-size: 22px; line-height: 28px; color: var(--ink); }
+  .hero-facts { display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 0; }
+  .hero-facts div { display: flex; flex-direction: column; gap: 2px; }
+  .hero-facts dt { font-size: 14px; line-height: 18px; color: var(--ink-muted); }
+  .hero-facts dd { margin: 0; font-size: 16px; line-height: 22px; font-weight: 500; }
+  .hero-note { margin: 0; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .hero-after { margin: 0; font-size: 16px; line-height: 24px; color: var(--ink-muted); }
+  .hero-after b { color: var(--ink); font-weight: 500; }
+  .hero-video { flex: 0 0 400px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .hero-video .vthumb { flex: none; width: 400px; height: 225px; }
+  .hero-vt { font-size: 14px; line-height: 20px; font-weight: 500; }
+  .hero-vm { font-size: 14px; line-height: 18px; color: var(--ink-muted); }
+  .dfoot { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .dfoot .row { display: flex; align-items: center; gap: 14px; }
+  /* a contact line, not a button: the kiosk never navigates, so it reads as information */
+  .wa { display: inline-flex; align-items: center; gap: 12px; min-height: 56px; color: var(--ink); font-size: 18px; line-height: 24px; font-weight: 500; }
+  .wa svg { color: var(--wine-600); flex: none; }
+  .ghost { display: inline-flex; align-items: center; min-height: 56px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--hairline); font-size: 15px; font-weight: 500; color: var(--ink-muted); }
+  .hours { margin-left: auto; font-size: 14px; line-height: 20px; color: var(--ink-muted); text-align: right; }
+  .legal { margin: 0; font-size: 14px; line-height: 20px; color: var(--ink-muted); text-wrap: pretty; }
+  /* zone B */
+  #zoneB { position: relative; flex: 0 0 540px; height: 540px; box-sizing: border-box; display: flex; gap: 32px; padding: 40px 32px 32px; border-top: 1px solid var(--hairline); background: var(--surface-200); overflow: hidden; }
+  .pleft { display: flex; flex-direction: column; gap: 14px; flex: 1 1 auto; min-width: 0; }
+  .peyebrow { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 18px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wine-600); }
+  .pvalue .eyebrow { font-size: 14px; line-height: 18px; }
+  .ptitlewrap { position: relative; display: inline-block; max-width: 100%; align-self: flex-start; }
+  .ptitlewrap i { position: absolute; inset: -8px -12px; border-radius: var(--radius-md); background: var(--rose-200); }
+  .ptitlewrap h2 { position: relative; margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 46px; line-height: 46px; letter-spacing: 0.01em; text-transform: uppercase; text-wrap: balance; }
+  .ptitlewrap.long h2 { font-size: 36px; line-height: 38px; }
+  .ptitlewrap h2 em { font-style: normal; color: var(--wine-600); }
+  .plede { margin: 0; font-size: 17px; line-height: 24px; color: var(--ink-muted); max-width: 600px; }
+  .pchips { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pchips .chip { padding: 8px 14px; border-radius: 999px; background: var(--surface-100); font-size: 14px; line-height: 20px; font-weight: 500; }
+  .pchips .valid { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .pfoot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .pdots i { border-color: var(--wine-600); } .pdots i.on { background: var(--wine-600); }
+  .pnav { display: inline-flex; gap: 8px; }
+  .pnav button { width: 52px; height: 52px; border-radius: 999px; border: 1px solid var(--hairline); display: inline-flex; align-items: center; justify-content: center; color: var(--ink); }
+  .pvalue { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; flex: 0 0 360px; width: 360px; border-radius: var(--radius-md); background: var(--surface-100); padding: 24px; box-sizing: border-box; text-align: center; }
+  .pvalue .big { font-family: var(--font-display); font-weight: 600; font-size: 56px; line-height: 60px; color: var(--wine-600); max-width: 100%; overflow-wrap: anywhere; }
+  .pvalue .big.long { font-size: 40px; line-height: 44px; }
+  .pvalue .note { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  /* an instruction, not a button: patients ask at the desk */
+  .pvalue .ask { margin-top: 14px; font-size: 14px; line-height: 20px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--wine-600); }
+  .pbar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--rose-200); }
+  .pbar i { display: block; height: 100%; width: 0; background: var(--wine-600); transition: width 1s linear; }
+  .kiosk-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 60px; text-align: center; color: var(--ink-muted); font-size: 20px; line-height: 30px; }
+  .kiosk-empty b { font-family: var(--font-display); font-weight: 500; font-size: 46px; line-height: 50px; color: var(--ink); }
+  .status-pill { position: absolute; right: 24px; bottom: 16px; font-size: 13px; color: #e9c6c3; display: inline-flex; align-items: center; gap: 6px; }
+  .status-pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #e9c6c3; }
+  .status-pill[data-state="live"]::before { background: #de7883; }
+
+  /* ---------- ADMIN ---------- */
+  #admin { display: flex; flex-wrap: wrap; width: 100%; min-height: 100%; box-sizing: border-box; }
+  .side { flex: 1 1 240px; max-width: 260px; display: flex; flex-direction: column; gap: 28px; padding: 28px 20px; box-sizing: border-box; background: var(--surface-200); border-right: 1px solid var(--hairline); }
+  .side .brand { display: flex; flex-direction: column; gap: 6px; padding: 0 8px; }
+  .side .brand .logo { height: 26px; }
+  .side nav { display: flex; flex-direction: column; gap: 4px; }
+  .side nav a { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: var(--radius-sm); color: var(--ink); text-decoration: none; font-size: 15px; }
+  .side nav a[aria-current="page"] { background: var(--surface-100); color: var(--wine-600); font-weight: 500; }
+  .side .who { margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 0 8px; }
+  .side .who .row { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 36px; height: 36px; border-radius: 999px; background: var(--surface-300); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; object-fit: cover; }
+  .side .who small { font-size: 13px; color: var(--ink-muted); display: block; }
+  .main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px; padding: 32px 40px 40px; box-sizing: border-box; }
+  @media (max-width: 760px) { .side { max-width: none; border-right: 0; border-bottom: 1px solid var(--hairline); gap: 16px; } .side nav { flex-direction: row; flex-wrap: wrap; } .side .who { margin-top: 0; } .main { padding: 24px 0 40px; } }
+  .phead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .phead h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 40px; line-height: 44px; text-wrap: balance; }
+  .phead .l { display: flex; flex-direction: column; gap: 4px; }
+  .subtitle { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .pub-confirm { gap: 10px; }
+  .phead .r { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .pub-state { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--surface-200); font-size: 13px; color: var(--ink-muted); }
+  .pub-state::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--hairline); }
+  .pub-state[data-state="live"]::before { background: var(--wine-600); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 0 20px; border-radius: 999px; font-size: 15px; font-weight: 500; border: 1px solid transparent; text-decoration: none; }
+  .btn.solid { background: var(--wine-600); color: var(--on-wine); }
+  .btn.solid:disabled { opacity: 0.5; cursor: default; }
+  .btn.outline { border-color: var(--wine-600); color: var(--wine-600); }
+  .btn.quiet { border-color: var(--control-border); color: var(--ink-muted); }
+  .btn.sm { min-height: 44px; padding: 0 14px; font-size: 14px; font-weight: 400; }
+  .btn.sm.outline { font-weight: 500; }
+  .link { display: inline-flex; align-items: center; background: none; border: 0; color: var(--wine-600); font-size: 14px; text-decoration: none; cursor: pointer; min-height: 44px; padding: 0 4px; }
+  .link.muted { color: var(--ink-muted); }
+  .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .tile { display: flex; flex-direction: column; gap: 6px; padding: 20px; border-radius: var(--radius-md); background: var(--surface-200); min-width: 0; }
+  .tile span { font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+  .tile b { font-size: 32px; line-height: 36px; font-weight: 500; }
+  .tile b.warn { color: var(--wine-600); }
+  .cols { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+  .cols > .wide { flex: 999 1 520px; min-width: 0; }
+  .cols > .narrow { flex: 1 1 300px; max-width: 400px; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+  @media (max-width: 900px) { .cols > .narrow { max-width: none; } }
+  .card { display: flex; flex-direction: column; gap: 14px; padding: 20px 24px; border-radius: var(--radius-md); background: var(--surface-200); min-width: 0; }
+  .card.lined { background: none; border: 1px solid var(--hairline); }
+  .card h2 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 500; }
+  .card h3 { margin: 0; font-size: 16px; line-height: 22px; font-weight: 500; }
+  .card .hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .note { font-size: 14px; line-height: 20px; color: var(--ink-muted); margin: 0; text-wrap: pretty; }
+  .search { min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--control-border); background: var(--surface-100); font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; line-height: 20px; }
+  th { text-align: left; font-weight: 500; color: var(--ink-muted); font-size: 13px; line-height: 18px; padding: 8px 10px; }
+  th:first-child, td:first-child { padding-left: 0; } th:last-child, td:last-child { padding-right: 0; text-align: right; }
+  td { padding: 12px 10px; border-top: 1px solid var(--hairline); vertical-align: middle; }
+  td.muted { color: var(--ink-muted); }
+  .tablewrap { overflow-x: auto; }
+  .check { display: inline-flex; align-items: center; gap: 8px; min-height: 28px; font-size: 14px; }
+  .check input { width: 20px; height: 20px; margin: 0; accent-color: #8e2f3b; }
+  .check small { font-size: 13px; color: var(--ink-muted); }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field label { font-size: 13px; line-height: 16px; font-weight: 500; }
+  .field .lbl { display: flex; justify-content: space-between; align-items: baseline; }
+  .field input, .field select, .field textarea { min-height: 44px; padding: 0 14px; border-radius: var(--radius-sm); border: 1px solid var(--control-border); background: var(--surface-100); font-size: 15px; box-sizing: border-box; width: 100%; }
+  .field textarea { padding: 12px 14px; line-height: 22px; resize: vertical; min-height: 72px; }
+  .field .help { font-size: 13px; line-height: 18px; color: var(--ink-muted); text-wrap: pretty; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  @media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+  form.panel { display: flex; flex-direction: column; gap: 18px; padding: 24px; border-radius: var(--radius-md); background: var(--surface-200); min-width: 0; }
+  .drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 160px; border-radius: var(--radius-sm); border: 1.6px dashed var(--control-border); background: var(--surface-300); color: var(--ink); text-align: center; padding: 16px; cursor: pointer; position: relative; overflow: hidden; }
+  .drop:focus-visible { outline: 2px solid var(--wine-600); outline-offset: 2px; }
+  .drop b { font-size: 14px; line-height: 20px; color: var(--ink); font-weight: 500; }
+  .drop small { font-size: 13px; line-height: 18px; color: var(--ink); opacity: 0.78; }
+  .drop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .drop.row { flex-direction: row; min-height: 0; padding: 20px 24px; gap: 18px; border-radius: var(--radius-md); text-align: left; justify-content: flex-start; }
+  .drop.row .ico { width: 52px; height: 52px; border-radius: 999px; background: var(--wine-600); color: var(--on-wine); display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .drop.row b { font-size: 16px; line-height: 22px; }
+  .drop.row small { font-size: 13px; line-height: 18px; }
+  .preview-card { display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: var(--radius-md); background: var(--surface-200); box-shadow: 0 0 0 2px var(--wine-600); }
+  .preview-card .n { font-size: 18px; line-height: 24px; font-weight: 500; }
+  .preview-card .d { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .preview-card .p { font-size: 13px; line-height: 16px; color: var(--ink-muted); }
+  .facts3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 12px; line-height: 16px; }
+  .facts3 div { display: flex; flex-direction: column; gap: 2px; } .facts3 span { color: var(--ink-muted); } .facts3 b { font-weight: 500; }
+  .status { padding: 3px 10px; border-radius: 999px; font-size: 13px; line-height: 18px; background: var(--surface-100); color: var(--ink-muted); white-space: nowrap; }
+  .status.on { background: var(--wine-600); color: var(--on-wine); }
+  .prow { display: flex; gap: 16px; align-items: flex-start; padding: 18px 20px; border-radius: var(--radius-md); background: var(--surface-200); box-shadow: var(--shadow-card); }
+  .prow .ord { display: flex; flex-direction: column; gap: 4px; flex: 0 0 auto; }
+  .ib { width: 44px; height: 44px; flex: 0 0 auto; border-radius: var(--radius-sm); border: 1px solid var(--control-border); display: inline-flex; align-items: center; justify-content: center; }
+  .ib.sm { width: 40px; height: 40px; border-radius: 8px; } .ib.bare { border: 0; color: var(--ink-muted); }
+  .ib:disabled { opacity: 0.35; cursor: default; }
+  .prow .body { display: flex; flex-direction: column; gap: 6px; flex: 1 1 auto; min-width: 0; }
+  .prow .body .t { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 17px; line-height: 22px; font-weight: 500; }
+  .prow .body .l { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .prow .body .m { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+  .prow .body .m .chip { padding: 4px 10px; border-radius: 999px; background: var(--surface-100); color: var(--ink); }
+  .prow .act { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: 0 0 auto; }
+  .toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px 0 8px; border-radius: 999px; border: 1px solid var(--control-border); font-size: 14px; font-weight: 500; color: var(--ink-muted); }
+  .toggle[aria-checked="true"] { color: var(--ink); }
+  .toggle .trk { width: 36px; height: 22px; border-radius: 999px; background: var(--control-border); position: relative; display: inline-block; transition: background .2s; }
+  .toggle .trk::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left .2s; }
+  .toggle[aria-checked="true"] .trk { background: var(--wine-600); } .toggle[aria-checked="true"] .trk::after { left: 17px; }
+  .switch-wrap { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-muted); }
+  .switch { width: 52px; height: 32px; border-radius: 999px; background: var(--control-border); position: relative; display: inline-block; flex: 0 0 auto; }
+  .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 999px; background: #fff; transition: left .2s; }
+  .switch[aria-checked="true"] { background: var(--wine-600); } .switch[aria-checked="true"]::after { left: 23px; }
+  .rowline { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; }
+  .numin { display: inline-flex; align-items: center; gap: 6px; }
+  .numin input { width: 72px; min-height: 44px; padding: 0 10px; border-radius: var(--radius-sm); border: 1px solid var(--control-border); background: var(--surface-100); font-size: 15px; text-align: right; }
+  .numin span { font-size: 13px; color: var(--ink-muted); }
+  .vgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 560px) { .vgrid { grid-template-columns: 1fr; } }
+  .vcard { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: var(--radius-md); background: var(--surface-200); box-shadow: var(--shadow-card); min-width: 0; }
+  .vcard .ph { position: relative; height: 150px; border-radius: var(--radius-sm); overflow: hidden; background: #1e1819; }
+  .vcard .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .vcard .ph .play { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 999px; background: var(--wine-600); color: var(--on-wine); display: inline-flex; align-items: center; justify-content: center; }
+  .vcard .ph .dur { position: absolute; right: 8px; bottom: 8px; padding: 3px 8px; border-radius: 999px; background: rgba(30,24,25,0.7); color: #fff; font-size: 12px; line-height: 16px; }
+  .vcard .t { font-size: 15px; line-height: 20px; font-weight: 500; }
+  .vcard .m { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+  .vcard .m span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vcard .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .plist { display: flex; flex-direction: column; gap: 6px; }
+  .plist .it { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--surface-200); }
+  .plist .it .num { width: 24px; font-size: 12px; color: var(--ink-muted); }
+  .plist .it .t { flex: 1 1 auto; min-width: 0; font-size: 14px; line-height: 18px; overflow-wrap: anywhere; }
+  .plist .it .d { font-size: 13px; color: var(--ink-muted); white-space: nowrap; }
+  .upl { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-radius: var(--radius-md); background: var(--surface-200); }
+  .upl .body { display: flex; flex-direction: column; gap: 6px; flex: 1 1 auto; min-width: 0; }
+  .upl .body .t { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 20px; }
+  .upl .body .t b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .upl .body .t span { color: var(--ink-muted); flex: 0 0 auto; }
+  .ubar { height: 6px; border-radius: 999px; background: var(--rose-200); overflow: hidden; }
+  .ubar i { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--wine-600); transition: width .3s; }
+  .changes { display: flex; flex-direction: column; gap: 12px; }
+  .changes div { display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 20px; }
+  .changes small { font-size: 13px; color: var(--ink-muted); }
+  .plist-sm { display: flex; flex-direction: column; gap: 8px; }
+  .plist-sm div { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 20px; }
+  .plist-sm i { width: 8px; height: 8px; border-radius: 999px; border: 1.6px solid var(--wine-600); flex: 0 0 auto; }
+  .plist-sm i.on { background: var(--wine-600); }
+  .plist-sm span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .plist-sm small { font-size: 13px; color: var(--ink-muted); flex: 0 0 auto; }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--surface-100); padding: 10px 16px; border-radius: 999px; font-size: 14px; z-index: 50; box-shadow: var(--shadow-card); max-width: calc(100% - 32px); box-sizing: border-box; }
+  .toast.err { background: var(--wine-700); color: #fff; }
+  .gate { max-width: 560px; margin: 80px auto; display: flex; flex-direction: column; gap: 16px; text-align: center; align-items: center; }
+  .gate h1 { font-family: var(--font-display); font-weight: 500; font-size: 40px; line-height: 44px; margin: 0; }
+  .gate p { margin: 0; color: var(--ink-muted); }
+  .confirm { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--ink-muted); }
+  .pbandprev { display: flex; gap: 14px; padding: 18px; border-radius: 12px; background: var(--surface-200); border-top: 1px solid var(--hairline); }
+  .pbandprev .l { display: flex; flex-direction: column; gap: 6px; flex: 1 1 auto; min-width: 0; }
+  .pbandprev .l .e { font-size: 11px; line-height: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wine-600); }
+  .pbandprev .l .t { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 24px; text-transform: uppercase; }
+  .pbandprev .l .t em { font-style: normal; color: var(--wine-600); }
+  .pbandprev .l .d { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+  .pbandprev .l .v { font-size: 11px; line-height: 14px; color: var(--ink-muted); }
+  .pbandprev .r { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; flex: 0 0 110px; border-radius: var(--radius-sm); background: var(--surface-100); padding: 10px; text-align: center; }
+  .pbandprev .r .k { font-size: 11px; line-height: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+  .pbandprev .r .b { font-family: var(--font-display); font-weight: 600; font-size: 20px; line-height: 22px; color: var(--wine-600); max-width: 100%; overflow-wrap: anywhere; }
+  .pbandprev .r .b.long { font-size: 15px; line-height: 18px; }
+  @media (prefers-reduced-motion: reduce) { .bar > i, .pbar i, .ubar i, .toggle .trk, .toggle .trk::after, .switch, .switch::after { transition: none; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="adc-logo" viewBox="0 0 609.4 56.7"><g>
+<path d="M113,42.1c-2.4,5.2-7.6,8.9-13.8,8.9c-5.1,0-9.7-2.9-12.6-6.8c-0.6,1.7-1.5,3.3-2.5,4.8c3.1,4.3,9.2,7,15,7c8.4,0,15.7-5.3,18.6-12.7L113,42.1z"/>
+<path d="M99.2,15.9c-9.5,0-15.4,6.1-17.6,10.4c-1.3,2.5-1.9,5.1-2.5,9.6c-0.3,2.1-1.8,15-15.1,15c-9.6,0-15.3-8.1-15-15.4c0.4-11.2,10.6-14.8,14.8-14.7c5.9,0.2,9.2,2.6,11.2,4.8h2.8V0.6h-5V18c-11.4-6.1-28.6,1.3-28.8,18c-0.1,12.5,10,20,20.1,20c6.6,0,11.2-2.4,14.4-5.9c4.3-4.8,5.2-10.7,5.6-14.2c1.3-12.3,10.4-15,15.1-15c6.6,0,11.3,3.7,13.8,8.9l4.8-1.2C115,21,107.3,15.9,99.2,15.9"/>
+<path d="M20.4,20.9c7.2,0,13.4,5.1,14.9,12.1c0,0.2,0.1,0.7,0.1,0.7h5.1c0,0-0.1-0.8-0.2-1c-1.6-9.7-10-16.8-19.8-16.8c-11.1,0-20.1,9-20.1,20.1c0,11.1,9,20.1,20.1,20.1c5.7,0,12.3-2.6,15-7.3v5.7h4.9V38.3h-4.9L35.3,39c-1.4,7-7.6,12.1-14.8,12.1c-8.3,0-15.1-6.8-15.1-15.1C5.3,27.7,12.1,20.9,20.4,20.9"/>
+<path d="M201.7,41c0.6,2.6,2.4,4,5.5,4c3.3,0,4.6-1.5,4.6-3.5c0-2.2-1.1-3.3-5.5-4.4c-5.4-1.3-7.2-3.2-7.2-6.3c0-3.4,2.5-6.1,7.6-6.1c5.4,0,7.7,3.1,8,6.1h-3.4c-0.4-1.9-1.5-3.5-4.7-3.5c-2.6,0-4,1.1-4,3.2c0,2,1.2,2.8,5.1,3.7c6.4,1.5,7.6,4,7.6,6.9c0,3.7-2.8,6.5-8.3,6.5c-5.6,0-8.1-3-8.6-6.6L201.7,41L201.7,41z"/>
+<rect height="22.3" width="3.3" y="25" x="307.8"/>
+<path d="M336.4,40.8c-1,3.9-3.9,6.7-9,6.7c-6.8,0-10.1-5.1-10.1-11.4c0-6.1,3.4-11.6,10.2-11.6c5.4,0,8.3,3.1,8.9,6.8h-3.3c-0.7-2.3-2.3-4.1-5.7-4.1c-4.8,0-6.7,4.3-6.7,8.7c0,4.3,1.8,8.8,6.8,8.8c3.4,0,4.8-2,5.6-4L336.4,40.8L336.4,40.8z"/>
+<path d="M355.3,44.5h4.5c5.1,0,7.5-3.6,7.5-8.6c0-4.3-2.2-8.2-7.4-8.2h-4.5L355.3,44.5L355.3,44.5z M352,25h8.1c6.3,0,10.6,4.3,10.6,10.9c0,6.6-4.1,11.4-10.7,11.4h-8L352,25L352,25z"/>
+<path d="M439.3,38c0-4.1,0-8.3,0.1-10.7h-0.1c-1,3.8-4.3,13-6.8,20h-2.9c-1.9-5.8-5.3-16.1-6.3-20h-0.1c0.2,2.6,0.2,7.5,0.2,11.3v8.7h-3.1V24.9h4.9c2.4,6.7,5.3,15.4,6,18.3h0c0.5-2.3,4-11.7,6.4-18.3h4.8v22.3h-3.2L439.3,38L439.3,38z"/>
+<path d="M500.5,40.8c-1,3.9-3.9,6.7-9,6.7c-6.8,0-10.1-5.1-10.1-11.4c0-6.1,3.4-11.6,10.2-11.6c5.4,0,8.3,3.1,8.9,6.8h-3.3c-0.7-2.3-2.3-4.1-5.7-4.1c-4.8,0-6.7,4.3-6.7,8.7c0,4.3,1.8,8.8,6.8,8.8c3.4,0,4.8-2,5.6-4L500.5,40.8L500.5,40.8z"/>
+<path d="M527.3,47.3V24.9h4.3c3.1,5.2,9.8,15.9,11,18.3h0c-0.2-2.8-0.2-6.4-0.2-10v-8.3h3.1v22.3h-4.1c-2.8-4.8-9.8-16.4-11.2-18.9h0c0.2,2.4,0.2,6.4,0.2,10.4v8.5L527.3,47.3L527.3,47.3z"/>
+<path d="M165.6,25h-4.1l-7.9,22.3h3.3c0,0,6-17.8,6.5-19.7h0c0.5,1.8,1.6,4.9,3.7,10.5h-5l-0.9,2.8h6.6l2.4,6.4h3.5L165.6,25z"/>
+<path d="M459.6,25h-4.1l-7.9,22.3h3.3c0,0,6-17.8,6.5-19.7h0c0.5,1.8,1.6,4.9,3.7,10.5h-5l-0.9,2.8h6.6l2.4,6.4h3.5L459.6,25z"/>
+<polygon points="182,44.5 182,38.6 182,37 182,34.2 182,33 182,27.8 193.6,27.8 193.6,25 178.8,25 178.8,47.3 193.7,47.3 194.2,44.5"/><rect height="2.8" width="8.8" y="34.2" x="184.3"/>
+<polygon points="269.4,44.5 269.4,38.6 269.4,37 269.4,34.2 269.4,33 269.4,27.8 281,27.8 281,25 266.2,25 266.2,47.3 281.1,47.3 281.5,44.5"/><rect height="2.8" width="8.8" y="34.2" x="271.7"/>
+<polygon points="380.1,44.5 380.1,38.6 380.1,37 380.1,34.2 380.1,33 380.1,27.8 391.6,27.8 391.6,25 376.9,25 376.9,47.3 391.8,47.3 392.2,44.5"/><rect height="2.8" width="8.8" y="34.2" x="382.3"/>
+<polygon points="509.6,44.5 509.6,38.6 509.6,37 509.6,34.2 509.6,33 509.6,27.8 521.1,27.8 521.1,25 506.4,25 506.4,47.3 521.3,47.3 521.7,44.5"/><rect height="2.8" width="8.8" y="34.2" x="511.8"/>
+<polygon points="593.7,25 593.7,47.3 608.7,47.3 609.1,44.5 597,44.5 597,38.6 597,37 597,34.2 597,33 597,27.8 608.5,27.8 608.5,25"/><rect height="2.8" width="8.8" y="34.2" x="599.2"/>
+<path d="M413.4,42.9v-1c0-3.9-1.6-5.2-3.3-5.7c2-0.6,3.7-2.3,3.7-5.3c0-3.5-2.5-6-7.1-6h-8.9v22.3h3.3v-8.2v-1.5v-2.8v-2.6v-4.5h5c2.9,0,4.4,1.3,4.4,3.5c0,2.4-1.4,3.6-4.7,3.6h-2.5v2.8h2.1c3.9,0,4.8,1.3,4.8,4.4v0.5c0,2.1,0,3.9,0.4,4.8h3.2C413.3,46.3,413.4,44.4,413.4,42.9"/>
+<path d="M588.7,42.9v-1c0-3.9-1.6-5.2-3.3-5.7c2-0.6,3.7-2.3,3.7-5.3c0-3.5-2.5-6-7.1-6H573v22.3h3.3v-8.2v-1.5v-2.8v-2.6v-4.5h5c2.9,0,4.4,1.3,4.4,3.5c0,2.4-1.4,3.6-4.7,3.6h-2.5v2.8h2.1c3.9,0,4.8,1.3,4.8,4.4v0.5c0,2.1,0,3.9,0.4,4.8h3.2C588.6,46.3,588.7,44.4,588.7,42.9"/>
+<rect height="22.3" width="3.3" y="25" x="240.9"/><polygon points="255.3,25 255.3,34.2 246.5,34.2 246.5,37 255.3,37 255.3,47.3 258.6,47.3 258.6,25"/>
+<polygon points="229,25 218.5,25 218.5,27.8 225.7,27.8 225.7,47.3 229,47.3 229,34.8 229,27.8"/><rect height="2.8" width="4.9" y="25" x="231.2"/>
+<polygon points="295.9,25 285.4,25 285.4,27.8 292.5,27.8 292.5,47.3 295.9,47.3 295.9,34.8 295.9,27.8"/><rect height="2.8" width="4.9" y="25" x="298.1"/>
+<polygon points="561,25 550.5,25 550.5,27.8 557.6,27.8 557.6,47.3 561,47.3 561,34.8 561,27.8"/><rect height="2.8" width="4.9" y="25" x="563.2"/>
+</g></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M9 7v10l8-5z" fill="currentColor"/></symbol>
+<symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 10l5-3v10l-5-3z" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21 L4 13 A5.657 5.657 0 0 1 12 5 A5.657 5.657 0 0 1 20 13 Z" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6M4 20h16" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></g></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3c0 5-4 9-9 9 5 0 9 4 9 9 0-5 4-9 9-9-5 0-9-4-9-9z" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="8" cy="8" r="1.4" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-tablet" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 19h4" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-wa" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-3.9A8 8 0 1 1 8.2 19z"/><path d="M9.5 9.5c.3 2 2 3.7 4 4l1.2-1.2 2 1-.6 1.7c-3.6.3-7.5-3.5-7.8-7.1L10 7l1 2z"/></g></symbol>
+<symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-playing" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.5v7l5.5-3.5z" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+</svg>
+
+<!-- ================= KIOSK ================= -->
+<section id="kiosk" aria-label="Layar info perawatan">
+  <div id="stage">
+    <div id="zoneA">
+      <div id="kioskEmpty" class="kiosk-empty" hidden>
+        <svg class="logo" style="height:30px" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg>
+        <b>Layar belum berisi konten</b>
+        <span>Buka halaman admin, isi perawatan, promo dan video, lalu tekan "Publikasikan ke layar".</span>
+      </div>
+      <button id="saver" class="fill" aria-label="Sentuh layar untuk melihat perawatan" hidden>
+        <video id="saverVideo" muted autoplay playsinline preload="auto"></video>
+        <span class="saver-scrim"></span>
+        <span class="saver-logo"><svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg></span>
+        <span class="saver-text" id="saverText">
+          <span class="saver-meta"><span>Video penjelasan</span><span class="dot4"></span><span id="svNum">1 / 1</span><span class="ai-tag" id="svAi" hidden>Karakter virtual (AI)</span></span>
+          <span class="saver-title" id="svTitle"></span>
+          <span class="saver-desc" id="svDesc"></span>
+        </span>
+        <span class="saver-foot"><span class="dots" id="svDots"></span><span class="cta-pill">Sentuh layar untuk melihat perawatan</span></span>
+        <span class="edge-bar"><i id="svBar"></i></span>
+      </button>
+      <div id="player" class="fill" hidden>
+        <video id="playerVideo" playsinline preload="auto"></video>
+        <div class="player-top">
+          <span class="player-badge"><svg width="18" height="18"><use href="#i-playing"/></svg><span id="plBadge">Sedang diputar</span></span>
+          <span class="player-hint" id="plHint">Ketuk gambar untuk jeda</span>
+          <button class="player-close" id="plClose" aria-label="Tutup video"><svg width="18" height="18"><use href="#i-x"/></svg><span>Tutup</span></button>
+        </div>
+        <div class="player-bottom">
+          <div class="player-title" id="plTitle"></div>
+          <div class="player-desc" id="plDesc"></div>
+          <span class="ai-tag" id="plAi" hidden>Karakter virtual (AI)</span>
+        </div>
+        <span class="edge-bar"><i id="plBar"></i></span>
+      </div>
+      <div id="dash" hidden></div>
+    </div>
+    <div id="zoneB" hidden></div>
+  </div>
+  <span class="status-pill" id="kStatus" data-state="connecting" hidden>Menghubungkan…</span>
+</section>
+
+<!-- ================= ADMIN ================= -->
+<section id="admin" hidden>
+  <aside class="side">
+    <div class="brand"><svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg><span class="eyebrow">Admin layar klinik</span></div>
+    <nav aria-label="Menu admin">
+      <a href="#admin" data-tab="ringkasan"><svg width="18" height="18"><use href="#i-grid"/></svg><span>Ringkasan</span></a>
+      <a href="#perawatan" data-tab="perawatan"><svg width="18" height="18"><use href="#i-spark"/></svg><span>Perawatan</span></a>
+      <a href="#promo" data-tab="promo"><svg width="18" height="18"><use href="#i-tag"/></svg><span>Promo</span></a>
+      <a href="#video" data-tab="video"><svg width="18" height="18"><use href="#i-video"/></svg><span>Video &amp; screen saver</span></a>
+      <a href="#kiosk"><svg width="18" height="18"><use href="#i-tablet"/></svg><span>Pratinjau layar</span></a>
+    </nav>
+    <div class="who">
+      <div class="row"><img class="avatar" id="meAvatar" alt="" hidden><span class="avatar" id="meInit">·</span><span><span id="meName" style="font-size:14px;font-weight:500">Memuat…</span><small id="meRole"></small></span></div>
+    </div>
+  </aside>
+  <main class="main" id="adminMain">
+    <div class="gate" id="gate" hidden>
+      <svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg>
+      <h1>Halaman admin hanya untuk editor</h1>
+      <p id="gateMsg">Akun ini tidak memiliki hak mengubah layar. Minta akses Editor dari menu Share halaman ini, lalu muat ulang.</p>
+      <a class="btn outline" href="#kiosk">Buka layar</a>
+    </div>
+    <div id="adminBody" hidden>
+      <div class="phead">
+        <div class="l"><h1 id="phTitle">Ringkasan</h1><span class="subtitle" id="phEyebrow">Layar ruang tunggu</span></div>
+        <div class="r"><span class="pub-state" id="pubState">Memuat…</span><button class="btn solid" id="btnPublish"><svg width="18" height="18"><use href="#i-check"/></svg><span>Publikasikan ke layar</span></button><span class="confirm pub-confirm" id="pubConfirm" hidden><span id="pubConfirmText"></span><button type="button" class="btn solid sm" id="pubYes">Ya, tayangkan</button><button type="button" class="btn quiet sm" id="pubNo">Batal</button></span></div>
+      </div>
+
+      <!-- Ringkasan -->
+      <div id="tab-ringkasan" class="tab" style="display:flex;flex-direction:column;gap:24px">
+        <div class="tiles" id="tiles"></div>
+        <div class="cols">
+          <section class="card wide" style="padding-bottom:8px">
+            <div class="hd"><h2>Perawatan</h2><div style="display:flex;gap:8px;align-items:center"><label for="cari" class="sr">Cari perawatan</label><input id="cari" class="search" type="search" placeholder="Cari perawatan"><button class="btn outline" style="padding:0 16px;font-size:14px" id="btnNewTreat"><svg width="16" height="16"><use href="#i-plus"/></svg><span>Tambah</span></button></div></div>
+            <div class="tablewrap" id="treatTable"></div>
+            <button class="link" id="btnAllTreat" style="align-self:flex-start;padding:10px 0 12px;font-size:14px">Lihat semua perawatan</button>
+          </section>
+          <div class="narrow">
+            <section class="card"><div class="hd"><h2>Band promo</h2><a class="link" href="#promo">Kelola</a></div><div class="plist-sm" id="promoMini"></div><p class="note" id="promoMiniNote"></p></section>
+            <section class="card lined"><h2>Perubahan terakhir</h2><div class="changes" id="changes"></div></section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perawatan -->
+      <div id="tab-perawatan" class="tab" hidden>
+        <div class="cols">
+          <form class="panel wide" id="treatForm" autocomplete="off">
+            <div class="hd" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0;font-size:18px;font-weight:500" id="tfTitle">Perawatan baru</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn quiet" id="tfCancel">Batal</button><button type="submit" class="btn outline" id="tfSave">Simpan draf</button></div></div>
+            <div class="grid2">
+              <div class="field"><label for="tfName">Nama perawatan</label><input id="tfName" type="text" required maxlength="60"></div>
+              <div class="field"><label for="tfCat">Kategori (sesuai menu website)</label><select id="tfCat"></select></div>
+            </div>
+            <div class="field"><div class="lbl"><label for="tfDesc">Deskripsi singkat (tampil di kartu)</label><span class="help tnum" id="tfDescLen">0 / 120</span></div><textarea id="tfDesc" rows="2" maxlength="120"></textarea><span class="help">Tanpa kata "sembuh", "terbaik", "dijamin" atau perbandingan dengan klinik lain. Nada tenang, satu kalimat.</span></div>
+            <div class="grid2">
+              <div class="field"><label for="tfPrice">Harga mulai dari</label><input id="tfPrice" type="text" placeholder="Rp… atau kosongkan untuk 'Tanya resepsionis'"></div>
+              <div class="field"><label for="tfSessions">Jumlah sesi</label><input id="tfSessions" type="text" placeholder="Kosongkan = ditentukan dokter"></div>
+              <div class="field"><label for="tfDuration">Durasi tindakan</label><input id="tfDuration" type="text" placeholder="Kosongkan = ditentukan dokter"></div>
+              <div class="field"><label for="tfDowntime">Downtime</label><input id="tfDowntime" type="text" placeholder="Kosongkan = ditentukan dokter"></div>
+            </div>
+            <div class="field"><label for="tfAfter">Setelah perawatan</label><textarea id="tfAfter" rows="2" placeholder="Kosongkan = mengikuti anjuran dokter setelah tindakan"></textarea></div>
+            <div class="field"><label for="tfConcerns">Untuk keluhan apa (sesuai halaman website)</label><input id="tfConcerns" type="text"><span class="help">Hanya klaim yang ada di website atau daftar perawatan resmi.</span></div>
+            <div class="grid2">
+              <div class="field"><label for="tfVideo">Video penjelasan</label><select id="tfVideo"></select><a class="link" href="#video">Unggah video baru</a></div>
+              <div class="field"><label>Foto perawatan</label><label class="drop" for="tfPhoto" id="tfPhotoDrop"><img id="tfPhotoImg" alt="" hidden><svg width="28" height="28"><use href="#i-upload"/></svg><b>Pilih foto</b><small>JPG atau PNG, rasio 16:9, maks. 5 MB</small></label><input id="tfPhoto" class="sr" type="file" accept="image/png,image/jpeg,image/webp"><button type="button" class="link muted" id="tfPhotoRemove" hidden>Hapus foto</button></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><label class="check"><input type="checkbox" id="tfShow" checked><span>Tampil di layar</span></label><span class="confirm" id="tfDeleteWrap" hidden><button type="button" class="link muted" id="tfDelete">Hapus perawatan</button><span id="tfDeleteConfirm" hidden>Yakin? <button type="button" class="link" id="tfDeleteYes">Ya, hapus</button> · <button type="button" class="link muted" id="tfDeleteNo">Batal</button></span></span></div>
+          </form>
+          <div class="narrow">
+            <section class="card lined"><h3>Pratinjau kartu di layar</h3><div class="preview-card" id="tfPreview"></div><div class="facts3" id="tfFacts"></div><span class="note" id="tfCatNote"></span></section>
+            <section class="card"><div class="hd"><h2>Semua perawatan</h2><span class="note" id="treatCount"></span></div><div class="plist" id="treatList"></div></section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Promo -->
+      <div id="tab-promo" class="tab" hidden>
+        <div class="cols">
+          <section class="wide" style="display:flex;flex-direction:column;gap:12px">
+            <div class="hd" style="display:flex;justify-content:space-between;padding:0 4px"><h2 style="margin:0;font-size:18px;font-weight:500">Daftar promo</h2><span class="note">Urutan = urutan slide di band</span></div>
+            <div id="promoList" style="display:flex;flex-direction:column;gap:12px"></div>
+            <p class="note" style="margin:4px 4px 0">Promo medis ditulis sebagai paket, bonus atau voucher. Tanpa coretan harga dan tanpa kata mendesak ("buruan", "sekarang juga").</p>
+          </section>
+          <div class="narrow">
+            <form class="panel" id="promoForm" autocomplete="off" style="gap:14px">
+              <div class="hd" style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:18px;font-weight:500" id="pfTitle">Tambah promo</h2><button type="button" class="link muted" id="pfCancel" hidden>Batal</button></div>
+              <div class="field"><label for="pfTitleIn">Judul</label><input id="pfTitleIn" type="text" required maxlength="40" placeholder="mis. Paket Hair Loss"></div>
+              <div class="field"><label for="pfAccent">Bagian judul berwarna (opsional)</label><input id="pfAccent" type="text" maxlength="40" placeholder="mis. + skinbooster gratis"></div>
+              <div class="grid2" style="gap:12px">
+                <div class="field"><label for="pfKind">Jenis</label><select id="pfKind"><option value="Paket">Paket</option><option value="Bonus">Bonus / gratis</option><option value="Voucher">Voucher</option><option value="Produk">Produk skincare</option></select></div>
+                <div class="field"><label for="pfValue">Nilai / harga paket</label><input id="pfValue" type="text" maxlength="14" placeholder="Rp… atau Gratis"></div>
+              </div>
+              <div class="field"><label for="pfValueNote">Keterangan nilai</label><input id="pfValueNote" type="text" maxlength="40" placeholder="mis. 6 sesi + Signature Facial"></div>
+              <div class="field"><label for="pfLede">Mekanisme (satu kalimat)</label><textarea id="pfLede" rows="2" maxlength="160"></textarea></div>
+              <div class="grid2" style="gap:12px">
+                <div class="field"><label for="pfFrom">Berlaku dari</label><input id="pfFrom" type="date"></div>
+                <div class="field"><label for="pfTo">Sampai</label><input id="pfTo" type="date"></div>
+              </div>
+              <div class="field"><label for="pfEyebrow">Label kecil di atas judul</label><input id="pfEyebrow" type="text" maxlength="30" placeholder="mis. Promo Oktober"></div>
+              <div class="field"><label for="pfChip">Perawatan terkait</label><select id="pfChip"></select></div>
+              <label class="check"><input type="checkbox" id="pfLive" checked><span>Tayang di band promo setelah dipublikasikan</span></label>
+              <button type="submit" class="btn outline" id="pfSave"><svg width="16" height="16"><use href="#i-plus"/></svg><span>Tambah ke daftar</span></button>
+              <span class="confirm" id="pfDeleteWrap" hidden><button type="button" class="link muted" id="pfDelete">Hapus promo</button><span id="pfDeleteConfirm" hidden>Hapus promo ini dari daftar? <button type="button" class="link" id="pfDeleteYes">Ya, hapus</button> · <button type="button" class="link muted" id="pfDeleteNo">Batal</button></span></span>
+            </form>
+            <section class="card lined"><h3>Pratinjau slide di band</h3><div class="pbandprev" id="pfPreview"></div></section>
+            <section class="card lined" style="gap:12px">
+              <h3>Pengaturan band promo</h3>
+              <div class="rowline"><label for="setSlide">Durasi per slide</label><span class="numin"><input id="setSlide" type="number" min="3" max="60"><span>detik</span></span></div>
+              <label class="check"><input type="checkbox" id="setHide"><span>Sembunyikan band saat tidak ada promo aktif</span></label>
+              <label class="check"><input type="checkbox" id="setHold"><span>Jeda 20 detik saat pasien menyentuh slide</span></label>
+              <span class="note">Band promo berjalan terpisah dari zona utama: tetap berganti saat video screen saver maupun saat pasien membuka daftar perawatan.</span>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video -->
+      <div id="tab-video" class="tab" hidden>
+        <div class="cols">
+          <section class="wide" style="display:flex;flex-direction:column;gap:16px">
+            <label class="drop row" for="vUpload" id="vDrop"><span class="ico"><svg width="24" height="24"><use href="#i-upload"/></svg></span><span style="display:flex;flex-direction:column;gap:4px"><b>Seret video ke sini atau pilih berkas</b><small>MP4 (H.264) · video 9:16 (1080×1920) tampil utuh dengan bingkai gelap di kiri–kanan; 16:9 tampil dengan bingkai atas–bawah · maks. 20 MB per berkas · tanpa suara di ruang tunggu</small></span></label>
+            <input id="vUpload" class="sr" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.mov,.webm">
+            <div class="upl" id="uplRow" hidden><svg width="22" height="22" style="color:var(--wine-600);flex:0 0 auto"><use href="#i-video"/></svg><div class="body"><div class="t"><b id="uplName"></b><span class="tnum" id="uplPct"></span></div><div class="ubar"><i id="uplBar"></i></div><span class="note" id="uplStage"></span></div></div>
+            <div class="hd" style="display:flex;justify-content:space-between;align-items:center;padding:4px 4px 0"><h2 style="margin:0;font-size:18px;font-weight:500">Pustaka video</h2><span class="note" id="vCount"></span></div>
+            <div class="vgrid" id="vGrid"></div>
+            <p class="note" style="margin:0 4px">Video dengan karakter Elle memakai label "Karakter virtual (AI)" di layar. Video tidak menyebut harga promo dan tidak menampilkan foto sebelum–sesudah.</p>
+          </section>
+          <div class="narrow">
+            <section class="card">
+              <div class="hd"><h2>Mode screen saver</h2><span class="switch-wrap"><span id="setSaverLabel">Aktif</span><button class="switch" id="setSaver" role="switch" aria-checked="true" aria-label="Putar video saat layar tidak digunakan"></button></span></div>
+              <span class="note" style="font-size:13px;line-height:18px">Saat tidak ada sentuhan, zona utama memutar video berikut bergantian. Band promo di bawahnya tetap berjalan sendiri.</span>
+              <div class="rowline"><label for="setIdle">Mulai setelah tidak disentuh</label><span class="numin"><input id="setIdle" type="number" min="1" max="30"><span>menit</span></span></div>
+              <label class="check"><input type="checkbox" id="setSound"><span>Suara (mati untuk ruang tunggu)</span></label>
+              <label class="check"><input type="checkbox" id="setTitles"><span>Tampilkan judul dan deskripsi di atas video 16:9</span></label>
+              <span class="note" style="font-size:13px;line-height:18px">Video 9:16 selalu tampil utuh tanpa teks tambahan: judul, label AI, dan subtitelnya sudah ada di dalam videonya.</span>
+            </section>
+            <section class="card lined" style="gap:12px">
+              <div class="hd"><h3>Urutan putar</h3><span class="note" id="plInfo"></span></div>
+              <div class="plist" id="playlist"></div>
+              <span class="note">Tambahkan video dari pustaka dengan tombol "Ke urutan putar".</span>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<script>
+(() => {
+'use strict';
+const CATS = ['Laser','Facial','Hair','Injectables','Microneedling','Body Health','Contouring & Face Lifting','Body Contouring','Intima','Blepharoplasty'];
+const BANNED = ['sembuh','terbaik','dijamin','garansi','buruan','sekarang juga','segera','terbatas','permanen','nomor 1','no. 1','#1','paling'];
+const DEFAULT_SETTINGS = { idleMin: 2, slideSecs: 8, hideBandWhenEmpty: true, holdOnTouch: true, saverOn: true, sound: false, showTitles: true, playlist: [] };
+const WA_NUMBER = '0821-3014-4778';
+const DD = 'Ditentukan dokter', AD = 'Mengikuti anjuran dokter setelah tindakan.';
+const $ = (s, r) => (r || document).querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const blob = (id) => id ? '/_blob/' + id : '';
+const fmtDur = (s) => { s = Math.round(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); };
+const MON = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const fmtDate = (iso) => { if (!iso) return ''; const p = iso.split('-'); return (parseInt(p[2], 10) || '') + ' ' + (MON[parseInt(p[1], 10) - 1] || '') + ' ' + p[0]; };
+const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); };
+const fmtWhen = (iso) => { if (!iso) return ''; const d = new Date(iso); return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'); };
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+const use = (n) => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(n).catch(() => null) : Promise.resolve(null);
+const priceLine = (p) => p && p.trim() ? 'Mulai dari ' + p.trim() : 'Harga: tanya resepsionis';
+const or = (v, d) => v && String(v).trim() ? String(v).trim() : d;
+const validity = (p) => { const f = p.from, t = p.to; if (f && t) return 'Berlaku ' + fmtDate(f) + ' – ' + fmtDate(t); if (f) return 'Mulai ' + fmtDate(f); if (t) return 'Berlaku sampai ' + fmtDate(t); return 'Berlaku sepanjang tahun'; };
+const promoState = (p, today) => { today = today || todayISO(); if (!p.live) return 'Tidak tayang'; if (p.from && p.from > today) return 'Terjadwal'; if (p.to && p.to < today) return 'Berakhir'; return 'Aktif'; };
+const KIND_LABEL = { Paket: 'Paket perawatan', Bonus: 'Promo bulan ini', Voucher: 'Voucher', Produk: 'Produk skincare' };
+const VALUE_LABEL = { Paket: 'Harga paket', Bonus: 'Bonus', Voucher: 'Voucher', Produk: 'Produk' };
+const bannedIn = (text) => { const t = ' ' + String(text || '').toLowerCase() + ' '; return BANNED.filter((w) => t.indexOf(w) >= 0); };
+
+let db = null, userNs = null, assets = null, me = null, canEdit = false;
+const S = { route: 'kiosk', tab: 'ringkasan', live: null, treatments: [], promos: [], videos: [], settings: Object.assign({}, DEFAULT_SETTINGS), log: [], ready: false, dbState: 'connecting' };
+let toastT = null;
+function toast(msg, err) { let t = $('#toast'); if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); document.body.appendChild(t); } t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, err ? 6000 : 2600); }
+
+/* ---------------- routing ---------------- */
+const ADMIN_TABS = { admin: 'ringkasan', perawatan: 'perawatan', promo: 'promo', video: 'video' };
+function route() {
+  const h = (location.hash || '#kiosk').replace('#', '');
+  const isAdmin = Object.prototype.hasOwnProperty.call(ADMIN_TABS, h);
+  S.route = isAdmin ? 'admin' : 'kiosk';
+  if (isAdmin) S.tab = ADMIN_TABS[h];
+  document.body.classList.toggle('route-admin', isAdmin);
+  $('#kiosk').hidden = isAdmin; $('#admin').hidden = !isAdmin;
+  if (isAdmin) { Kiosk.stop(); Admin.show(); } else { Kiosk.start(); }
+}
+window.addEventListener('hashchange', route);
+
+/* ---------------- KIOSK ---------------- */
+const Kiosk = (() => {
+  const K = { on: false, mode: 'saver', clip: 0, promo: 0, promoT: 0, hold: 0, cat: null, sel: null, lastTouch: Date.now(), timer: null, actives: [], activeKey: '', failed: new Set() };
+  const stage = $('#stage'), zoneA = $('#zoneA'), zoneB = $('#zoneB'), saver = $('#saver'), sv = $('#saverVideo'), player = $('#player'), pv = $('#playerVideo'), dash = $('#dash');
+  function fit() { const sc = Math.min(window.innerWidth / 1080, window.innerHeight / 1920); stage.style.transform = 'scale(' + sc + ')'; stage.style.left = Math.max(0, (window.innerWidth - 1080 * sc) / 2) + 'px'; stage.style.top = Math.max(0, (window.innerHeight - 1920 * sc) / 2) + 'px'; }
+  window.addEventListener('resize', fit);
+  const live = () => S.live || { treatments: [], promos: [], videos: [], settings: DEFAULT_SETTINGS };
+  const settings = () => Object.assign({}, DEFAULT_SETTINGS, live().settings || {});
+  const vid = (id) => live().videos.find((v) => v.id === id);
+  const playlist = () => (settings().playlist || []).map(vid).filter((v) => v && v.asset && !K.failed.has(v.id));
+  const visibleTreats = () => live().treatments.filter((t) => t.show !== false);
+  const catsWith = () => CATS.filter((c) => visibleTreats().some((t) => t.cat === c));
+
+  function start() { if (K.on) return; K.on = true; fit(); K.lastTouch = Date.now(); K.decided = false; render(); K.timer = setInterval(tick, 1000); }
+  function stop() { K.on = false; clearInterval(K.timer); try { sv.pause(); pv.pause(); } catch (e) {} sv.removeAttribute('src'); pv.removeAttribute('src'); }
+  const canSave = () => settings().saverOn !== false && playlist().length > 0;
+
+  function touch() { K.lastTouch = Date.now(); }
+  stage.addEventListener('pointerdown', touch, { capture: true, passive: true });
+
+  function tick() {
+    if (!K.on) return;
+    const st = settings();
+    if (K.mode !== 'saver' && canSave() && Date.now() - K.lastTouch > (st.idleMin || 2) * 60000) { setMode('saver'); }
+    const clk = $('#kClock'); if (clk) { const n = new Date(); clk.querySelector('b').textContent = n.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'); clk.querySelector('span').textContent = n.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
+    // promo band
+    const acts = K.actives; if (acts.length > 1) {
+      if (K.hold > 0) K.hold--; else { K.promoT++; if (K.promoT >= (st.slideSecs || 8)) { K.promo = (K.promo + 1) % acts.length; K.promoT = 0; renderBand(); } }
+      const b = $('#pBar'); if (b) b.style.width = Math.min(100, Math.round(K.promoT / (st.slideSecs || 8) * 100)) + '%';
+    }
+  }
+  function setMode(m) { if (K.mode === m) return; K.mode = m; render(); }
+
+  function render() {
+    if (!K.on) return;
+    const hasLive = !!S.live && (live().treatments.length || live().videos.length || live().promos.length);
+    $('#kioskEmpty').hidden = !!hasLive;
+    $('#kStatus').hidden = !!hasLive;
+    if (!hasLive) { saver.hidden = true; player.hidden = true; dash.hidden = true; renderBand(); return; }
+    if (!K.decided) { K.decided = true; K.mode = canSave() ? 'saver' : 'dash'; }
+    if (K.mode === 'saver' && !canSave()) K.mode = 'dash';
+    saver.hidden = K.mode !== 'saver'; player.hidden = K.mode !== 'player'; dash.hidden = K.mode !== 'dash';
+    if (K.mode === 'saver') renderSaver(); else { try { sv.pause(); } catch (e) {} }
+    if (K.mode === 'dash') renderDash();
+    if (K.mode !== 'player') { try { pv.pause(); } catch (e) {} }
+    renderBand();
+  }
+
+  /* --- video fit: a portrait clip shows whole, with no overlay text (it carries its own title, AI label and subtitles); a landscape clip is letterboxed and gets the title overlay when the admin wants it --- */
+  function isPortrait(el, v) {
+    if (el.videoWidth && el.videoHeight) return el.videoHeight > el.videoWidth;
+    const r = v && v.ratio || ''; if (r === '9:16') return true; if (r === '16:9') return false;
+    const m = r.match(/^(\d+)×(\d+)$/); return m ? parseInt(m[2], 10) > parseInt(m[1], 10) : true;
+  }
+  function applyFit(el, box, v) { box.classList.toggle('whole', isPortrait(el, v) || settings().showTitles === false); }
+
+  /* --- screen saver --- */
+  function renderSaver() {
+    const pl = playlist(); if (!pl.length) return;
+    if (K.clip >= pl.length) K.clip = 0;
+    const v = pl[K.clip], st = settings(); K.saverClip = v;
+    $('#svNum').textContent = (K.clip + 1) + ' / ' + pl.length;
+    $('#svAi').hidden = !v.ai;
+    $('#svTitle').textContent = v.title || ''; $('#svDesc').textContent = v.desc || '';
+    $('#svDots').innerHTML = pl.map((_, i) => '<i class="' + (i === K.clip ? 'on' : '') + '"></i>').join('');
+    $('#svBar').style.width = '0%';
+    const src = blob(v.asset);
+    if (sv.getAttribute('data-src') !== src) { sv.setAttribute('data-src', src); sv.poster = blob(v.poster); sv.src = src; }
+    applyFit(sv, saver, v);
+    sv.muted = !st.sound; sv.loop = pl.length === 1;
+    const p = sv.play(); if (p && p.catch) p.catch(() => { sv.muted = true; sv.play().catch(() => {}); });
+  }
+  sv.addEventListener('loadedmetadata', () => applyFit(sv, saver, K.saverClip));
+  sv.addEventListener('timeupdate', () => { if (sv.duration) $('#svBar').style.width = Math.min(100, sv.currentTime / sv.duration * 100) + '%'; });
+  sv.addEventListener('ended', () => { const pl = playlist(); if (!pl.length) return; K.clip = (K.clip + 1) % pl.length; if (K.clip === 0) K.failed.clear(); renderSaver(); });
+  sv.addEventListener('error', () => { if (K.saverClip) K.failed.add(K.saverClip.id); sv.removeAttribute('data-src'); const pl = playlist(); if (!pl.length) { setMode('dash'); return; } K.clip = K.clip % pl.length; setTimeout(renderSaver, 800); });
+  saver.addEventListener('click', () => { touch(); setMode('dash'); });
+
+  /* --- dashboard --- */
+  function renderDash() {
+    const cats = catsWith(); if (!cats.length) { dash.innerHTML = '<div class="kiosk-empty" style="position:relative;flex:1"><b>Belum ada perawatan yang tampil</b><span>Aktifkan "Tampil di layar" pada perawatan di halaman admin, lalu publikasikan.</span></div>'; return; }
+    if (!cats.includes(K.cat)) K.cat = cats[0];
+    const items = visibleTreats().filter((t) => t.cat === K.cat);
+    if (!items.some((t) => t.id === K.sel)) K.sel = items[0] ? items[0].id : null;
+    const sel = items.find((t) => t.id === K.sel) || items[0];
+    const v = sel && sel.video ? vid(sel.video) : null;
+    const n = new Date();
+    let h = '<div class="dash-head"><div style="display:flex;flex-direction:column;gap:10px"><svg class="logo" style="height:30px" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg><h1>Info <em>Perawatan</em></h1><p>Treat Your Skin Kindly. Sentuh perawatan untuk melihat penjelasan dan videonya.</p></div><div class="clock" id="kClock"><b class="tnum">' + n.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.') + '</b><span>' + esc(n.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) + '</span></div></div>';
+    h += '<div class="cats">' + cats.map((c) => '<button data-cat="' + esc(c) + '" class="' + (c === K.cat ? 'on' : '') + '">' + esc(c) + '</button>').join('') + '</div>';
+    if (sel) {
+      const facts = [['Sesi', sel.sessions], ['Durasi', sel.duration], ['Downtime', sel.downtime]];
+      const filled = facts.filter((f) => f[1] && String(f[1]).trim()), missing = facts.filter((f) => !(f[1] && String(f[1]).trim())).map((f) => f[0]);
+      const listId = (a) => a.length === 1 ? a[0] : a.length === 2 ? a[0] + ' dan ' + a[1].toLowerCase() : a[0] + ', ' + a[1].toLowerCase() + ', dan ' + a[2].toLowerCase();
+      const hasVideo = !!(v && v.asset), price = or(sel.price, '');
+      h += '<section class="hero" aria-label="Perawatan terpilih"><div class="hero-main">'
+        + '<div class="hero-top"><h2' + (sel.name.length > 28 ? ' class="long"' : '') + '>' + esc(sel.name) + '</h2></div>'
+        + (price ? '<div class="hero-price"><span>Mulai dari</span><b class="tnum">' + esc(price) + '</b></div>' : '<div class="hero-price ask"><b>Harga: tanya resepsionis</b></div>')
+        + (sel.concerns ? '<p class="hero-concerns"><b>Untuk keluhan: </b>' + esc(sel.concerns) + '</p>' : '')
+        + (filled.length ? '<dl class="hero-facts">' + filled.map((f) => '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>').join('') + '</dl>' : '')
+        + (missing.length ? '<p class="hero-note">' + listId(missing) + ' ditentukan dokter saat konsultasi.</p>' : '')
+        + '<p class="hero-after"><b>Setelah perawatan: </b>' + esc(or(sel.after, AD)) + '</p>'
+        + (hasVideo ? '' : '<p class="hero-note">Belum ada video untuk perawatan ini. Dokter kami menjelaskannya langsung saat konsultasi.</p>')
+        + '</div>'
+        + (hasVideo ? '<button class="hero-video" data-act="play" aria-label="Putar video penjelasan"><span class="vthumb"><img src="' + esc(blob(v.poster)) + '" alt=""><span class="play"><svg width="30" height="30"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + '</span></span><span class="hero-vt">' + esc(v.title) + '</span><span class="hero-vm">Video penjelasan' + (v.ai ? ' · Karakter virtual (AI)' : '') + '</span></button>' : '')
+        + '</section>';
+    }
+    h += '<div class="tgrid">' + items.map((t) => '<button class="tcard ' + (t.id === sel.id ? 'on' : '') + '" data-sel="' + esc(t.id) + '">' + (t.photo ? '<img src="' + esc(blob(t.photo)) + '" alt="">' : '') + '<span class="n">' + esc(t.name) + '</span><span class="d">' + esc(t.desc) + '</span><span class="p tnum">' + esc(priceLine(t.price)) + '</span></button>').join('') + '</div>';
+    h += '<div class="dfoot"><div class="row"><span class="wa"><svg width="20" height="20"><use href="#i-wa"/></svg><span>Tanya &amp; buat janji · WA ' + WA_NUMBER + '</span></span>' + (canSave() ? '<button class="ghost" data-act="sleep">Kembali ke video</button>' : '') + '<span class="hours">Sen–Jum 09.00–20.00 · Sab 09.00–18.00<br>Jl. Ir. H. Juanda No. 88, Bandung</span></div><p class="legal">Harga adalah perkiraan untuk perawatan standar dan dapat berbeda sesuai area. Hasil setiap pasien dapat berbeda tergantung kondisi masing-masing. Konsultasikan dengan dokter kami.</p></div>';
+    dash.innerHTML = h;
+  }
+  dash.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return; touch();
+    if (b.dataset.cat) { K.cat = b.dataset.cat; K.sel = null; renderDash(); }
+    else if (b.dataset.sel) { K.sel = b.dataset.sel; renderDash(); }
+    else if (b.dataset.act === 'play') openPlayer();
+    else if (b.dataset.act === 'sleep') setMode('saver');
+  });
+
+  /* --- player --- */
+  function openPlayer() {
+    const sel = live().treatments.find((t) => t.id === K.sel); const v = sel && sel.video ? vid(sel.video) : null; if (!v || !v.asset) return;
+    $('#plTitle').textContent = v.title || ''; $('#plDesc').textContent = v.desc || ''; $('#plAi').hidden = !v.ai; $('#plBadge').textContent = 'Sedang diputar · ' + fmtDur(v.dur); $('#plBar').style.width = '0%';
+    K.playerClip = v; pv.poster = blob(v.poster); pv.src = blob(v.asset); pv.muted = !settings().sound; applyFit(pv, player, v);
+    setMode('player');
+    const p = pv.play(); if (p && p.catch) p.catch(() => { pv.muted = true; pv.play().catch(() => {}); });
+  }
+  pv.addEventListener('loadedmetadata', () => applyFit(pv, player, K.playerClip));
+  pv.addEventListener('timeupdate', () => { if (pv.duration) $('#plBar').style.width = Math.min(100, pv.currentTime / pv.duration * 100) + '%'; });
+  pv.addEventListener('ended', () => { touch(); setMode('dash'); });
+  pv.addEventListener('error', () => { if (K.playerClip) K.failed.add(K.playerClip.id); touch(); setMode('dash'); });
+  // tap the picture to pause and resume; the badge says which
+  pv.addEventListener('click', () => { touch(); if (pv.paused) { const p = pv.play(); if (p && p.catch) p.catch(() => {}); } else pv.pause(); });
+  const badge = () => { const d = K.playerClip ? fmtDur(K.playerClip.dur) : ''; const paused = pv.paused && !pv.ended; $('#plBadge').textContent = (paused ? 'Dijeda · ' : 'Sedang diputar · ') + d; $('#plHint').textContent = paused ? 'Ketuk gambar untuk lanjut' : 'Ketuk gambar untuk jeda'; };
+  pv.addEventListener('pause', badge); pv.addEventListener('play', badge);
+  $('#plClose').addEventListener('click', () => { touch(); setMode('dash'); });
+
+  /* --- promo band (zone B) --- */
+  function computeActives() { const today = todayISO(); return (live().promos || []).filter((p) => promoState(p, today) === 'Aktif').sort((a, b) => (a.order || 0) - (b.order || 0)); }
+  function renderBand() {
+    const st = settings(); const acts = computeActives(); const key = acts.map((p) => p.id).join('|');
+    if (key !== K.activeKey) { K.activeKey = key; K.actives = acts; if (K.promo >= acts.length) { K.promo = 0; K.promoT = 0; } }
+    const show = acts.length > 0 || st.hideBandWhenEmpty === false;
+    zoneB.hidden = !show; if (!show) return;
+    const p = acts[K.promo];
+    if (!p) { zoneB.innerHTML = '<div class="pleft"><div class="peyebrow"><svg width="16" height="16"><use href="#i-heart"/></svg><span>Program klinik</span></div><div class="ptitlewrap"><i></i><h2>Tanya program <em>bulan ini</em></h2></div><p class="plede">Resepsionis kami dengan senang hati menjelaskan paket dan program perawatan yang sedang berjalan.</p></div><div class="pvalue"><span class="eyebrow">Informasi</span><span class="big">ADC</span><span class="note">Aesthetic Derma Centre</span><span class="ask">Tanya resepsionis</span></div>'; return; }
+    const long = ((p.title || '') + ' ' + (p.accent || '')).trim().length > 36, many = acts.length > 1;
+    zoneB.innerHTML = '<div class="pleft"><div class="peyebrow"><svg width="16" height="16"><use href="#i-heart"/></svg><span>' + esc(p.eyebrow || KIND_LABEL[p.kind] || 'Promo') + '</span></div><div class="ptitlewrap' + (long ? ' long' : '') + '"><i></i><h2>' + esc(p.title) + (p.accent ? ' <em>' + esc(p.accent) + '</em>' : '') + '</h2></div><p class="plede">' + esc(p.lede) + '</p><div class="pchips"><span class="chip">' + esc(p.chip || 'Semua perawatan') + '</span><span class="valid">' + esc(validity(p)) + '</span></div>' + (many ? '<div class="pfoot"><span class="dots pdots">' + acts.map((_, i) => '<i class="' + (i === K.promo ? 'on' : '') + '"></i>').join('') + '</span><span class="pnav"><button data-p="-1" aria-label="Promo sebelumnya"><svg width="20" height="20"><use href="#i-left"/></svg></button><button data-p="1" aria-label="Promo berikutnya"><svg width="20" height="20"><use href="#i-right"/></svg></button></span></div>' : '') + '</div><div class="pvalue"><span class="eyebrow">' + esc(p.valueLabel || VALUE_LABEL[p.kind] || 'Nilai') + '</span>' + (p.value ? '<span class="big tnum' + (p.value.length > 10 ? ' long' : '') + '">' + esc(p.value) + '</span>' : '') + (p.valueNote ? '<span class="note">' + esc(p.valueNote) + '</span>' : '') + '<span class="ask">Tanya resepsionis</span></div>' + (many ? '<div class="pbar"><i id="pBar" style="width:' + Math.min(100, Math.round(K.promoT / (st.slideSecs || 8) * 100)) + '%"></i></div>' : '');
+  }
+  zoneB.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-p]'); if (!b) return; touch();
+    const n = K.actives.length; if (!n) return; K.promo = (K.promo + n + parseInt(b.dataset.p, 10)) % n; K.promoT = 0; if (settings().holdOnTouch !== false) K.hold = 20; renderBand();
+  });
+  return { start, stop, render };
+})();
+
+/* ---------------- ADMIN ---------------- */
+const Admin = (() => {
+  let shown = false, editingTreat = null, editingPromo = null, deleteArm = {}, saveQueue = Promise.resolve();
+  const write = (fn) => { saveQueue = saveQueue.then(fn).catch((e) => { toast('Gagal menyimpan: ' + (e && e.message || e), true); }); return saveQueue; };
+  const byOrder = (a, b) => (a.order || 0) - (b.order || 0) || String(a.name || a.title || '').localeCompare(String(b.name || b.title || ''));
+  const treats = () => S.treatments.slice().sort(byOrder);
+  const promos = () => S.promos.slice().sort(byOrder);
+  const video = (id) => S.videos.find((v) => v.id === id);
+  const treatName = (id) => { const t = S.treatments.find((x) => x.id === id); return t ? t.name : ''; };
+
+  function show() {
+    if (!S.ready) return;
+    const gate = $('#gate'), body = $('#adminBody');
+    if (!db || !canEdit) { gate.hidden = false; body.hidden = true; $('#gateMsg').textContent = !db ? 'Basis data tidak tersedia pada tampilan ini. Buka halaman dari claude.ai dengan akun yang masuk.' : 'Akun ini tidak memiliki hak mengubah layar. Minta akses Editor dari menu Share halaman ini, lalu muat ulang.'; return; }
+    gate.hidden = true; body.hidden = false;
+    if (!shown) { shown = true; bind(); }
+    document.querySelectorAll('.side nav a[data-tab]').forEach((a) => { if (a.dataset.tab === S.tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    document.querySelectorAll('.tab').forEach((t) => { t.hidden = t.id !== 'tab-' + S.tab; });
+    const titles = { ringkasan: ['Layar ruang tunggu', 'Ringkasan'], perawatan: ['Perawatan', editingTreat ? 'Ubah perawatan' : 'Perawatan baru'], promo: ['Band promo · zona bawah layar', 'Promo'], video: ['Zona utama layar', 'Video & screen saver'] };
+    $('#phEyebrow').textContent = titles[S.tab][0]; $('#phTitle').textContent = titles[S.tab][1];
+    renderAll();
+  }
+
+  /* ----- snapshot & diff ----- */
+  function buildSnapshot() {
+    const st = Object.assign({}, DEFAULT_SETTINGS, S.settings);
+    return {
+      treatments: treats().map((t) => ({ id: t.id, name: t.name, cat: t.cat, desc: t.desc || '', price: t.price || '', sessions: t.sessions || '', duration: t.duration || '', downtime: t.downtime || '', after: t.after || '', concerns: t.concerns || '', photo: t.photo || null, video: t.video || null, show: t.show !== false, order: t.order || 0 })),
+      promos: promos().map((p) => ({ id: p.id, title: p.title, accent: p.accent || '', eyebrow: p.eyebrow || '', kind: p.kind || 'Paket', value: p.value || '', valueLabel: p.valueLabel || '', valueNote: p.valueNote || '', lede: p.lede || '', chip: p.chip || 'Semua perawatan', from: p.from || '', to: p.to || '', live: !!p.live, order: p.order || 0 })),
+      videos: S.videos.map((v) => ({ id: v.id, title: v.title, desc: v.desc || '', dur: v.dur || 0, asset: v.asset || null, poster: v.poster || null, ai: !!v.ai, ratio: v.ratio || '' })),
+      settings: { idleMin: st.idleMin, slideSecs: st.slideSecs, hideBandWhenEmpty: st.hideBandWhenEmpty, holdOnTouch: st.holdOnTouch, saverOn: st.saverOn, sound: st.sound, showTitles: st.showTitles, playlist: (st.playlist || []).filter((id) => video(id)) }
+    };
+  }
+  function diff() {
+    const live = S.live || { treatments: [], promos: [], videos: [], settings: {} }, snap = buildSnapshot();
+    const cmp = (a, b) => { const am = new Map(a.map((x) => [x.id, JSON.stringify(x)])); const bm = new Map(b.map((x) => [x.id, JSON.stringify(x)])); let n = 0; am.forEach((v, k) => { if (bm.get(k) !== v) n++; }); bm.forEach((v, k) => { if (!am.has(k)) n++; }); return n; };
+    const t = cmp(snap.treatments, live.treatments || []), p = cmp(snap.promos, live.promos || []), v = cmp(snap.videos, live.videos || []);
+    const s = JSON.stringify(snap.settings) !== JSON.stringify(Object.assign({}, DEFAULT_SETTINGS, live.settings || {}, { playlist: (live.settings && live.settings.playlist) || [] })) ? 1 : 0;
+    return { t, p, v, s, total: t + p + v + s };
+  }
+  function diffParts(d) { const parts = []; if (d.t) parts.push(d.t + ' perawatan'); if (d.p) parts.push(d.p + ' promo'); if (d.v) parts.push(d.v + ' video'); if (d.s) parts.push('pengaturan'); return parts; }
+  // publishing is the gate: name what goes live before it does; a plain republish (nothing changed) needs no second step
+  function askPublish() {
+    const d = diff(); if (!d.total) { publish(); return; }
+    $('#pubConfirmText').textContent = 'Tayangkan ' + d.total + ' perubahan (' + diffParts(d).join(', ') + ') ke layar?';
+    $('#btnPublish').hidden = true; $('#pubConfirm').hidden = false; $('#pubYes').focus();
+  }
+  function hidePubConfirm() { $('#pubConfirm').hidden = true; $('#btnPublish').hidden = false; }
+  async function publish() {
+    const btn = $('#btnPublish'); btn.disabled = true;
+    try {
+      const snap = buildSnapshot(); snap.publishedAt = new Date().toISOString(); snap.by = me && me.id || null; await db.doc('published/live').set(snap); await logChange('Layar dipublikasikan');
+      // assets removed from drafts are only deleted once no live snapshot can reference them
+      if (assets && S.trash && S.trash.length) { for (const id of S.trash) { try { await assets.delete(id); } catch (e) {} } await db.doc('config/trash').set({ assets: [] }); }
+      toast('Dipublikasikan ke layar');
+    }
+    catch (e) { toast('Gagal mempublikasikan: ' + (e && e.message || e), true); }
+    btn.disabled = false;
+  }
+  async function trashAssets(ids) { ids = ids.filter(Boolean); if (!ids.length) return; await db.doc('config/trash').set({ assets: (S.trash || []).concat(ids) }); }
+  async function logChange(text) {
+    try { const entries = [{ text, when: new Date().toISOString(), by: me && me.id || null }].concat(S.log || []).slice(0, 30); await db.doc('config/log').set({ entries }); } catch (e) {}
+  }
+  const touchDoc = (d) => Object.assign(d, { updatedAt: new Date().toISOString() });
+
+  /* ----- render ----- */
+  function renderAll() { renderHeader(); if (S.tab === 'ringkasan') renderOverview(); if (S.tab === 'perawatan') { renderTreatForm(false); renderTreatList(); } if (S.tab === 'promo') { renderPromoList(); renderPromoForm(false); renderBandSettings(); } if (S.tab === 'video') { renderVideos(); renderSaverSettings(); } }
+  function renderHeader() {
+    const ps = $('#pubState'); const d = diff();
+    if (S.live && S.live.publishedAt) { ps.dataset.state = 'live'; ps.textContent = 'Tayang · dipublikasikan ' + fmtWhen(S.live.publishedAt) + (d.total ? ' · ' + d.total + ' perubahan belum tayang' : ''); }
+    else { ps.dataset.state = 'none'; ps.textContent = 'Belum pernah dipublikasikan'; }
+  }
+  function renderOverview() {
+    const today = todayISO(); const vis = S.treatments.filter((t) => t.show !== false).length;
+    const states = S.promos.map((p) => promoState(p, today)); const nA = states.filter((s) => s === 'Aktif').length, nT = states.filter((s) => s === 'Terjadwal').length, nB = states.filter((s) => s === 'Berakhir').length;
+    const pl = (S.settings.playlist || []).filter(video); const linked = S.videos.filter((v) => S.treatments.some((t) => t.video === v.id)).length;
+    const d = diff(); const parts = []; if (d.t) parts.push(d.t + ' perawatan'); if (d.p) parts.push(d.p + ' promo'); if (d.v) parts.push(d.v + ' video'); if (d.s) parts.push('pengaturan');
+    $('#tiles').innerHTML = '<div class="tile"><span>Perawatan tampil</span><b class="tnum">' + vis + '</b><span>dari ' + S.treatments.length + ' perawatan</span></div><div class="tile"><span>Promo di band</span><b class="tnum">' + nA + '</b><span>' + nT + ' terjadwal, ' + nB + ' berakhir</span></div><div class="tile"><span>Video di screen saver</span><b class="tnum">' + pl.length + '</b><span>' + linked + ' ditautkan ke perawatan</span></div><div class="tile"><span>Perubahan belum dipublikasikan</span><b class="tnum ' + (d.total ? 'warn' : '') + '">' + d.total + '</b><span>' + (parts.length ? esc(parts.join(', ')) : 'semua sudah tayang') + '</span></div>';
+    renderTreatTable();
+    $('#promoMini').innerHTML = promos().map((p) => { const s = promoState(p, today); return '<div><i class="' + (s === 'Aktif' ? 'on' : '') + '"></i><span>' + esc(p.title) + '</span><small>' + s + '</small></div>'; }).join('') || '<span class="note">Belum ada promo.</span>';
+    $('#promoMiniNote').textContent = 'Berganti setiap ' + (S.settings.slideSecs || 8) + ' detik · terpisah dari konten utama';
+    renderChanges();
+  }
+  let allTreats = false;
+  function renderTreatTable() {
+    const q = ($('#cari').value || '').toLowerCase().trim(); let rows = treats().filter((t) => !q || (t.name + ' ' + t.cat).toLowerCase().includes(q));
+    const total = rows.length; if (!allTreats && !q) rows = rows.slice(0, 7);
+    $('#treatTable').innerHTML = '<table><thead><tr><th>Nama</th><th>Kategori</th><th>Mulai dari</th><th>Video</th><th>Tampil</th><th></th></tr></thead><tbody>' + rows.map((t) => '<tr><td style="font-weight:500">' + esc(t.name) + '</td><td class="muted">' + esc(t.cat) + '</td><td class="tnum">' + esc(or(t.price, 'Tanya resepsionis')) + '</td><td class="muted">' + esc(t.video && video(t.video) ? video(t.video).title : '—') + '</td><td><label class="check"><input type="checkbox" data-show="' + esc(t.id) + '" ' + (t.show !== false ? 'checked' : '') + '><small>' + (t.show !== false ? 'Tampil' : 'Sembunyi') + '</small></label></td><td><button class="btn quiet sm" data-edit="' + esc(t.id) + '" style="color:var(--ink)">Ubah</button></td></tr>').join('') + (rows.length ? '' : '<tr><td colspan="6" class="muted">Belum ada perawatan. Tekan "Tambah".</td></tr>') + '</tbody></table>';
+    $('#btnAllTreat').textContent = allTreats ? 'Tampilkan 7 teratas' : 'Lihat semua ' + total + ' perawatan'; $('#btnAllTreat').hidden = total <= 7 || !!q;
+  }
+  async function renderChanges() {
+    const log = S.log || []; const ids = log.map((e) => e.by).filter(Boolean); let names = {};
+    if (userNs && ids.length) { try { names = await userNs.profiles(ids); } catch (e) {} }
+    $('#changes').innerHTML = log.slice(0, 6).map((e) => '<div><span>' + esc(e.text) + '</span><small>' + esc(fmtWhen(e.when)) + (e.by && names[e.by] && names[e.by].name ? ' · ' + esc(names[e.by].name) : '') + '</small></div>').join('') || '<span class="note">Belum ada perubahan tercatat.</span>';
+  }
+
+  /* ----- treatments ----- */
+  function openTreat(id) { editingTreat = id || null; deleteArm = {}; location.hash = '#perawatan'; S.tab = 'perawatan'; renderTreatForm(true); show(); }
+  function renderTreatForm(fill) {
+    const f = $('#treatForm'); const t = editingTreat ? S.treatments.find((x) => x.id === editingTreat) : null;
+    $('#tfCat').innerHTML = CATS.map((c) => '<option>' + esc(c) + '</option>').join('');
+    $('#tfVideo').innerHTML = '<option value="">— Tanpa video —</option>' + S.videos.map((v) => '<option value="' + esc(v.id) + '">' + esc(v.title) + ' (' + fmtDur(v.dur) + ')</option>').join('');
+    if (fill) {
+      $('#tfName').value = t ? t.name : ''; $('#tfCat').value = t ? t.cat : CATS[0]; $('#tfDesc').value = t ? t.desc || '' : ''; $('#tfPrice').value = t ? t.price || '' : ''; $('#tfSessions').value = t ? t.sessions || '' : ''; $('#tfDuration').value = t ? t.duration || '' : ''; $('#tfDowntime').value = t ? t.downtime || '' : ''; $('#tfAfter').value = t ? t.after || '' : ''; $('#tfConcerns').value = t ? t.concerns || '' : ''; $('#tfShow').checked = t ? t.show !== false : true;
+      f.dataset.photo = t && t.photo || '';
+    }
+    $('#tfVideo').value = t && !$('#tfVideo').dataset.touched ? (t.video || '') : $('#tfVideo').value;
+    if (fill) { $('#tfVideo').value = t ? (t.video || '') : ''; delete $('#tfVideo').dataset.touched; }
+    $('#tfTitle').textContent = t ? t.name : 'Perawatan baru'; $('#tfDeleteWrap').hidden = !t; $('#tfDeleteConfirm').hidden = true;
+    $('#tfPhotoDrop').hidden = !assets; if (!assets) $('#tfPhotoDrop').insertAdjacentHTML('afterend', '');
+    updateTreatPreview();
+  }
+  function updateTreatPreview() {
+    const f = $('#treatForm'); const name = $('#tfName').value || 'Nama perawatan', desc = $('#tfDesc').value, price = $('#tfPrice').value;
+    $('#tfDescLen').textContent = desc.length + ' / 120';
+    const photo = f.dataset.photo; const img = $('#tfPhotoImg'); img.hidden = !photo; if (photo) img.src = blob(photo); $('#tfPhotoRemove').hidden = !photo;
+    $('#tfPreview').innerHTML = (photo ? '<img src="' + esc(blob(photo)) + '" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:10px">' : '') + '<span class="n">' + esc(name) + '</span><span class="d">' + esc(desc || 'Deskripsi singkat tampil di sini.') + '</span><span class="p tnum">' + esc(priceLine(price)) + '</span>';
+    $('#tfFacts').innerHTML = '<div><span>Sesi</span><b>' + esc(or($('#tfSessions').value, DD)) + '</b></div><div><span>Durasi</span><b>' + esc(or($('#tfDuration').value, DD)) + '</b></div><div><span>Downtime</span><b>' + esc(or($('#tfDowntime').value, DD)) + '</b></div>';
+    $('#tfCatNote').textContent = 'Kategori: ' + $('#tfCat').value;
+  }
+  function renderTreatList() {
+    const list = treats(); $('#treatCount').textContent = list.length + ' perawatan';
+    $('#treatList').innerHTML = list.map((t) => '<div class="it"><span class="t">' + esc(t.name) + '</span><span class="d">' + esc(t.cat) + '</span>' + (t.show === false ? '<span class="status">Sembunyi</span>' : '') + '<button class="btn quiet sm" data-edit="' + esc(t.id) + '" style="color:var(--ink)">Ubah</button></div>').join('') || '<span class="note">Belum ada perawatan.</span>';
+  }
+  async function saveTreat(e) {
+    e.preventDefault();
+    const name = $('#tfName').value.trim(); if (!name) { toast('Nama perawatan wajib diisi', true); return; }
+    const bad = bannedIn(name + ' ' + $('#tfDesc').value + ' ' + $('#tfAfter').value + ' ' + $('#tfConcerns').value); if (bad.length) { toast('Kata tidak diperbolehkan: ' + bad.join(', ') + '. Ubah dulu teksnya.', true); return; }
+    const t = editingTreat ? S.treatments.find((x) => x.id === editingTreat) : null; const id = t ? t.id : uid();
+    const doc = touchDoc({ id, name, cat: $('#tfCat').value, desc: $('#tfDesc').value.trim(), price: $('#tfPrice').value.trim(), sessions: $('#tfSessions').value.trim(), duration: $('#tfDuration').value.trim(), downtime: $('#tfDowntime').value.trim(), after: $('#tfAfter').value.trim(), concerns: $('#tfConcerns').value.trim(), video: $('#tfVideo').value || null, photo: $('#treatForm').dataset.photo || null, show: $('#tfShow').checked, order: t ? (t.order || 0) : (Math.max(0, ...S.treatments.map((x) => x.order || 0)) + 1) });
+    await write(async () => { await db.doc('treatments/' + id).set(doc); await logChange((t ? 'Perawatan "' : 'Perawatan baru "') + name + '" disimpan sebagai draf'); toast('Draf disimpan. Tekan "Publikasikan ke layar" agar tayang.'); });
+    editingTreat = id; $('#tfTitle').textContent = name; $('#tfDeleteWrap').hidden = false; $('#phTitle').textContent = 'Ubah perawatan';
+  }
+  async function deleteTreat() {
+    const t = S.treatments.find((x) => x.id === editingTreat); if (!t) return;
+    await write(async () => { await db.doc('treatments/' + t.id).delete(); await logChange('Perawatan "' + t.name + '" dihapus'); await trashAssets([t.photo]); toast('Perawatan dihapus dari draf. Publikasikan agar hilang dari layar.'); });
+    editingTreat = null; renderTreatForm(true); show();
+  }
+  async function toggleShow(id, on) { const t = S.treatments.find((x) => x.id === id); if (!t) return; await write(async () => { await db.doc('treatments/' + id).update(touchDoc({ show: on })); await logChange('"' + t.name + '" ' + (on ? 'ditampilkan di layar' : 'disembunyikan dari layar')); }); }
+  async function uploadPhoto(file) {
+    if (!assets || !file) return; if (file.size > 5 * 1024 * 1024) { toast('Foto lebih dari 5 MB. Perkecil dulu.', true); return; }
+    try { const r = await assets.upload(file); $('#treatForm').dataset.photo = r.id; updateTreatPreview(); toast('Foto terunggah. Simpan draf untuk menyimpannya.'); } catch (e) { toast('Unggah foto gagal: ' + (e && e.code || e), true); }
+  }
+
+  /* ----- promos ----- */
+  function renderPromoList() {
+    const today = todayISO(); const list = promos();
+    $('#promoList').innerHTML = list.map((p, i) => { const s = promoState(p, today); return '<div class="prow"><div class="ord"><button class="ib" data-pmove="' + esc(p.id) + '|-1" aria-label="Naikkan urutan" ' + (i === 0 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-up"/></svg></button><button class="ib" data-pmove="' + esc(p.id) + '|1" aria-label="Turunkan urutan" ' + (i === list.length - 1 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-down"/></svg></button></div><div class="body"><div class="t"><span>' + esc(p.title) + (p.accent ? ' ' + esc(p.accent) : '') + '</span><span class="status ' + (s === 'Aktif' ? 'on' : '') + '">' + s + '</span></div><span class="l">' + esc(p.lede) + '</span><div class="m"><span class="chip">' + esc(p.chip || 'Semua perawatan') + '</span><span>' + esc(validity(p)) + '</span><span>' + esc(p.kind + (p.value ? ' · ' + p.value : '')) + '</span></div></div><div class="act"><button class="toggle" data-ptoggle="' + esc(p.id) + '" role="switch" aria-checked="' + (p.live ? 'true' : 'false') + '"><span class="trk"></span><span>' + (p.live ? 'Tayang' : 'Tidak tayang') + '</span></button><button class="link muted" data-pedit="' + esc(p.id) + '">Ubah</button></div></div>'; }).join('') || '<p class="note" style="padding:0 4px">Belum ada promo. Tambahkan lewat formulir di samping.</p>';
+  }
+  function renderPromoForm(fill) {
+    const p = editingPromo ? S.promos.find((x) => x.id === editingPromo) : null;
+    const chips = ['Semua perawatan'].concat(treats().map((t) => t.name), ['Program referral', 'Produk skincare']);
+    const cur = $('#pfChip').value; $('#pfChip').innerHTML = chips.map((c) => '<option>' + esc(c) + '</option>').join(''); if (!fill && cur) $('#pfChip').value = cur;
+    if (fill) { $('#pfTitleIn').value = p ? p.title : ''; $('#pfAccent').value = p ? p.accent || '' : ''; $('#pfKind').value = p ? p.kind || 'Paket' : 'Paket'; $('#pfValue').value = p ? p.value || '' : ''; $('#pfValueNote').value = p ? p.valueNote || '' : ''; $('#pfLede').value = p ? p.lede || '' : ''; $('#pfFrom').value = p ? p.from || '' : ''; $('#pfTo').value = p ? p.to || '' : ''; $('#pfEyebrow').value = p ? p.eyebrow || '' : ''; $('#pfChip').value = p ? p.chip || 'Semua perawatan' : 'Semua perawatan'; $('#pfLive').checked = p ? !!p.live : true; }
+    $('#pfTitle').textContent = p ? 'Ubah promo' : 'Tambah promo'; $('#pfCancel').hidden = !p; $('#pfSave').querySelector('span').textContent = p ? 'Simpan perubahan' : 'Tambah ke daftar'; $('#pfSave').querySelector('svg').hidden = !!p; $('#pfDeleteWrap').hidden = !p; $('#pfDeleteConfirm').hidden = true;
+    updatePromoPreview();
+  }
+  function updatePromoPreview() {
+    const kind = $('#pfKind').value, title = $('#pfTitleIn').value || 'Judul promo', accent = $('#pfAccent').value, lede = $('#pfLede').value || 'Mekanisme promo dalam satu kalimat.';
+    const p = { from: $('#pfFrom').value, to: $('#pfTo').value };
+    $('#pfPreview').innerHTML = '<div class="l"><span class="e">' + esc($('#pfEyebrow').value || KIND_LABEL[kind]) + '</span><span class="t">' + esc(title) + (accent ? ' <em>' + esc(accent) + '</em>' : '') + '</span><span class="d">' + esc(lede) + '</span><span class="v">' + esc(validity(p)) + '</span></div><div class="r"><span class="k">' + esc(VALUE_LABEL[kind]) + '</span><span class="b tnum' + ($('#pfValue').value.length > 10 ? ' long' : '') + '">' + esc($('#pfValue').value || '—') + '</span></div>';
+  }
+  async function savePromo(e) {
+    e.preventDefault(); const title = $('#pfTitleIn').value.trim(); if (!title) { toast('Judul promo wajib diisi', true); return; }
+    const bad = bannedIn(title + ' ' + $('#pfAccent').value + ' ' + $('#pfLede').value + ' ' + $('#pfValueNote').value); if (bad.length) { toast('Kata tidak diperbolehkan: ' + bad.join(', ') + '. Ubah dulu teksnya.', true); return; }
+    const from = $('#pfFrom').value, to = $('#pfTo').value; if (from && to && to < from) { toast('Tanggal "Sampai" harus setelah "Berlaku dari".', true); return; }
+    const p = editingPromo ? S.promos.find((x) => x.id === editingPromo) : null; const id = p ? p.id : uid(); const kind = $('#pfKind').value;
+    const doc = touchDoc({ id, title, accent: $('#pfAccent').value.trim(), kind, value: $('#pfValue').value.trim(), valueLabel: VALUE_LABEL[kind], valueNote: $('#pfValueNote').value.trim(), lede: $('#pfLede').value.trim(), from, to, eyebrow: $('#pfEyebrow').value.trim(), chip: $('#pfChip').value, live: $('#pfLive').checked, order: p ? (p.order || 0) : (Math.max(0, ...S.promos.map((x) => x.order || 0)) + 1) });
+    await write(async () => { await db.doc('promos/' + id).set(doc); await logChange((p ? 'Promo "' : 'Promo baru "') + title + '" disimpan' + (doc.live ? (doc.from && doc.from > todayISO() ? ', dijadwalkan ' + fmtDate(doc.from) : '') : ' (tidak tayang)')); toast(p ? 'Promo diperbarui. Publikasikan agar tayang.' : 'Promo ditambahkan ke daftar. Publikasikan agar tayang.'); });
+    editingPromo = null; renderPromoForm(true);
+  }
+  async function togglePromo(id) { const p = S.promos.find((x) => x.id === id); if (!p) return; await write(async () => { await db.doc('promos/' + id).update(touchDoc({ live: !p.live })); await logChange('Promo "' + p.title + '" ' + (!p.live ? 'diaktifkan' : 'dimatikan')); }); }
+  async function movePromo(id, d) {
+    const list = promos(); const i = list.findIndex((p) => p.id === id); const j = i + d; if (i < 0 || j < 0 || j >= list.length) return;
+    const a = list[i], b = list[j]; const ao = i + 1, bo = j + 1;
+    await write(async () => { await db.doc('promos/' + a.id).update({ order: bo }); await db.doc('promos/' + b.id).update({ order: ao }); for (let k = 0; k < list.length; k++) { if (k !== i && k !== j && (list[k].order || 0) !== k + 1) await db.doc('promos/' + list[k].id).update({ order: k + 1 }); } });
+  }
+  async function deletePromo(id) { const p = S.promos.find((x) => x.id === id); if (!p) return; await write(async () => { await db.doc('promos/' + id).delete(); await logChange('Promo "' + p.title + '" dihapus'); toast('Promo dihapus'); }); editingPromo = null; renderPromoForm(true); }
+  function renderBandSettings() { const st = S.settings; const set = (id, v, chk) => { const el = $(id); if (document.activeElement === el) return; if (chk) el.checked = !!v; else el.value = v; }; set('#setSlide', st.slideSecs || 8); set('#setHide', st.hideBandWhenEmpty !== false, true); set('#setHold', st.holdOnTouch !== false, true); }
+
+  /* ----- settings ----- */
+  let settingsT = null;
+  function saveSettings(patch, label) {
+    Object.assign(S.settings, patch); clearTimeout(settingsT);
+    settingsT = setTimeout(() => write(async () => { const doc = Object.assign({}, DEFAULT_SETTINGS, S.settings, { updatedAt: new Date().toISOString() }); await db.doc('config/settings').set(doc); if (label) await logChange(label); }), 500);
+  }
+
+  /* ----- videos ----- */
+  function renderVideos() {
+    const pl = S.settings.playlist || [];
+    $('#vCount').textContent = S.videos.length + ' video · ' + S.videos.filter((v) => S.treatments.some((t) => t.video === v.id)).length + ' ditautkan ke perawatan';
+    $('#vDrop').hidden = !assets; if (!assets) $('#vCount').textContent += ' · unggah hanya untuk Editor';
+    $('#vGrid').innerHTML = S.videos.map((v) => { const linkedTo = S.treatments.filter((t) => t.video === v.id).map((t) => t.name); const inList = pl.includes(v.id); const editing = deleteArm.vedit === v.id;
+      return '<div class="vcard"><div class="ph"><img src="' + esc(blob(v.poster)) + '" alt=""><span class="play"><svg width="20" height="20"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + (v.ratio ? ' · ' + esc(v.ratio) : '') + '</span></div>' +
+        (editing ? '<div class="field"><label for="ve-t-' + esc(v.id) + '">Judul</label><input id="ve-t-' + esc(v.id) + '" value="' + esc(v.title) + '" maxlength="80"></div><div class="field"><label for="ve-d-' + esc(v.id) + '">Deskripsi di layar</label><textarea id="ve-d-' + esc(v.id) + '" rows="2" maxlength="160">' + esc(v.desc) + '</textarea></div><label class="check"><input type="checkbox" id="ve-ai-' + esc(v.id) + '" ' + (v.ai ? 'checked' : '') + '><span>Karakter virtual (AI)</span></label><div class="acts"><button class="btn outline sm" data-vsave="' + esc(v.id) + '">Simpan</button><button class="btn quiet sm" data-vcancel="1">Batal</button></div>'
+          : '<span class="t">' + esc(v.title) + '</span><div class="m"><span>' + esc(linkedTo.length ? 'Ditautkan ke ' + linkedTo.join(', ') : 'Belum ditautkan ke perawatan') + '</span><span class="status ' + (linkedTo.length ? 'on' : '') + '">' + (linkedTo.length ? 'Terpasang' : 'Pustaka') + '</span></div><div class="acts">' +
+            (deleteArm.vlink === v.id ? '<select class="search" style="min-height:32px;border-radius:999px;font-size:13px;flex:1 1 160px" data-vlinksel="' + esc(v.id) + '"><option value="">Pilih perawatan…</option>' + treats().map((t) => '<option value="' + esc(t.id) + '">' + esc(t.name) + '</option>').join('') + '</select>' : '<button class="btn outline sm" data-vlink="' + esc(v.id) + '">Tautkan ke perawatan</button>') +
+            '<button class="btn quiet sm" data-vlist="' + esc(v.id) + '" style="color:var(--ink)" ' + (inList ? 'disabled' : '') + '>' + (inList ? 'Di urutan putar' : 'Ke urutan putar') + '</button><button class="btn quiet sm" data-vedit="' + esc(v.id) + '" style="color:var(--ink)">Ubah</button>' +
+            (deleteArm.vdel === v.id ? '<span class="confirm">' + esc(videoDeleteText(v)) + ' <button class="link" data-vdelyes="' + esc(v.id) + '">Ya, hapus</button> · <button class="link muted" data-vcancel="1">Batal</button></span>' : '<button class="link muted" data-vdel="' + esc(v.id) + '">Hapus</button>') + '</div>') + '</div>'; }).join('') || '<p class="note">Pustaka masih kosong. Unggah video pertama di atas.</p>';
+    renderPlaylist();
+  }
+  function renderPlaylist() {
+    const pl = (S.settings.playlist || []).filter(video); const total = pl.reduce((a, id) => a + (video(id).dur || 0), 0);
+    $('#plInfo').textContent = pl.length + ' video · ' + fmtDur(total) + ' mnt';
+    $('#playlist').innerHTML = pl.map((id, i) => { const v = video(id); return '<div class="it"><span class="num tnum">' + (i + 1) + '</span><span class="t">' + esc(v.title) + '</span><span class="d tnum">' + fmtDur(v.dur) + '</span><button class="ib sm" data-plmove="' + i + '|-1" aria-label="Naikkan" ' + (i === 0 ? 'disabled' : '') + '><svg width="12" height="12"><use href="#i-up"/></svg></button><button class="ib sm" data-plmove="' + i + '|1" aria-label="Turunkan" ' + (i === pl.length - 1 ? 'disabled' : '') + '><svg width="12" height="12"><use href="#i-down"/></svg></button><button class="ib sm bare" data-plrm="' + i + '" aria-label="Keluarkan dari urutan"><svg width="14" height="14"><use href="#i-x"/></svg></button></div>'; }).join('') || '<span class="note">Urutan putar kosong: screen saver tidak akan tampil.</span>';
+  }
+  function renderSaverSettings() { const st = S.settings; $('#setSaver').setAttribute('aria-checked', st.saverOn !== false ? 'true' : 'false'); $('#setSaverLabel').textContent = st.saverOn !== false ? 'Aktif' : 'Mati'; const set = (id, v, chk) => { const el = $(id); if (document.activeElement === el) return; if (chk) el.checked = !!v; else el.value = v; }; set('#setIdle', st.idleMin || 2); set('#setSound', !!st.sound, true); set('#setTitles', st.showTitles !== false, true); }
+  function uplShow(name, pct, stage) { const r = $('#uplRow'); r.hidden = false; $('#uplName').textContent = name; $('#uplPct').textContent = pct == null ? '' : pct + '%'; $('#uplBar').style.width = (pct == null ? 100 : pct) + '%'; $('#uplStage').textContent = stage; }
+  async function uploadVideo(file) {
+    if (!assets || !file) return;
+    const MAX = 20 * 1024 * 1024; if (file.size > MAX) { toast('Berkas ' + (file.size / 1048576).toFixed(1) + ' MB melebihi batas 20 MB. Kompres dulu (mis. HandBrake, 1080×1920, ±2,5 Mbps).', true); return; }
+    const name = file.name; const ext = name.toLowerCase().split('.').pop(); const type = ext === 'webm' ? 'video/webm' : 'video/mp4';
+    try {
+      uplShow(name, 5, 'Membaca berkas…');
+      const url = URL.createObjectURL(file); const probe = document.createElement('video'); probe.muted = true; probe.playsInline = true; probe.preload = 'auto'; probe.src = url;
+      const meta = await new Promise((res, rej) => { probe.onloadedmetadata = () => res({ dur: probe.duration, w: probe.videoWidth, h: probe.videoHeight }); probe.onerror = () => rej(new Error('Format video tidak terbaca di browser ini. Gunakan MP4 H.264.')); setTimeout(() => rej(new Error('Video tidak terbaca')), 15000); });
+      uplShow(name, 20, 'Membuat poster…');
+      const poster = await new Promise((res) => { const t = Math.min(1.5, Math.max(0, meta.dur / 4)); probe.currentTime = t; probe.onseeked = () => { try { const c = document.createElement('canvas'); const sc = 540 / meta.w; c.width = 540; c.height = Math.round(meta.h * sc); c.getContext('2d').drawImage(probe, 0, 0, c.width, c.height); c.toBlob((b) => res(b), 'image/jpeg', 0.82); } catch (e) { res(null); } }; setTimeout(() => res(null), 8000); });
+      URL.revokeObjectURL(url);
+      let posterId = null; if (poster) { uplShow(name, 30, 'Mengunggah poster…'); const pr = await assets.upload(poster, { type: 'image/jpeg' }); posterId = pr.id; }
+      uplShow(name, 40, 'Mengunggah video ' + (file.size / 1048576).toFixed(1) + ' MB… (browser tidak melaporkan kemajuan unggahan; tunggu sampai selesai)');
+      let fake = 40; const tk = setInterval(() => { fake = Math.min(90, fake + 2); $('#uplBar').style.width = fake + '%'; $('#uplPct').textContent = fake + '%'; }, 700);
+      let r; try { r = await assets.upload(file, { type }); } finally { clearInterval(tk); }
+      uplShow(name, 100, 'Selesai');
+      const ratio = meta.w && meta.h ? (Math.abs(meta.w / meta.h - 9 / 16) < 0.05 ? '9:16' : Math.abs(meta.w / meta.h - 16 / 9) < 0.05 ? '16:9' : meta.w + '×' + meta.h) : '';
+      const id = uid(); const title = name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+      const doc = touchDoc({ id, title, desc: '', dur: Math.round(meta.dur), asset: r.id, poster: posterId, ai: true, ratio, sizeBytes: r.sizeBytes });
+      await write(async () => { await db.doc('videos/' + id).set(doc); await logChange('Video "' + title + '" diunggah ke pustaka'); });
+      deleteArm = { vedit: id }; toast('Video terunggah. Beri judul dan deskripsi, lalu tambahkan ke urutan putar.');
+      setTimeout(() => { $('#uplRow').hidden = true; }, 2500);
+    } catch (e) { $('#uplRow').hidden = true; toast('Unggah gagal: ' + (e && (e.message || e.code) || e), true); }
+  }
+  async function saveVideoMeta(id) { const v = video(id); if (!v) return; const title = $('#ve-t-' + id).value.trim() || v.title; const desc = $('#ve-d-' + id).value.trim(); const ai = $('#ve-ai-' + id).checked; const bad = bannedIn(title + ' ' + desc); if (bad.length) { toast('Kata tidak diperbolehkan: ' + bad.join(', '), true); return; } await write(async () => { await db.doc('videos/' + id).update(touchDoc({ title, desc, ai })); }); deleteArm = {}; renderVideos(); }
+  async function linkVideo(vidId, treatId) { const t = S.treatments.find((x) => x.id === treatId); if (!t) return; await write(async () => { await db.doc('treatments/' + treatId).update(touchDoc({ video: vidId })); await logChange('Video "' + video(vidId).title + '" ditautkan ke ' + t.name); }); deleteArm = {}; }
+  async function deleteVideo(id) { const v = video(id); if (!v) return; await write(async () => { for (const t of S.treatments.filter((x) => x.video === id)) await db.doc('treatments/' + t.id).update(touchDoc({ video: null })); const pl = (S.settings.playlist || []).filter((x) => x !== id); await db.doc('config/settings').set(Object.assign({}, DEFAULT_SETTINGS, S.settings, { playlist: pl, updatedAt: new Date().toISOString() })); await db.doc('videos/' + id).delete(); await logChange('Video "' + v.title + '" dihapus dari pustaka'); await trashAssets([v.asset, v.poster]); toast('Video dihapus dari draf. Layar masih memutarnya sampai dipublikasikan ulang.'); }); deleteArm = {}; }
+  function videoDeleteText(v) { const linked = S.treatments.filter((t) => t.video === v.id).map((t) => t.name); const inList = (S.settings.playlist || []).includes(v.id); const facts = []; if (linked.length) facts.push('terpasang di ' + linked.join(', ')); if (inList) facts.push('ada di urutan putar'); return 'Hapus video ini?' + (facts.length ? ' Video ini ' + facts.join(' dan ') + '; tautan itu ikut dilepas.' : '') + ' Layar tetap memutarnya sampai Anda mempublikasikan ulang.'; }
+
+  /* ----- bind ----- */
+  function bind() {
+    $('#btnPublish').addEventListener('click', askPublish);
+    $('#pubYes').addEventListener('click', () => { hidePubConfirm(); publish(); });
+    $('#pubNo').addEventListener('click', hidePubConfirm);
+    $('#pfDelete').addEventListener('click', () => { $('#pfDeleteConfirm').hidden = false; });
+    $('#pfDeleteNo').addEventListener('click', () => { $('#pfDeleteConfirm').hidden = true; });
+    $('#pfDeleteYes').addEventListener('click', () => { if (editingPromo) deletePromo(editingPromo); });
+    // keyboard users reach the drop zones through the label, not the hidden input
+    document.querySelectorAll('label.drop').forEach((l) => { l.setAttribute('tabindex', '0'); l.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const inp = document.getElementById(l.getAttribute('for')); if (inp) inp.click(); } }); });
+    ['tfPhoto', 'vUpload'].forEach((id) => { $('#' + id).setAttribute('tabindex', '-1'); });
+    $('#cari').addEventListener('input', renderTreatTable);
+    $('#btnAllTreat').addEventListener('click', () => { allTreats = !allTreats; renderTreatTable(); });
+    $('#btnNewTreat').addEventListener('click', () => openTreat(null));
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.edit) openTreat(b.dataset.edit);
+      else if (b.dataset.pedit) { editingPromo = b.dataset.pedit; renderPromoForm(true); $('#pfTitleIn').focus(); }
+      else if (b.dataset.ptoggle) togglePromo(b.dataset.ptoggle);
+      else if (b.dataset.pmove) { const [id, d] = b.dataset.pmove.split('|'); movePromo(id, parseInt(d, 10)); }
+      else if (b.dataset.vlink) { deleteArm = { vlink: b.dataset.vlink }; renderVideos(); }
+      else if (b.dataset.vlist) { const pl = (S.settings.playlist || []).slice(); if (!pl.includes(b.dataset.vlist)) { pl.push(b.dataset.vlist); saveSettings({ playlist: pl }, 'Video "' + video(b.dataset.vlist).title + '" ditambahkan ke screen saver'); renderVideos(); } }
+      else if (b.dataset.vedit) { deleteArm = { vedit: b.dataset.vedit }; renderVideos(); }
+      else if (b.dataset.vsave) saveVideoMeta(b.dataset.vsave);
+      else if (b.dataset.vcancel) { deleteArm = {}; renderVideos(); }
+      else if (b.dataset.vdel) { deleteArm = { vdel: b.dataset.vdel }; renderVideos(); }
+      else if (b.dataset.vdelyes) deleteVideo(b.dataset.vdelyes);
+      else if (b.dataset.plmove) { const [i, d] = b.dataset.plmove.split('|').map(Number); const pl = (S.settings.playlist || []).filter(video); const j = i + d; if (j < 0 || j >= pl.length) return; const t = pl[i]; pl[i] = pl[j]; pl[j] = t; saveSettings({ playlist: pl }, 'Urutan putar screen saver diubah'); renderPlaylist(); }
+      else if (b.dataset.plrm != null) { const pl = (S.settings.playlist || []).filter(video); const v = video(pl[b.dataset.plrm]); pl.splice(Number(b.dataset.plrm), 1); saveSettings({ playlist: pl }, v ? 'Video "' + v.title + '" dikeluarkan dari screen saver' : ''); renderPlaylist(); renderVideos(); }
+    });
+    document.addEventListener('change', (e) => {
+      const el = e.target;
+      if (el.dataset.show) toggleShow(el.dataset.show, el.checked);
+      else if (el.dataset.vlinksel) { if (el.value) linkVideo(el.dataset.vlinksel, el.value); else { deleteArm = {}; renderVideos(); } }
+    });
+    // treatment form
+    const tf = $('#treatForm'); tf.addEventListener('submit', saveTreat);
+    tf.addEventListener('input', updateTreatPreview); tf.addEventListener('change', updateTreatPreview);
+    $('#tfVideo').addEventListener('change', () => { $('#tfVideo').dataset.touched = '1'; });
+    $('#tfCancel').addEventListener('click', () => { editingTreat = null; renderTreatForm(true); $('#phTitle').textContent = 'Perawatan baru'; });
+    $('#tfPhoto').addEventListener('change', () => uploadPhoto($('#tfPhoto').files[0]));
+    $('#tfPhotoRemove').addEventListener('click', () => { tf.dataset.photo = ''; updateTreatPreview(); });
+    $('#tfDelete').addEventListener('click', () => { $('#tfDeleteConfirm').hidden = false; });
+    $('#tfDeleteNo').addEventListener('click', () => { $('#tfDeleteConfirm').hidden = true; });
+    $('#tfDeleteYes').addEventListener('click', deleteTreat);
+    const drop = $('#tfPhotoDrop'); drop.addEventListener('dragover', (e) => { e.preventDefault(); }); drop.addEventListener('drop', (e) => { e.preventDefault(); uploadPhoto(e.dataTransfer.files[0]); });
+    // promo form
+    const pf = $('#promoForm'); pf.addEventListener('submit', savePromo); pf.addEventListener('input', updatePromoPreview); pf.addEventListener('change', updatePromoPreview);
+    $('#pfCancel').addEventListener('click', () => { editingPromo = null; renderPromoForm(true); });
+    $('#setSlide').addEventListener('change', () => { const v = Math.min(60, Math.max(3, parseInt($('#setSlide').value, 10) || 8)); $('#setSlide').value = v; saveSettings({ slideSecs: v }, 'Durasi slide band promo: ' + v + ' detik'); });
+    $('#setHide').addEventListener('change', () => saveSettings({ hideBandWhenEmpty: $('#setHide').checked }));
+    $('#setHold').addEventListener('change', () => saveSettings({ holdOnTouch: $('#setHold').checked }));
+    // video
+    $('#vUpload').addEventListener('change', () => { uploadVideo($('#vUpload').files[0]); $('#vUpload').value = ''; });
+    const vd = $('#vDrop'); vd.addEventListener('dragover', (e) => { e.preventDefault(); }); vd.addEventListener('drop', (e) => { e.preventDefault(); uploadVideo(e.dataTransfer.files[0]); });
+    $('#setSaver').addEventListener('click', () => { const on = $('#setSaver').getAttribute('aria-checked') !== 'true'; $('#setSaver').setAttribute('aria-checked', on ? 'true' : 'false'); $('#setSaverLabel').textContent = on ? 'Aktif' : 'Mati'; saveSettings({ saverOn: on }, 'Screen saver ' + (on ? 'dinyalakan' : 'dimatikan')); });
+    $('#setIdle').addEventListener('change', () => { const v = Math.min(30, Math.max(1, parseInt($('#setIdle').value, 10) || 2)); $('#setIdle').value = v; saveSettings({ idleMin: v }, 'Screen saver mulai setelah ' + v + ' menit'); });
+    $('#setSound').addEventListener('change', () => saveSettings({ sound: $('#setSound').checked }, 'Suara video ' + ($('#setSound').checked ? 'dinyalakan' : 'dimatikan')));
+    $('#setTitles').addEventListener('change', () => saveSettings({ showTitles: $('#setTitles').checked }));
+    renderTreatForm(true); renderPromoForm(true);
+  }
+  return { show, rerender: () => { if (shown && S.route === 'admin' && !$('#adminBody').hidden) renderAll(); } };
+})();
+
+/* ---------------- boot ---------------- */
+async function boot() {
+  route();
+  const [d, u, a] = await Promise.all([use('db'), use('user'), use('assets')]);
+  db = d; userNs = u; assets = a;
+  if (userNs) { try { me = await userNs.me(); canEdit = !!me.canEdit; } catch (e) {} }
+  const st = $('#kStatus');
+  if (!db) { S.ready = true; st.dataset.state = 'offline'; st.textContent = 'Tanpa basis data'; if (S.route === 'kiosk') Kiosk.render(); else Admin.show(); return; }
+  if (me) { $('#meName').textContent = me.name || (me.isOwner ? 'Pemilik' : 'Staf'); $('#meRole').textContent = me.isOwner ? 'Pemilik' : canEdit ? 'Editor' : 'Hanya melihat'; const init = (me.name || 'S').split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase(); $('#meInit').textContent = init; if (me.avatarUrl) { $('#meAvatar').src = me.avatarUrl; $('#meAvatar').hidden = false; $('#meInit').hidden = true; } }
+  const onErr = (e) => { st.dataset.state = 'offline'; st.textContent = 'Koneksi terputus'; };
+  db.doc('published/live').onSnapshot((snap) => { S.live = snap.exists ? snap.data() : null; S.ready = true; st.dataset.state = 'live'; st.textContent = 'Terhubung'; if (S.route === 'kiosk') Kiosk.render(); else { Admin.show(); } }, onErr);
+  if (canEdit) {
+    const sub = (coll, key) => db.collection(coll).onSnapshot((qs) => { S[key] = qs.docs.map((x) => Object.assign({ id: x.id }, x.data())); Admin.rerender(); }, onErr);
+    sub('treatments', 'treatments'); sub('promos', 'promos'); sub('videos', 'videos');
+    db.doc('config/settings').onSnapshot((snap) => { S.settings = Object.assign({}, DEFAULT_SETTINGS, snap.exists ? snap.data() : {}); Admin.rerender(); }, onErr);
+    db.doc('config/log').onSnapshot((snap) => { S.log = snap.exists ? (snap.data().entries || []) : []; Admin.rerender(); }, onErr);
+    db.doc('config/trash').onSnapshot((snap) => { S.trash = snap.exists ? (snap.data().assets || []) : []; }, onErr);
+  }
+  setTimeout(() => { if (!S.ready) { S.ready = true; if (S.route === 'kiosk') Kiosk.render(); else Admin.show(); } }, 4000);
+}
+boot();
+})();
+</script>

@@ -1,0 +1,137 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Admin-Dashboard.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "title": "Admin · Ringkasan",
+      "w": 1440,
+      "x": 0,
+      "y": 2340
+    },
+    "Admin-Perawatan-Form.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "title": "Admin · Tambah / ubah perawatan",
+      "w": 1440,
+      "x": 1520,
+      "y": 2340
+    },
+    "Admin-Promo.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Admin · Promo & band promo",
+      "w": 1440,
+      "x": 3040,
+      "y": 2340
+    },
+    "Admin-Video.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "title": "Admin · Video & screen saver",
+      "w": 1440,
+      "x": 4560,
+      "y": 2340
+    },
+    "Layar-Halaman.dc.html": {
+      "h": 1920,
+      "title": "Kiosk · halaman buatan admin (Tentang ADC)",
+      "w": 1080,
+      "x": 2320,
+      "y": 0
+    },
+    "Admin-Halaman.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Admin · Halaman",
+      "w": 1440,
+      "x": 0,
+      "y": 3740
+    },
+    "Admin-Halaman-Editor.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Admin · Buat / ubah halaman",
+      "w": 1440,
+      "x": 1520,
+      "y": 3740
+    },
+    "Admin-Tinjau.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "title": "Admin · Tinjau & publikasikan",
+      "w": 1440,
+      "x": 3040,
+      "y": 3740
+    },
+    "Layar-Dashboard.dc.html": {
+      "h": 1920,
+      "title": "Kiosk · dashboard perawatan + band promo",
+      "w": 1080,
+      "x": 1160,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 1920,
+      "is_interactive": true,
+      "title": "Kiosk · screen saver (video) + band promo",
+      "w": 1080,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-24T09:40:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "row1": {
+      "kind": "title1",
+      "maxW": 3400,
+      "text": "Layar pasien — kiosk berdiri, portrait 9:16 (1080×1920)",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "row2": {
+      "kind": "title1",
+      "maxW": 6000,
+      "text": "Admin (staf) — unggah perawatan, promo dan video",
+      "w": 240,
+      "x": 0,
+      "y": 2040
+    },
+    "row3": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "Halaman baru dan tinjauan sebelum tayang",
+      "x": 0,
+      "y": 3440
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Layar-Dashboard.dc.html",
+    "Layar-Halaman.dc.html",
+    "Admin-Dashboard.dc.html",
+    "Admin-Perawatan-Form.dc.html",
+    "Admin-Promo.dc.html",
+    "Admin-Video.dc.html",
+    "Admin-Halaman.dc.html",
+    "Admin-Halaman-Editor.dc.html",
+    "Admin-Tinjau.dc.html"
+  ],
+  "pages": [],
+  "title": "ADC Treatment Dashboard"
+}

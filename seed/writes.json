@@ -1,0 +1,266 @@
+[
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "picosure",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-picosure.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "excelv",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-excelv.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "fractional",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-fractional.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "dpc",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-dpc.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "peeling",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-peeling.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "dpcombo",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-dpcombo.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "ipl",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-ipl.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "hgl",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-hgl.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "phg",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-phg.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "sb",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-sb.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "botox",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-botox.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "fli",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-fli.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "mnrf",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-mnrf.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "dp4",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-dp4.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "slim",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-slim.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "meta",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-meta.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "pcos",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-pcos.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "fd",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-fd.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "ulth",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-ulth.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "lifu",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-lifu.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "exion",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-exion.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "exilisf",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-exilisf.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "exipro",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-exipro.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "xwave",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-xwave.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "exilisb",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-exilisb.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "emsella",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-emsella.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "bella",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-bella.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "iplb",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-iplb.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "femme",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-femme.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "eyebag",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-eyebag.json"
+ },
+ {
+  "op": "set",
+  "collection": "treatments",
+  "doc_id": "eyelid",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\t-eyelid.json"
+ },
+ {
+  "op": "set",
+  "collection": "videos",
+  "doc_id": "v1",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\v-v1.json"
+ },
+ {
+  "op": "set",
+  "collection": "videos",
+  "doc_id": "v2",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\v-v2.json"
+ },
+ {
+  "op": "set",
+  "collection": "videos",
+  "doc_id": "v3",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\v-v3.json"
+ },
+ {
+  "op": "set",
+  "collection": "videos",
+  "doc_id": "v4",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\v-v4.json"
+ },
+ {
+  "op": "set",
+  "collection": "promos",
+  "doc_id": "p1",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\p-p1.json"
+ },
+ {
+  "op": "set",
+  "collection": "promos",
+  "doc_id": "p2",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\p-p2.json"
+ },
+ {
+  "op": "set",
+  "collection": "promos",
+  "doc_id": "p3",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\p-p3.json"
+ },
+ {
+  "op": "set",
+  "collection": "promos",
+  "doc_id": "p4",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\p-p4.json"
+ },
+ {
+  "op": "set",
+  "collection": "promos",
+  "doc_id": "p5",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\p-p5.json"
+ },
+ {
+  "op": "set",
+  "collection": "promos",
+  "doc_id": "p6",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\p-p6.json"
+ },
+ {
+  "op": "set",
+  "collection": "config",
+  "doc_id": "settings",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\settings.json"
+ },
+ {
+  "op": "set",
+  "collection": "config",
+  "doc_id": "log",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\log.json"
+ },
+ {
+  "op": "set",
+  "collection": "published",
+  "doc_id": "live",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\live.json"
+ }
+]
