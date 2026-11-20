@@ -26,10 +26,10 @@
   a { color: var(--text); }
   a:hover { color: var(--gold); }
   h1, h2, h3 { font-family: var(--ff-head); letter-spacing: 0; }
-  .logo { display: block; width: 250px; height: auto; }
+  .logo { display: block; width: 250px; height: auto; aspect-ratio: 609.4 / 56.7; }
   .logo path, .logo rect, .logo polygon { fill: #000; }
   .hs { scrollbar-width: none; } .hs::-webkit-scrollbar { display: none; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .sr { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; border: 0 !important; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .tnum { font-variant-numeric: tabular-nums; }
   .eyebrow { font-size: 13px; line-height: 16px; letter-spacing: 0.05em; color: var(--muted); }
   /* the brand's label voice: narrow sans, 50% tracking, sentence case */
@@ -43,130 +43,154 @@
     overflow: hidden; background: var(--bg); color: var(--text); touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
   #zoneA { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
   .fill { position: absolute; inset: 0; }
-  /* screen saver */
-  #saver { background: var(--text); color: #fff; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; height: 100%; overflow: hidden; }
+  /* screen saver: one <video>, two layouts. Vertical (.v): the clip shows whole on near-black above a 120px bar with progress, inverted logo, dots and a light CTA. Horizontal (.h): light page, logo top, the 1000×563 clip with its caption centred, dots and a dark CTA at the bottom. A page slide (.pg) borrows the light layout. */
+  #saver { display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; box-sizing: border-box; background: var(--text); color: #fff; text-align: left; }
+  .sv-top { display: none; flex: 0 0 auto; }
+  .sv-top .logo { width: 300px; }
+  .sv-mid { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  .sv-media { position: relative; display: block; flex: 1 1 auto; min-height: 0; background: var(--text); }
   #saverVideo, #playerVideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; background: var(--text); }
-  .saver-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background: linear-gradient(to top, var(--scrim) 0%, var(--scrim-mid) 55%, var(--scrim-0) 100%); }
-  /* "whole" mode: a portrait clip already carries its own title, AI label and subtitles, so the overlay text leaves and only the controls stay */
-  #saver.whole .saver-text { display: none; }
-  #saver.whole .saver-scrim { height: 150px; }
-  #saver.whole .cta-pill { min-height: 56px; }
-  #saver.whole .saver-foot { padding-bottom: 28px; }
-  .edge-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,0.3); }
-  .edge-bar i { display: block; height: 100%; width: 0; background: #fff; transition: width 1s linear; }
-  .saver-logo { position: absolute; top: 32px; left: 32px; display: inline-flex; align-items: center; padding: 16px 20px; background: var(--card); box-shadow: var(--shadow); }
-  .saver-logo .logo { width: 260px; }
-  .saver-text { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 0 40px 22px; color: #fff; }
-  .saver-meta { display: flex; align-items: center; gap: 12px; font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: var(--peach); }
-  .dot4 { width: 4px; height: 4px; border-radius: 999px; background: var(--peach); }
-  .ai-tag { margin-left: 8px; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.5); font-size: 13px; line-height: 16px; letter-spacing: 0.025em; color: #fff; }
-  .saver-title { font-family: var(--ff-head); font-weight: 400; font-size: 52px; line-height: 60px; letter-spacing: 0; text-wrap: balance; }
-  .saver-desc { font-size: 20px; line-height: 28px; color: rgba(255,255,255,0.86); max-width: 820px; }
-  .saver-foot { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 0 40px 40px; }
+  .sv-line { display: block; height: 4px; background: rgba(255,255,255,0.25); flex: 0 0 auto; }
+  .sv-line i { display: block; height: 100%; width: 0; background: #fff; transition: width 1s linear; }
+  #saver.v .sv-mid .sv-line { display: none; }
+  .sv-meta, .sv-title, .sv-desc, .sv-page { display: none; }
+  .sv-foot { position: relative; flex: 0 0 120px; display: flex; align-items: center; gap: 24px; padding: 0 40px; background: var(--text); color: #fff; }
+  .sv-foot > .sv-line { position: absolute; left: 0; right: 0; top: 0; }
+  .sv-foot .logo { width: 250px; flex: 0 0 auto; }
+  .sv-foot .logo path, .sv-foot .logo rect, .sv-foot .logo polygon { fill: #fff; }
   .dots { display: inline-flex; gap: 8px; }
   .dots i { width: 10px; height: 10px; border-radius: 999px; border: 1.5px solid #fff; background: transparent; }
   .dots i.on { background: #fff; }
-  .cta-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 64px; padding: 0 36px; background: var(--card); color: var(--text);
+  .cta-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 64px; padding: 0 28px; background: var(--card); color: var(--text);
     font-size: 16px; line-height: 20px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase; }
-  /* player */
-  #player { background: var(--text); color: #fff; display: flex; flex-direction: column; }
-  .player-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 32px; }
-  .player-badge { display: inline-flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(33,33,33,0.75); font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; }
-  .player-hint { font-size: 15px; line-height: 20px; color: rgba(255,255,255,0.86); padding: 12px 16px; background: rgba(33,33,33,0.55); }
+  .sv-foot .cta-pill { margin-left: auto; }
+  #saver.h, #saver.pg { background: var(--bg); color: var(--text); padding: 40px; gap: 24px; }
+  #saver.h .sv-top, #saver.pg .sv-top { display: block; }
+  #saver.h .sv-mid { justify-content: center; gap: 24px; }
+  #saver.h .sv-media { flex: 0 0 563px; width: 1000px; height: 563px; box-shadow: var(--shadow); }
+  #saver.h .sv-line { background: var(--border); } #saver.h .sv-line i { background: var(--text); }
+  #saver.h .sv-meta { display: block; font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); }
+  #saver.h .sv-title { display: block; font-family: var(--ff-head); font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0; text-wrap: balance; }
+  #saver.h .sv-desc { display: block; font-size: 20px; line-height: 28px; color: var(--muted); max-width: 880px; }
+  #saver.h.notitles .sv-meta, #saver.h.notitles .sv-title, #saver.h.notitles .sv-desc { display: none; }
+  #saver.pg .sv-media, #saver.pg .sv-line { display: none; }
+  #saver.pg .sv-page { display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+  #saver.h .sv-foot, #saver.pg .sv-foot { flex: 0 0 auto; padding: 0; background: transparent; color: var(--text); justify-content: space-between; }
+  #saver.h .sv-foot .logo, #saver.pg .sv-foot .logo, #saver.h .sv-foot > .sv-line, #saver.pg .sv-foot > .sv-line { display: none; }
+  #saver.h .dots i, #saver.pg .dots i { border-color: var(--text); } #saver.h .dots i.on, #saver.pg .dots i.on { background: var(--text); }
+  #saver.h .cta-pill, #saver.pg .cta-pill { background: var(--text); color: #fff; margin-left: 0; padding: 0 32px; }
+  .ai-tag { padding: 4px 10px; border: 1px solid rgba(255,255,255,0.5); font-size: 13px; line-height: 16px; letter-spacing: 0.025em; color: #fff; }
+  /* player: vertical on near-black at full height; horizontal on the light page with the clip, progress, title and description centred under the top bar */
+  #player { display: flex; flex-direction: column; background: var(--text); color: #fff; }
+  .player-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 32px; flex: 0 0 auto; }
+  .player-badge { display: inline-flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(255,255,255,0.12); font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; }
+  .player-hint { margin-left: auto; font-size: 15px; line-height: 20px; color: rgba(255,255,255,0.86); padding: 12px 16px; }
   .player-close { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; background: var(--card); color: var(--text); font-size: 16px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase; }
-  .player-bottom { position: relative; margin-top: auto; padding: 120px 40px 40px; background: linear-gradient(to top, rgba(33,33,33,0.92), rgba(33,33,33,0)); display: flex; flex-direction: column; align-items: flex-start; }
-  #player.whole .player-bottom { display: none; }
-  .player-bottom .ai-tag { margin: 14px 0 0; }
-  .player-title { font-family: var(--ff-head); font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0; }
-  .player-desc { margin-top: 12px; font-size: 20px; line-height: 28px; color: rgba(255,255,255,0.86); }
+  .pl-mid { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+  .pl-media { position: relative; display: block; flex: 1 1 auto; min-height: 0; background: var(--text); }
+  .player-title, .player-desc, #player .ai-tag { display: none; }
+  #player.h { background: var(--bg); color: var(--text); }
+  #player.h .player-badge { background: var(--band); }
+  #player.h .player-hint { color: var(--muted); }
+  #player.h .player-close { background: var(--text); color: #fff; }
+  #player.h .pl-mid { justify-content: center; gap: 24px; padding: 0 40px 104px; }
+  #player.h .pl-media { flex: 0 0 563px; width: 1000px; height: 563px; box-shadow: var(--shadow); }
+  #player.h .sv-line { background: var(--border); } #player.h .sv-line i { background: var(--text); }
+  #player.h .player-title { display: block; font-family: var(--ff-head); font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0; }
+  #player.h .player-desc { display: block; font-size: 20px; line-height: 28px; color: var(--muted); max-width: 880px; }
+  #player.h .ai-tag { display: inline-block; align-self: flex-start; border-color: var(--muted); color: var(--muted); }
   /* dashboard */
   #dash { display: flex; flex-direction: column; gap: 24px; height: 100%; box-sizing: border-box; padding: 40px 40px 24px; }
-  .dash-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .dash-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex: 0 0 auto; }
   .dash-head .brand { display: flex; flex-direction: column; gap: 16px; }
   .dash-head .logo { width: 300px; }
   .dash-head h1 { margin: 0; font-family: var(--ff-head); font-weight: 400; font-size: 52px; line-height: 56px; letter-spacing: 0; }
   .dash-head p { margin: 0; font-size: 18px; line-height: 26px; color: var(--muted); }
   .clock { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-bottom: 4px; }
-  .clock b { font-family: var(--ff-head); font-size: 28px; line-height: 32px; font-weight: 400; letter-spacing: 0; }
-  .clock span { font-size: 14px; line-height: 18px; color: var(--muted); }
-  .vthumb { position: relative; flex: 0 0 400px; width: 400px; height: 225px; overflow: hidden; background: var(--band); }
-  .vthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
-  .vthumb .play { position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; background: var(--text); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
-  .vthumb .dur { position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #fff; font-size: 14px; line-height: 18px; }
+  .clock b { font-family: var(--ff-head); font-size: 36px; line-height: 40px; font-weight: 400; letter-spacing: 0; }
+  .clock span { font-size: 13px; line-height: 16px; color: var(--muted); }
+  /* tabs: Perawatan first, then the pages staff published */
+  .tabs { display: flex; gap: 32px; border-bottom: 1px solid var(--border); flex: 0 0 auto; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button { flex: 0 0 auto; min-height: 56px; padding: 0 4px; font-size: 20px; line-height: 24px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); box-shadow: inset 0 -3px 0 transparent; white-space: nowrap; }
+  .tabs button.on { color: var(--text); font-weight: 600; box-shadow: inset 0 -3px 0 var(--text); }
+  /* Perawatan tab: large video left, choices right */
+  .treat2 { display: flex; gap: 24px; flex: 1 1 auto; min-height: 0; }
+  .vcol { flex: 0 0 480px; width: 480px; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .vpanel { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 20px; flex: 0 0 auto; width: 480px; height: 853px; overflow: hidden; background: var(--text); color: var(--text); text-align: left; }
+  .vpanel.h { background: var(--band); }
+  .vpanel .vimg { position: relative; display: block; flex: 0 0 auto; width: 480px; height: 853px; background: var(--text); }
+  .vpanel.h .vimg { height: 270px; }
+  .vpanel .vimg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .vpanel .play { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; background: var(--text); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+  .vpanel:active .play { background: var(--muted); }
+  .vpanel .dur { position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #fff; font-size: 13px; line-height: 16px; }
+  .vpanel .vdesc { display: none; padding: 0 24px; font-size: 18px; line-height: 26px; color: var(--muted); }
+  .vpanel.h .vdesc { display: block; }
+  .vpanel.none { align-items: center; justify-content: center; padding: 40px; box-sizing: border-box; background: var(--band); color: var(--muted); text-align: center; cursor: default; }
+  .vpanel.none .lbl { font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); }
+  .vpanel.none .ttl { font-family: var(--ff-head); font-size: 24px; line-height: 30px; font-weight: 500; letter-spacing: 0; color: var(--text); }
+  .vpanel.none .sub { font-size: 18px; line-height: 26px; color: var(--muted); }
+  .vpanel.none .txt { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .vcap { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .vcap .m { font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); }
+  .vcap .t { font-family: var(--ff-head); font-size: 20px; line-height: 26px; font-weight: 500; letter-spacing: 0; }
+  .tcol { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 16px; min-height: 0; }
   .cats { display: flex; flex-wrap: wrap; gap: 8px; flex: 0 0 auto; }
-  .cats button { flex: 0 0 auto; min-height: 56px; padding: 0 20px; background: transparent; color: var(--text); border: 1px solid var(--border); font-size: 18px; line-height: 22px; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap; }
+  .cats button { flex: 0 0 auto; min-height: 48px; padding: 0 14px; background: transparent; color: var(--text); border: 1px solid var(--border); font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap; }
   .cats button.on { background: var(--text); color: #fff; border-color: var(--text); }
   /* touch feedback: a pressed control darkens one step, no motion needed */
-  .cats button:not(.on):active, .tcard:active, .ghost:active, .pnav button:active { background: var(--band); }
-  .hero-video:active .vthumb .play, .player-close:active { background: var(--muted); }
-  .tgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-content: start; overflow-y: auto; flex: 1 1 auto; min-height: 0; padding: 2px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  .tgrid::-webkit-scrollbar { width: 6px; } .tgrid::-webkit-scrollbar-thumb { background: var(--border); }
-  .tcard { display: flex; flex-direction: column; gap: 8px; min-height: 128px; padding: 24px; box-sizing: border-box; background: var(--card); box-shadow: var(--shadow); }
+  .cats button:not(.on):active, .tcard:active, .ghost:active, .pnav button:active, .tabs button:active { background: var(--band); }
+  .player-close:active { background: var(--muted); }
+  .tlist { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1 1 auto; min-height: 0; padding: 2px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .tlist::-webkit-scrollbar { width: 6px; } .tlist::-webkit-scrollbar-thumb { background: var(--border); }
+  .tcard { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; padding: 16px 20px; box-sizing: border-box; background: var(--card); box-shadow: var(--shadow); text-align: left; }
   .tcard.on { box-shadow: 0 0 0 2px var(--text), var(--shadow); }
-  .tcard .n { font-family: var(--ff-head); font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0; }
-  .tcard .d { font-size: 16px; line-height: 22px; color: var(--muted); }
-  .tcard .p { margin-top: 4px; font-size: 15px; line-height: 20px; font-weight: 500; color: var(--text); }
-  .tcard img { width: 100%; height: 120px; object-fit: cover; }
-  /* hero: the selected treatment leads; the card list below it supports */
-  .hero { display: flex; gap: 32px; padding: 28px 32px; background: var(--card); box-shadow: var(--shadow); }
-  .hero-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
-  .hero-top h2 { margin: 0; font-size: 28px; line-height: 34px; font-weight: 500; text-wrap: balance; overflow-wrap: anywhere; }
-  .hero-top h2.long { font-size: 22px; line-height: 28px; }
-  .hero-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; }
-  .hero-price span { font-size: 14px; line-height: 20px; color: var(--muted); white-space: nowrap; }
-  .hero-concerns { margin: 0; font-size: 16px; line-height: 22px; color: var(--text); }
-  .hero-concerns b { font-weight: 600; }
-  .hero-price b { font-family: var(--ff-head); font-weight: 500; font-size: 36px; line-height: 42px; letter-spacing: 0; color: var(--text); }
-  .hero-price.ask b { font-family: var(--ff-body); font-weight: 500; font-size: 20px; line-height: 26px; letter-spacing: 0.025em; color: var(--text); }
-  .hero-facts { display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 0; }
-  .hero-facts div { display: flex; flex-direction: column; gap: 2px; }
-  .hero-facts dt { font-size: 14px; line-height: 18px; color: var(--muted); }
-  .hero-facts dd { margin: 0; font-size: 18px; line-height: 24px; font-weight: 500; }
-  .hero-note { margin: 0; font-size: 15px; line-height: 20px; color: var(--muted); }
-  .hero-after { margin: 0; font-size: 16px; line-height: 22px; color: var(--muted); }
-  .hero-after b { color: var(--text); font-weight: 600; }
-  .hero-video { flex: 0 0 400px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
-  .hero-video .vthumb { flex: none; width: 400px; height: 225px; }
-  .hero-vt { font-size: 15px; line-height: 20px; font-weight: 500; }
-  .hero-vm { font-size: 14px; line-height: 18px; color: var(--muted); }
-  .dfoot { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+  .tcard .row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .tcard .n { font-family: var(--ff-head); font-size: 20px; line-height: 26px; font-weight: 500; letter-spacing: 0; }
+  .tcard .pr { flex: 0 0 auto; font-size: 14px; line-height: 18px; color: var(--muted); }
+  .tcard .d { font-size: 15px; line-height: 20px; color: var(--muted); }
+  .tcard .hv { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; line-height: 16px; color: var(--text); }
+  .detail { display: flex; flex-direction: column; gap: 12px; flex: 0 0 auto; padding: 20px; background: var(--card); box-shadow: var(--shadow); }
+  .detail .hd { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .detail .hd b { font-family: var(--ff-head); font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0; }
+  .detail .cat { flex: 0 0 auto; padding: 4px 10px; background: var(--peach); font-size: 13px; line-height: 16px; }
+  .detail .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; margin: 0; }
+  .detail .facts div { display: flex; flex-direction: column; gap: 4px; }
+  .detail .facts dt { font-size: 13px; line-height: 16px; color: var(--muted); }
+  .detail .facts dd { margin: 0; font-size: 16px; line-height: 22px; font-weight: 500; }
+  .detail .after { margin: 0; font-size: 14px; line-height: 20px; color: var(--muted); }
+  .detail .after b { color: var(--text); font-weight: 500; }
+  /* page tab: blocks the admin composed */
+  .page { display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 2px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .page h2 { margin: 0; font-family: var(--ff-head); font-weight: 400; font-size: 36px; line-height: 44px; letter-spacing: 0; }
+  .page p { margin: 0; font-size: 20px; line-height: 30px; color: var(--muted); max-width: 880px; }
+  .page .plist2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .page .plist2 div { display: flex; gap: 12px; padding: 20px 24px; background: var(--card); box-shadow: var(--shadow); font-size: 18px; line-height: 26px; }
+  .page .plist2 i { flex: 0 0 auto; width: 8px; height: 8px; margin-top: 9px; background: var(--text); }
+  .page .pnote { padding: 20px 24px; background: var(--peach); font-size: 18px; line-height: 26px; }
+  .page .pimg { display: block; width: 100%; height: 480px; object-fit: cover; object-position: 50% 45%; flex: 0 0 auto; }
+  .pvid { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; flex: 0 0 auto; }
+  .pvid.v { align-items: center; }
+  .pvid button { position: relative; width: 1000px; height: 563px; overflow: hidden; background: var(--text); }
+  .pvid.v button { width: 360px; height: 640px; }
+  .pvid button img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pvid .play { position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; background: var(--text); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+  .pvid .dur { position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #fff; font-size: 13px; line-height: 16px; }
+  .pvid .cap { font-size: 15px; line-height: 20px; color: var(--muted); }
+  /* saver page slide: the same blocks, smaller */
+  .sv-page .page { overflow: hidden; }
+  .dfoot { display: flex; flex-direction: column; gap: 12px; margin-top: auto; flex: 0 0 auto; }
   .dfoot .row { display: flex; align-items: center; gap: 16px; }
   /* a contact strip, not a button: the kiosk never navigates, so it reads as information */
   .wa { display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 24px; background: var(--peach); color: var(--text); font-size: 18px; line-height: 22px; font-weight: 500; letter-spacing: 0.05em; }
   .wa svg { flex: none; }
   .wa b { font-weight: 600; }
   .ghost { display: inline-flex; align-items: center; min-height: 56px; padding: 0 24px; background: var(--greige); border: 1px solid var(--btn-border); color: var(--text); font-size: 14px; line-height: 18px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase; }
-  .hours { margin-left: auto; font-size: 14px; line-height: 20px; color: var(--muted); text-align: right; }
-  .legal { margin: 0; font-size: 14px; line-height: 20px; color: var(--muted); text-wrap: pretty; }
-  /* zone B */
-  #zoneB { position: relative; flex: 0 0 540px; height: 540px; box-sizing: border-box; display: flex; gap: 32px; padding: 40px 40px 32px; border-top: 1px solid var(--border); background: var(--band); overflow: hidden; }
-  .pleft { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; min-width: 0; }
-  .peyebrow { font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); }
-  .ptitlewrap { position: relative; display: inline-block; max-width: 100%; align-self: flex-start; }
-  .ptitlewrap i { position: absolute; inset: -8px -12px; background: var(--peach); }
-  .ptitlewrap h2 { position: relative; margin: 0; font-family: var(--ff-head); font-weight: 400; font-size: 40px; line-height: 48px; letter-spacing: 0; text-wrap: balance; }
-  .ptitlewrap.long h2 { font-size: 32px; line-height: 38px; }
-  .ptitlewrap h2 em { font-style: italic; }
-  .plede { margin: 0; font-size: 18px; line-height: 26px; color: var(--muted); max-width: 600px; }
-  .pchips { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .pchips .chip { padding: 8px 12px; background: var(--card); font-size: 15px; line-height: 20px; font-weight: 500; }
-  .pchips .valid { font-size: 14px; line-height: 20px; color: var(--muted); }
-  .pfoot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-  .pdots i { border-color: var(--text); } .pdots i.on { background: var(--text); }
-  .pnav { display: inline-flex; gap: 8px; }
-  .pnav button { width: 52px; height: 52px; background: var(--greige); border: 1px solid var(--btn-border); display: inline-flex; align-items: center; justify-content: center; color: var(--text); }
-  .pvalue { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; flex: 0 0 360px; width: 360px; background: var(--card); box-shadow: var(--shadow); padding: 24px; box-sizing: border-box; text-align: center; }
-  .pvalue .eyebrow { font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); }
-  .pvalue .big { font-family: var(--ff-head); font-weight: 500; font-size: 40px; line-height: 48px; letter-spacing: 0; color: var(--text); max-width: 100%; overflow-wrap: anywhere; }
-  .pvalue .big.long { font-size: 30px; line-height: 36px; }
-  .pvalue .note { font-size: 16px; line-height: 22px; color: var(--muted); }
-  /* an instruction, not a button: patients ask at the desk or message the clinic */
-  .pvalue .ask { margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 16px; background: var(--peach); font-size: 14px; line-height: 18px; color: var(--text); }
-  .pvalue .ask b { font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase; }
-  .pbar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--border); }
-  .pbar i { display: block; height: 100%; width: 0; background: var(--text); transition: width 1s linear; }
-  .kiosk-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 60px; text-align: center; color: var(--muted); font-size: 20px; line-height: 30px; }
-  .kiosk-empty b { font-family: var(--ff-head); font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0; color: var(--text); }
+  .hours { margin-left: auto; font-size: 13px; line-height: 18px; color: var(--muted); text-align: right; }
+  .legal { margin: 0; font-size: 12px; line-height: 16px; color: var(--muted); text-wrap: pretty; }
+  /* back to the admin, only on the admin's preview route, never on the real kiosk */
+  .kback { position: fixed; left: 16px; top: 16px; z-index: 5; }
   /* hearts: patients thank the doctor who treated them; counts never show on the screen, only in the admin */
   #hearts { display: flex; flex-direction: column; gap: 20px; height: 100%; box-sizing: border-box; padding: 32px 40px 20px; }
   .hz-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
@@ -208,15 +232,50 @@
   .ghost svg, .hz-entry svg { flex: none; }
   .hz-entry { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; background: var(--text); color: #fff; font-size: 14px; line-height: 18px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase; }
   .hz-entry:active { background: var(--muted); }
+  .dash-head .side-r { display: flex; flex-direction: column; align-items: flex-end; gap: 16px; flex: 0 0 auto; }
   /* screen-saver invitation between videos: same dark stage, the doctors' faces and one line */
-  .sv-invite { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 160px 64px 140px; background: var(--text); color: #fff; text-align: left; }
+  .sv-invite { position: absolute; inset: 0 0 120px 0; display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 120px 64px 80px; box-sizing: border-box; background: var(--text); color: #fff; text-align: left; }
   .sv-faces { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   .sv-faces img { width: 100%; aspect-ratio: 1; object-fit: cover; object-position: 50% 14%; display: block; background: #333; }
-  .sv-invite .saver-meta { color: var(--peach); }
-  .sv-invite .saver-title { font-size: 64px; line-height: 72px; }
-  .sv-invite .saver-desc { font-size: 24px; line-height: 34px; }
-  #saver.inviting #saverVideo, #saver.inviting .saver-text, #saver.inviting .dots, #saver.inviting .saver-scrim { visibility: hidden; }
+  .sv-invite .saver-meta { display: flex; align-items: center; gap: 12px; font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: var(--peach); }
+  .sv-invite .saver-title { font-family: var(--ff-head); font-weight: 400; font-size: 64px; line-height: 72px; letter-spacing: 0; text-wrap: balance; }
+  .sv-invite .saver-desc { font-size: 24px; line-height: 34px; color: rgba(255,255,255,0.86); max-width: 820px; }
+  #saver.inviting { background: var(--text); color: #fff; padding: 0; }
+  #saver.inviting .sv-mid { visibility: hidden; }
+  #saver.inviting .sv-foot { flex: 0 0 120px; padding: 0 40px; background: var(--text); color: #fff; justify-content: flex-start; }
+  #saver.inviting .sv-foot .logo { display: block; } #saver.inviting .sv-foot > .sv-line { display: block; }
+  #saver.inviting .sv-foot .dots { visibility: hidden; }
+  #saver.inviting .cta-pill { margin-left: auto; background: var(--card); color: var(--text); }
   @media (prefers-reduced-motion: reduce) { .hz-heart.pop svg, .hz-heart.nope svg, .hz-halo, .hz-burst svg { animation-duration: .01s; } .hz-card { transition: none; } }
+  /* zone B */
+  #zoneB { position: relative; flex: 0 0 540px; height: 540px; box-sizing: border-box; display: flex; gap: 32px; padding: 40px 40px 32px; border-top: 1px solid var(--border); background: var(--band); overflow: hidden; }
+  .pleft { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; min-width: 0; }
+  .peyebrow { font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); }
+  .ptitlewrap { position: relative; display: inline-block; max-width: 100%; align-self: flex-start; }
+  .ptitlewrap i { position: absolute; left: -12px; top: -8px; bottom: -8px; width: 583px; background: var(--peach); }
+  .ptitlewrap h2 { position: relative; margin: 0; font-family: var(--ff-head); font-weight: 400; font-size: 40px; line-height: 48px; letter-spacing: 0; text-wrap: balance; }
+  .ptitlewrap.long h2 { font-size: 32px; line-height: 38px; }
+  .ptitlewrap h2 em { font-style: italic; }
+  .plede { margin: 0; font-size: 18px; line-height: 26px; color: var(--muted); max-width: 600px; }
+  .pchips { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .pchips .chip { padding: 8px 12px; background: var(--card); font-size: 15px; line-height: 20px; font-weight: 500; }
+  .pchips .valid { font-size: 14px; line-height: 20px; color: var(--muted); }
+  .pfoot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .pdots i { border-color: var(--text); } .pdots i.on { background: var(--text); }
+  .pnav { display: inline-flex; gap: 8px; }
+  .pnav button { width: 52px; height: 52px; background: var(--greige); border: 1px solid var(--btn-border); display: inline-flex; align-items: center; justify-content: center; color: var(--text); }
+  .pvalue { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; flex: 0 0 360px; width: 360px; background: var(--card); box-shadow: var(--shadow); padding: 24px; box-sizing: border-box; text-align: center; }
+  .pvalue .eyebrow { font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); }
+  .pvalue .big { font-family: var(--ff-head); font-weight: 500; font-size: 40px; line-height: 48px; letter-spacing: 0; color: var(--text); max-width: 100%; overflow-wrap: anywhere; }
+  .pvalue .big.long { font-size: 30px; line-height: 36px; }
+  .pvalue .note { font-size: 16px; line-height: 22px; color: var(--muted); }
+  /* an instruction, not a button: patients ask at the desk or message the clinic */
+  .pvalue .ask { margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 16px; background: var(--peach); font-size: 14px; line-height: 18px; color: var(--text); }
+  .pvalue .ask b { font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase; }
+  .pbar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--border); }
+  .pbar i { display: block; height: 100%; width: 0; background: var(--text); transition: width 1s linear; }
+  .kiosk-empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 60px; text-align: center; color: var(--muted); font-size: 20px; line-height: 30px; }
+  .kiosk-empty b { font-family: var(--ff-head); font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0; color: var(--text); }
   .status-pill { position: absolute; right: 24px; bottom: 16px; font-size: 13px; letter-spacing: 0.05em; color: var(--border); display: inline-flex; align-items: center; gap: 6px; }
   .status-pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
   .status-pill[data-state="live"]::before { background: var(--peach); }
@@ -383,11 +442,85 @@
   .pbandprev .r .k { font-size: 11px; line-height: 14px; letter-spacing: 0.05em; color: var(--muted); }
   .pbandprev .r .b { font-family: var(--ff-head); font-weight: 500; font-size: 18px; line-height: 22px; letter-spacing: 0; color: var(--text); max-width: 100%; overflow-wrap: anywhere; }
   .pbandprev .r .b.long { font-size: 14px; line-height: 18px; }
+  /* ----- pages, review and the preview frame ----- */
+  .side nav a .grow { flex: 1 1 auto; }
+  .badge { min-width: 22px; padding: 0 6px; background: var(--peach); font-size: 13px; line-height: 22px; text-align: center; font-weight: 600; color: var(--text); }
+  .badge:empty, .badge[data-n="0"] { display: none; }
+  .sbadge { padding: 2px 8px; font-size: 13px; line-height: 18px; border: 1px solid var(--border); color: var(--text); white-space: nowrap; }
+  .sbadge.live { background: var(--peach); border-color: var(--peach); }
+  .sbadge.review { background: var(--text); color: #fff; border-color: var(--text); }
+  .filters { display: flex; gap: 4px; flex-wrap: wrap; }
+  .filters button { min-height: 36px; padding: 0 12px; border: 1px solid var(--border); font-size: 14px; font-weight: 500; letter-spacing: 0.05em; color: var(--text); }
+  .filters button[aria-pressed="true"] { background: var(--text); color: #fff; border-color: var(--text); }
+  .tcards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 1100px) { .tcards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .tcardx { display: flex; flex-direction: column; gap: 8px; padding: 24px; background: var(--card); box-shadow: var(--shadow); color: var(--text); text-align: left; min-width: 0; }
+  .tcardx:hover { box-shadow: 0 0 0 1px var(--gold), var(--shadow); }
+  .tcardx b { font-family: var(--ff-head); font-size: 18px; line-height: 24px; font-weight: 500; letter-spacing: 0; }
+  .tcardx span { font-size: 14px; line-height: 20px; color: var(--muted); }
+  .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+  .steps li { display: flex; gap: 12px; font-size: 16px; line-height: 22px; }
+  .steps li i { flex: 0 0 auto; width: 28px; height: 28px; background: var(--text); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; font-style: normal; }
+  .peachnote { padding: 12px 16px; background: var(--peach); font-size: 14px; line-height: 20px; color: var(--text); }
+  .blk { display: flex; flex-direction: column; gap: 12px; padding: 20px 24px; background: var(--card); box-shadow: var(--shadow); }
+  .blk .bh { display: flex; align-items: center; gap: 8px; }
+  .blk .bh .tag { padding: 2px 8px; background: var(--band); font-size: 13px; line-height: 18px; font-weight: 500; }
+  .blk .bh .sp { flex: 1 1 auto; }
+  .blk input, .blk textarea, .blk select { min-height: 44px; padding: 0 12px; border: 1px solid var(--border); background: var(--bg); font-size: 16px; box-sizing: border-box; width: 100%; }
+  .blk textarea { padding: 12px; line-height: 24px; resize: vertical; }
+  .blk input.hd { min-height: 48px; font-family: var(--ff-head); font-size: 22px; letter-spacing: 0; }
+  .blk textarea.notein { background: var(--peach); }
+  .blk .imgrow { display: flex; gap: 16px; align-items: stretch; flex-wrap: wrap; }
+  .blk .imgrow .drop { flex: 0 0 200px; min-height: 112px; }
+  .blk .imgrow .field { flex: 1 1 240px; }
+  .blk .vidrow { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; align-items: end; }
+  @media (max-width: 760px) { .blk .vidrow { grid-template-columns: 1fr; } }
+  .adders { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 16px 24px; border: 1.5px dashed var(--greige); }
+  .adders > span { font-size: 14px; font-weight: 500; letter-spacing: 0.05em; color: var(--muted); margin-right: 8px; }
+  .adders .btn.sm { min-height: 36px; padding: 0 12px; font-size: 12px; }
+  .seg { display: flex; }
+  .seg button { flex: 1 1 0; min-height: 44px; padding: 0 8px; border: 1px solid var(--text); font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-align: center; color: var(--text); background: transparent; }
+  .seg button + button { border-left: 0; }
+  .seg button[aria-pressed="true"] { background: var(--text); color: #fff; }
+  .seg.sm button { min-height: 36px; font-size: 13px; }
+  .help.over, .warnc { color: var(--error); }
+  /* the mini screen keeps the kiosk's 9:16 and scales the full 1080×1920 frame to whatever width the column gives it */
+  .mini { align-self: center; position: relative; width: 100%; max-width: 360px; aspect-ratio: 9 / 16; overflow: hidden; background: var(--bg); box-shadow: 0 0 0 1px var(--border), var(--shadow); }
+  .mini iframe { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; border: 0; transform: scale(0.33333); transform-origin: 0 0; background: var(--bg); }
+  #tab-halaman .cols > .narrow, #tab-tinjau .cols > .narrow { flex-basis: 400px; }
+  .chg { display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; background: var(--card); box-shadow: var(--shadow); }
+  .chg.sel { box-shadow: 0 0 0 2px var(--text), var(--shadow); }
+  .chg.off .body { opacity: 0.55; }
+  .chg > input { flex: 0 0 auto; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #212121; }
+  .chg .body { display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; min-width: 0; }
+  .chg .tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .chg .kind { padding: 2px 8px; background: var(--band); font-size: 13px; line-height: 18px; font-weight: 500; }
+  .chg .act { padding: 2px 8px; border: 1px solid var(--border); font-size: 13px; line-height: 18px; }
+  .chg .ttl { font-family: var(--ff-head); font-size: 18px; line-height: 24px; font-weight: 500; letter-spacing: 0; }
+  .chg .det { font-size: 16px; line-height: 22px; color: var(--muted); }
+  .chg .who { font-size: 13px; line-height: 16px; color: var(--muted); }
+  .chg .rnote { font-size: 14px; line-height: 20px; padding: 8px 12px; background: var(--peach); }
+  .chg .sidebtns { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: 0 0 auto; }
+  .chk { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px; }
+  .chk svg { flex: 0 0 auto; margin-top: 2px; }
+  .chk.warn { padding: 12px; border: 1px solid var(--error); }
+  .chk span { flex: 1 1 auto; }
+  .decide { box-shadow: 0 0 0 2px var(--text), var(--shadow); }
+  .hist .row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--border); }
+  .hist .row .b { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-width: 0; font-size: 16px; line-height: 22px; font-weight: 500; }
+  .hist .row .b small { font-size: 13px; line-height: 16px; color: var(--muted); font-weight: 400; }
+  .banner { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--peach); font-size: 16px; line-height: 22px; }
+  .banner svg { flex: 0 0 auto; }
+  .prow .act .toggle:disabled { cursor: default; }
+  .prow .act .ended { font-size: 13px; line-height: 16px; color: var(--muted); text-align: right; }
+  .vcard .orient { display: flex; flex-direction: column; gap: 6px; }
+  .vcard .orient .note { font-size: 12px; line-height: 16px; }
+  .intro { font-size: 15px; line-height: 22px; color: var(--muted); max-width: 460px; }
   /* heart tally (admin) */
-  .seg { display: inline-flex; flex-wrap: wrap; }
-  .seg button { min-height: 44px; padding: 0 16px; border: 1px solid var(--border); margin-left: -1px; background: var(--card); font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; }
-  .seg button[aria-pressed="true"] { position: relative; background: var(--text); color: #fff; border-color: var(--text); }
-  .seg button:not([aria-pressed="true"]):hover { border-color: var(--gold); position: relative; }
+  .hseg { display: inline-flex; flex-wrap: wrap; }
+  .hseg button { min-height: 44px; padding: 0 16px; border: 1px solid var(--border); margin-left: -1px; background: var(--card); font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; }
+  .hseg button[aria-pressed="true"] { position: relative; background: var(--text); color: #fff; border-color: var(--text); }
+  .hseg button:not([aria-pressed="true"]):hover { border-color: var(--gold); position: relative; }
   .hrank { display: flex; flex-direction: column; gap: 8px; }
   .hrow { display: grid; grid-template-columns: 40px minmax(90px, 150px) minmax(0, 1fr) 48px; align-items: center; gap: 12px; }
   .hrow img { width: 40px; height: 40px; border-radius: 999px; object-fit: cover; object-position: 50% 14%; display: block; }
@@ -449,6 +582,12 @@
 <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
 <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
 <symbol id="i-playing" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 8.5v7l5.5-3.5z" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7"/></g></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V9l8-5 8 5v12"/><path d="M10 21v-6h4v6"/></g></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h1M4 12h1M4 18h1"/></g></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16"/><path d="M3 10h18M8 3v4M16 3v4"/></g></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></g></symbol>
 </svg>
 
 <!-- ================= KIOSK ================= -->
@@ -458,16 +597,17 @@
       <div id="kioskEmpty" class="kiosk-empty" hidden>
         <svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg>
         <b>Layar belum berisi konten</b>
-        <span>Buka halaman admin, isi perawatan, promo dan video, lalu tekan "Publikasikan ke layar".</span>
+        <span>Buka halaman admin, isi perawatan, promo dan video, lalu publikasikan dari "Tinjau &amp; publikasikan".</span>
       </div>
-      <button id="saver" class="fill" aria-label="Sentuh layar untuk melihat perawatan" hidden>
-        <video id="saverVideo" muted autoplay playsinline preload="auto"></video>
-        <span class="saver-scrim"></span>
-        <span class="saver-logo"><svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg></span>
-        <span class="saver-text" id="saverText">
-          <span class="saver-meta"><span>Video penjelasan</span><span class="dot4"></span><span id="svNum">1 / 1</span><span class="ai-tag" id="svAi" hidden>Karakter virtual (AI)</span></span>
-          <span class="saver-title" id="svTitle"></span>
-          <span class="saver-desc" id="svDesc"></span>
+      <button id="saver" class="fill v" aria-label="Sentuh layar untuk melihat perawatan" hidden>
+        <span class="sv-top"><svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg></span>
+        <span class="sv-mid">
+          <span class="sv-media"><video id="saverVideo" muted autoplay playsinline preload="auto"></video></span>
+          <span class="sv-line"><i id="svBarH"></i></span>
+          <span class="sv-meta" id="svMeta"></span>
+          <span class="sv-title" id="svTitle"></span>
+          <span class="sv-desc" id="svDesc"></span>
+          <span class="sv-page" id="svPage"></span>
         </span>
         <span class="sv-invite" id="svInvite" hidden>
           <span class="sv-faces" id="svFaces"></span>
@@ -475,22 +615,21 @@
           <span class="saver-title">Beri heart untuk dokter Anda</span>
           <span class="saver-desc">Satu sentuhan untuk berterima kasih kepada dokter yang menangani Anda.</span>
         </span>
-        <span class="saver-foot"><span class="dots" id="svDots"></span><span class="cta-pill" id="svCta">Sentuh layar untuk melihat perawatan</span></span>
-        <span class="edge-bar"><i id="svBar"></i></span>
+        <span class="sv-foot"><span class="sv-line"><i id="svBar"></i></span><svg class="logo" aria-hidden="true"><use href="#adc-logo"/></svg><span class="dots" id="svDots"></span><span class="cta-pill" id="svCta">Sentuh layar untuk melihat perawatan</span></span>
       </button>
-      <div id="player" class="fill" hidden>
-        <video id="playerVideo" playsinline preload="auto"></video>
+      <div id="player" class="fill v" hidden>
         <div class="player-top">
           <span class="player-badge"><svg width="18" height="18"><use href="#i-playing"/></svg><span id="plBadge">Sedang diputar</span></span>
           <span class="player-hint" id="plHint">Ketuk gambar untuk jeda</span>
           <button class="player-close" id="plClose" aria-label="Tutup video"><svg width="18" height="18"><use href="#i-x"/></svg><span>Tutup</span></button>
         </div>
-        <div class="player-bottom">
+        <div class="pl-mid">
+          <span class="pl-media"><video id="playerVideo" playsinline preload="auto"></video></span>
+          <span class="sv-line"><i id="plBar"></i></span>
           <div class="player-title" id="plTitle"></div>
           <div class="player-desc" id="plDesc"></div>
           <span class="ai-tag" id="plAi" hidden>Karakter virtual (AI)</span>
         </div>
-        <span class="edge-bar"><i id="plBar"></i></span>
       </div>
       <div id="dash" hidden></div>
       <div id="hearts" hidden>
@@ -507,6 +646,7 @@
     <div id="zoneB" hidden></div>
   </div>
   <span class="status-pill" id="kStatus" data-state="connecting" hidden>Menghubungkan…</span>
+  <a class="btn outline kback" id="kBack" href="#admin" hidden><svg width="16" height="16"><use href="#i-left"/></svg><span>Kembali ke admin</span></a>
 </section>
 
 <!-- ================= ADMIN ================= -->
@@ -519,7 +659,9 @@
       <a href="#promo" data-tab="promo"><svg width="18" height="18"><use href="#i-tag"/></svg><span>Promo</span></a>
       <a href="#video" data-tab="video"><svg width="18" height="18"><use href="#i-video"/></svg><span>Video &amp; screen saver</span></a>
       <a href="#heart" data-tab="heart"><svg width="18" height="18"><use href="#i-heart"/></svg><span>Heart dokter</span></a>
-      <a href="#kiosk"><svg width="18" height="18"><use href="#i-tablet"/></svg><span>Pratinjau layar</span></a>
+      <a href="#halaman" data-tab="halaman"><svg width="18" height="18"><use href="#i-doc"/></svg><span>Halaman</span></a>
+      <a href="#tinjau" data-tab="tinjau"><svg width="18" height="18"><use href="#i-eye"/></svg><span class="grow">Tinjau &amp; publikasikan</span><span class="badge tnum" id="navBadge" data-n="0"></span></a>
+      <a href="#pratinjau"><svg width="18" height="18"><use href="#i-tablet"/></svg><span>Pratinjau layar</span></a>
     </nav>
     <div class="who">
       <div class="row"><img class="avatar" id="meAvatar" alt="" hidden><span class="avatar" id="meInit">·</span><span><span id="meName" style="font-size:14px;font-weight:500">Memuat…</span><small id="meRole"></small></span></div>
@@ -534,8 +676,8 @@
     </div>
     <div id="adminBody" hidden>
       <div class="phead">
-        <div class="l"><h1 id="phTitle">Ringkasan</h1><span class="subtitle" id="phEyebrow">Layar ruang tunggu</span></div>
-        <div class="r"><span class="pub-state" id="pubState">Memuat…</span><button class="btn solid" id="btnPublish"><svg width="18" height="18"><use href="#i-check"/></svg><span>Publikasikan ke layar</span></button><span class="confirm pub-confirm" id="pubConfirm" hidden><span id="pubConfirmText"></span><button type="button" class="btn solid sm" id="pubYes">Ya, tayangkan</button><button type="button" class="btn quiet sm" id="pubNo">Batal</button></span></div>
+        <div class="l"><span class="subtitle" id="phEyebrow">Layar ruang tunggu</span><h1 id="phTitle">Ringkasan</h1></div>
+        <div class="r" id="phActions"><span class="pub-state" id="pubState">Memuat…</span><a class="btn outline" id="btnReview" href="#tinjau">Tinjau perubahan</a></div>
       </div>
 
       <!-- Ringkasan -->
@@ -573,7 +715,7 @@
             <div class="field"><label for="tfAfter">Setelah perawatan</label><textarea id="tfAfter" rows="2" placeholder="Kosongkan = mengikuti anjuran dokter setelah tindakan"></textarea></div>
             <div class="field"><label for="tfConcerns">Untuk keluhan apa (sesuai halaman website)</label><input id="tfConcerns" type="text"><span class="help">Hanya klaim yang ada di website atau daftar perawatan resmi.</span></div>
             <div class="grid2">
-              <div class="field"><label for="tfVideo">Video penjelasan</label><select id="tfVideo"></select><a class="link" href="#video">Unggah video baru</a></div>
+              <div class="field"><label for="tfVideo">Video penjelasan</label><select id="tfVideo"></select><span class="help" id="tfVideoNote">Panel video di layar mengikuti orientasi videonya: vertikal 9:16 mengisi panel 480×853 di kiri, horizontal 16:9 tampil 480×270 di tengah panel dengan deskripsinya.</span><a class="link" href="#video">Unggah video baru</a></div>
               <div class="field"><label>Foto perawatan</label><label class="drop" for="tfPhoto" id="tfPhotoDrop"><img id="tfPhotoImg" alt="" hidden><svg width="28" height="28"><use href="#i-upload"/></svg><b>Pilih foto</b><small>JPG atau PNG, rasio 16:9, maks. 5 MB</small></label><input id="tfPhoto" class="sr" type="file" accept="image/png,image/jpeg,image/webp"><button type="button" class="link muted" id="tfPhotoRemove" hidden>Hapus foto</button></div>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><label class="check"><input type="checkbox" id="tfShow" checked><span>Tampil di layar</span></label><span class="confirm" id="tfDeleteWrap" hidden><button type="button" class="link muted" id="tfDelete">Hapus perawatan</button><span id="tfDeleteConfirm" hidden>Yakin? <button type="button" class="link" id="tfDeleteYes">Ya, hapus</button> · <button type="button" class="link muted" id="tfDeleteNo">Batal</button></span></span></div>
@@ -630,7 +772,7 @@
       <div id="tab-video" class="tab" hidden>
         <div class="cols">
           <section class="wide" style="display:flex;flex-direction:column;gap:16px">
-            <label class="drop row" for="vUpload" id="vDrop"><span class="ico"><svg width="24" height="24"><use href="#i-upload"/></svg></span><span style="display:flex;flex-direction:column;gap:4px"><b>Seret video ke sini atau pilih berkas</b><small>MP4 (H.264) · video 9:16 (1080×1920) tampil utuh dengan bingkai gelap di kiri–kanan; 16:9 tampil dengan bingkai atas–bawah · maks. 20 MB per berkas · tanpa suara di ruang tunggu</small></span></label>
+            <label class="drop row" for="vUpload" id="vDrop"><span class="ico"><svg width="24" height="24"><use href="#i-upload"/></svg></span><span style="display:flex;flex-direction:column;gap:4px"><b>Seret video ke sini atau pilih berkas</b><small>MP4 (H.264) · orientasi terbaca otomatis dari ukurannya: 9:16 (1080×1920) vertikal, 16:9 horizontal; bisa diubah di setiap kartu · maks. 20 MB per berkas · tanpa suara di ruang tunggu</small></span></label>
             <input id="vUpload" class="sr" type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.mov,.webm">
             <div class="upl" id="uplRow" hidden><svg width="22" height="22" style="flex:0 0 auto"><use href="#i-video"/></svg><div class="body"><div class="t"><b id="uplName"></b><span class="tnum" id="uplPct"></span></div><div class="ubar"><i id="uplBar"></i></div><span class="note" id="uplStage"></span></div></div>
             <div class="hd" style="display:flex;justify-content:space-between;align-items:center;padding:4px 4px 0"><h2 style="margin:0;font-size:18px;font-weight:500">Pustaka video</h2><span class="note" id="vCount"></span></div>
@@ -640,12 +782,12 @@
           <div class="narrow">
             <section class="card">
               <div class="hd"><h2>Mode screen saver</h2><span class="switch-wrap"><span id="setSaverLabel">Aktif</span><button class="switch" id="setSaver" role="switch" aria-checked="true" aria-label="Putar video saat layar tidak digunakan"></button></span></div>
-              <span class="note" style="font-size:13px;line-height:18px">Saat tidak ada sentuhan, zona utama memutar video berikut bergantian. Band promo di bawahnya tetap berjalan sendiri.</span>
+              <span class="note" style="font-size:13px;line-height:18px">Saat tidak ada sentuhan, zona utama memutar video berikut bergantian, lalu halaman yang diikutkan di screen saver (10 detik). Band promo di bawahnya tetap berjalan sendiri.</span>
               <div class="rowline"><label for="setIdle">Mulai setelah tidak disentuh</label><span class="numin"><input id="setIdle" type="number" min="1" max="30"><span>menit</span></span></div>
               <label class="check"><input type="checkbox" id="setSound"><span>Suara (mati untuk ruang tunggu)</span></label>
-              <label class="check"><input type="checkbox" id="setTitles"><span>Tampilkan judul dan deskripsi di atas video 16:9</span></label>
+              <label class="check"><input type="checkbox" id="setTitles"><span>Tampilkan judul dan deskripsi di bawah video horizontal 16:9</span></label>
               <label class="check"><input type="checkbox" id="setInvite"><span>Ajak pasien memberi heart untuk dokter, 12 detik setelah setiap dua video</span></label>
-              <span class="note" style="font-size:13px;line-height:18px">Video 9:16 selalu tampil utuh tanpa teks tambahan: judul, label AI, dan subtitelnya sudah ada di dalam videonya.</span>
+              <span class="note" style="font-size:13px;line-height:18px">Video vertikal 9:16 selalu tampil utuh tanpa teks tambahan: judul, label AI, dan subtitelnya sudah ada di dalam videonya.</span>
             </section>
             <section class="card lined" style="gap:12px">
               <div class="hd"><h3>Urutan putar</h3><span class="note" id="plInfo"></span></div>
@@ -661,7 +803,7 @@
         <div style="display:flex;flex-direction:column;gap:24px">
           <div class="hd" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
             <p class="note" id="hSince" style="margin:0"></p>
-            <div class="seg" role="group" aria-label="Rentang waktu"><button type="button" data-hr="today">Hari ini</button><button type="button" data-hr="7">7 hari</button><button type="button" data-hr="30">30 hari</button><button type="button" data-hr="all" aria-pressed="true">Sejak hitungan baru</button></div>
+            <div class="hseg" role="group" aria-label="Rentang waktu"><button type="button" data-hr="today">Hari ini</button><button type="button" data-hr="7">7 hari</button><button type="button" data-hr="30">30 hari</button><button type="button" data-hr="all" aria-pressed="true">Sejak hitungan baru</button></div>
           </div>
           <div class="tiles" id="hTiles"></div>
           <div class="cols">
@@ -679,6 +821,103 @@
           <p class="note">Heart diberikan pasien di layar dan langsung tersimpan; tidak perlu dipublikasikan. Jumlahnya hanya tampil di halaman ini, tidak di layar pasien.</p>
         </div>
       </div>
+
+      <!-- Halaman -->
+      <div id="tab-halaman" class="tab" hidden>
+        <div id="pgList" style="display:flex;flex-direction:column;gap:32px">
+          <section style="display:flex;flex-direction:column;gap:16px">
+            <h2 style="margin:0;font-family:var(--ff-head);font-size:22px;line-height:28px;font-weight:500;letter-spacing:0">Mulai dari template</h2>
+            <div class="tcards">
+              <button class="tcardx" data-tpl="blank"><svg width="24" height="24"><use href="#i-doc"/></svg><b>Halaman kosong</b><span>Susun sendiri dari blok judul, teks, gambar, daftar dan video.</span></button>
+              <button class="tcardx" data-tpl="klinik"><svg width="24" height="24"><use href="#i-home"/></svg><b>Info klinik</b><span>Foto, deskripsi singkat, penghargaan, alamat dan jam buka.</span></button>
+              <button class="tcardx" data-tpl="panduan"><svg width="24" height="24"><use href="#i-list"/></svg><b>Panduan perawatan</b><span>Persiapan dan perawatan setelah tindakan, dalam daftar poin.</span></button>
+              <button class="tcardx" data-tpl="event"><svg width="24" height="24"><use href="#i-cal"/></svg><b>Event</b><span>Tanggal, tempat dan detail event, dengan jadwal tayang otomatis.</span></button>
+            </div>
+          </section>
+          <div class="cols">
+            <section class="card wide" style="padding-bottom:8px">
+              <div class="hd"><h2>Semua halaman</h2><div class="filters" role="group" aria-label="Saring status" id="pgFilters"></div></div>
+              <div class="tablewrap" id="pgTable"></div>
+            </section>
+            <div class="narrow">
+              <section class="card">
+                <h2>Dari draf ke layar</h2>
+                <ol class="steps"><li><i>1</i><span>Buat atau ubah halaman. Semua perubahan tersimpan sebagai draf.</span></li><li><i>2</i><span>Kirim ke tinjauan. Draf belum terlihat oleh pasien.</span></li><li><i>3</i><span>Admin memeriksa pratinjau, lalu mempublikasikan ke layar.</span></li></ol>
+                <span class="peachnote">Layar di ruang tunggu hanya berubah setelah dipublikasikan dari halaman Tinjau &amp; publikasikan.</span>
+              </section>
+            </div>
+          </div>
+        </div>
+        <div id="pgEditor" class="cols" hidden>
+          <div class="wide" style="display:flex;flex-direction:column;gap:24px">
+            <section class="card">
+              <h2>Pengaturan halaman</h2>
+              <div class="grid2" style="gap:16px 24px">
+                <div class="field"><label for="pgTitle">Judul halaman</label><input id="pgTitle" type="text" maxlength="80"></div>
+                <div class="field"><div class="lbl"><label for="pgTab">Label tab di layar</label><span class="help tnum" id="pgTabLen">0 / 18</span></div><input id="pgTab" type="text" maxlength="18"></div>
+                <div class="field"><label for="pgPos">Posisi tab</label><select id="pgPos"></select></div>
+                <div class="grid2" style="gap:12px"><div class="field"><label for="pgFrom">Tayang dari</label><input id="pgFrom" type="date"></div><div class="field"><label for="pgTo">Sampai (opsional)</label><input id="pgTo" type="date"></div></div>
+              </div>
+              <div style="display:flex;gap:24px;flex-wrap:wrap"><label class="check"><input type="checkbox" id="pgShowTab"><span>Tampil sebagai tab di layar</span></label><label class="check"><input type="checkbox" id="pgInSaver"><span>Ikut diputar di screen saver (10 detik)</span></label></div>
+              <div class="peachnote" id="pgReviewNote" hidden></div>
+            </section>
+            <section style="display:flex;flex-direction:column;gap:16px">
+              <div class="hd" style="display:flex;align-items:center;justify-content:space-between"><h2 style="margin:0;font-family:var(--ff-head);font-size:22px;line-height:28px;font-weight:500;letter-spacing:0">Isi halaman</h2><span class="note" id="pgBlockCount"></span></div>
+              <div id="pgBlocks" style="display:flex;flex-direction:column;gap:16px"></div>
+              <div class="adders"><span>Tambah blok</span><button class="btn outline sm" data-addblk="heading"><svg width="12" height="12"><use href="#i-plus"/></svg><span>Judul</span></button><button class="btn outline sm" data-addblk="text"><svg width="12" height="12"><use href="#i-plus"/></svg><span>Paragraf</span></button><button class="btn outline sm" data-addblk="list"><svg width="12" height="12"><use href="#i-plus"/></svg><span>Daftar poin</span></button><button class="btn outline sm" data-addblk="note"><svg width="12" height="12"><use href="#i-plus"/></svg><span>Catatan</span></button><button class="btn outline sm" data-addblk="image"><svg width="12" height="12"><use href="#i-plus"/></svg><span>Gambar</span></button><button class="btn outline sm" data-addblk="video"><svg width="12" height="12"><use href="#i-plus"/></svg><span>Video</span></button></div>
+              <span class="confirm" id="pgDeleteWrap"><button type="button" class="link muted" id="pgDelete">Hapus halaman</button><span id="pgDeleteConfirm" hidden>Hapus halaman ini dari draf? <button type="button" class="link" id="pgDeleteYes">Ya, hapus</button> · <button type="button" class="link muted" id="pgDeleteNo">Batal</button></span></span>
+            </section>
+          </div>
+          <div class="narrow" style="max-width:420px">
+            <section class="card" style="gap:12px">
+              <div class="hd"><h2>Pratinjau layar</h2><span class="note" id="pgPrevState">Draf, belum tayang</span></div>
+              <div class="mini"><iframe id="pgFrame" title="Pratinjau layar halaman" tabindex="-1"></iframe></div>
+              <a class="link" href="#pratinjau" id="pgFull" style="align-self:center">Buka pratinjau layar penuh</a>
+            </section>
+            <section class="card" style="gap:12px">
+              <h2>Pemeriksaan isi</h2>
+              <div id="pgChecks" style="display:flex;flex-direction:column;gap:12px"></div>
+              <span class="note" style="font-size:13px;line-height:18px">Klaim manfaat hanya yang ada di website atau daftar perawatan resmi. Angka di bawah sepuluh ditulis dengan huruf, kecuali harga, durasi dan jumlah sesi.</span>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tinjau & publikasikan -->
+      <div id="tab-tinjau" class="tab" hidden>
+        <div class="banner" id="rvBanner" role="status" hidden><svg width="20" height="20"><use href="#i-check"/></svg><span id="rvBannerText"></span></div>
+        <div class="cols">
+          <div class="wide" style="display:flex;flex-direction:column;gap:16px">
+            <div class="hd" style="display:flex;align-items:center;justify-content:space-between"><h2 style="margin:0;font-family:var(--ff-head);font-size:22px;line-height:28px;font-weight:500;letter-spacing:0">Perubahan menunggu</h2><span class="note" id="rvCount"></span></div>
+            <div id="rvChanges" style="display:flex;flex-direction:column;gap:16px"></div>
+            <section class="card" style="gap:12px">
+              <h2>Pemeriksaan otomatis</h2>
+              <div id="rvChecks" style="display:flex;flex-direction:column;gap:12px"></div>
+              <span class="note" style="font-size:13px;line-height:18px">Peringatan tidak menghentikan publikasi, tetapi sebaiknya diperbaiki dulu.</span>
+            </section>
+            <section class="card decide">
+              <h2>Keputusan</h2>
+              <div class="field"><label for="rvNote">Catatan untuk penulis (opsional)</label><textarea id="rvNote" rows="2" placeholder="mis. Tolong ganti foto dengan versi yang lebih terang."></textarea></div>
+              <label class="check" style="align-items:flex-start"><input type="checkbox" id="rvConfirm" style="margin-top:1px"><span id="rvConfirmText">Saya sudah memeriksa pratinjau dan isi perubahan yang dipilih.</span></label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn solid" id="rvPublish" style="min-height:48px" disabled><svg width="16" height="16"><use href="#i-check"/></svg><span id="rvPublishText">Publikasikan ke layar</span></button><button class="btn outline" id="rvReturn" style="min-height:48px">Kembalikan ke draf</button></div>
+              <span class="note" style="font-size:13px;line-height:18px">Perubahan yang tidak dipilih tetap menunggu di sini. Layar diperbarui dalam sekitar satu menit setelah dipublikasikan.</span>
+            </section>
+          </div>
+          <div class="narrow" style="max-width:420px">
+            <section class="card" style="gap:12px">
+              <h2>Pratinjau layar</h2>
+              <div class="seg" role="group" aria-label="Versi pratinjau"><button id="rvAfter" aria-pressed="true">Setelah dipublikasikan</button><button id="rvLive" aria-pressed="false">Tayang sekarang</button></div>
+              <div class="mini"><iframe id="rvFrame" title="Pratinjau layar" tabindex="-1"></iframe></div>
+              <a class="link" href="#pratinjau" style="align-self:center">Buka pratinjau layar penuh</a>
+            </section>
+            <section class="card hist" style="gap:12px">
+              <h2>Riwayat publikasi</h2>
+              <div id="rvHistory" style="display:flex;flex-direction:column"></div>
+              <span class="note" style="font-size:13px;line-height:18px">Mengembalikan versi lama juga masuk ke daftar tinjauan dulu, tidak langsung tayang.</span>
+            </section>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </section>
@@ -687,7 +926,7 @@
 (() => {
 'use strict';
 const CATS = ['Laser','Facial','Hair','Injectables','Microneedling','Body Health','Contouring & Face Lifting','Body Contouring','Intima','Blepharoplasty'];
-const BANNED = ['sembuh','terbaik','dijamin','garansi','buruan','sekarang juga','segera','terbatas','permanen','nomor 1','no. 1','#1','paling'];
+const BANNED = ['sembuh','menyembuhkan','mengobati','terbaik','dijamin','garansi','buruan','sekarang juga','segera','terbatas','permanen','nomor 1','no. 1','#1','paling','tercanggih','termurah','tercepat','satu-satunya','100% aman','tanpa efek samping','instan','seketika'];
 const DEFAULT_SETTINGS = { idleMin: 2, slideSecs: 8, hideBandWhenEmpty: true, holdOnTouch: true, saverOn: true, sound: false, showTitles: true, heartInvite: true, playlist: [] };
 // doctors patients can give a heart to, in the clinic's chosen order; photos are artifact assets (originals in media/doctors/)
 const DOCTORS = [
@@ -711,6 +950,7 @@ const catLabel = (c) => CAT_LABEL[c] || c;
 // counts under ten are spelled out in prose per the brand guide; prices, durations and session counts stay as digits
 const KATA = ['nol', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan'];
 const kata = (n) => (n >= 0 && n < 10) ? KATA[n] : String(n);
+const cap = (s) => String(s).replace(/^./, (c) => c.toUpperCase());
 const DD = 'Ditentukan dokter', AD = 'Mengikuti anjuran dokter setelah tindakan.';
 const $ = (s, r) => (r || document).querySelector(s);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -719,38 +959,59 @@ const fmtDur = (s) => { s = Math.round(s || 0); return Math.floor(s / 60) + ':' 
 const MON = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 const fmtDate = (iso) => { if (!iso) return ''; const p = iso.split('-'); return (parseInt(p[2], 10) || '') + ' ' + (MON[parseInt(p[1], 10) - 1] || '') + ' ' + p[0]; };
 const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); };
-const fmtWhen = (iso) => { if (!iso) return ''; const d = new Date(iso); return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'); };
+const fmtWhen = (iso) => { if (!iso) return ''; const d = new Date(iso); if (isNaN(d)) return ''; return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'); };
+const fmtClock = (iso) => { const d = iso ? new Date(iso) : new Date(); return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'); };
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 const use = (n) => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(n).catch(() => null) : Promise.resolve(null);
-const priceLine = (p) => p && p.trim() ? 'Mulai dari ' + p.trim() : 'Harga: tanya resepsionis';
 const or = (v, d) => v && String(v).trim() ? String(v).trim() : d;
 const validity = (p) => { const f = p.from, t = p.to; if (f && t) return 'Berlaku ' + fmtDate(f) + ' – ' + fmtDate(t); if (f) return 'Mulai ' + fmtDate(f); if (t) return 'Berlaku sampai ' + fmtDate(t); return 'Berlaku sepanjang tahun'; };
 const promoState = (p, today) => { today = today || todayISO(); if (!p.live) return 'Tidak tayang'; if (p.from && p.from > today) return 'Terjadwal'; if (p.to && p.to < today) return 'Berakhir'; return 'Aktif'; };
 const KIND_LABEL = { Paket: 'Paket perawatan', Bonus: 'Promo bulan ini', Voucher: 'Voucher', Produk: 'Produk skincare' };
 const VALUE_LABEL = { Paket: 'Harga paket', Bonus: 'Bonus', Voucher: 'Voucher', Produk: 'Produk' };
-const bannedIn = (text) => { const t = ' ' + String(text || '').toLowerCase() + ' '; return BANNED.filter((w) => t.indexOf(w) >= 0); };
+const bannedIn = (text) => { const t = ' ' + String(text || '').toLowerCase().replace(/\s+/g, ' ') + ' '; return BANNED.filter((w) => { const re = new RegExp('(^|[^a-z0-9])' + w.replace(/[.*+?^${}()|[\]\\%#]/g, '\\$&') + '($|[^a-z0-9])'); return re.test(t); }); };
+const uniq = (a) => a.filter((x, i) => a.indexOf(x) === i);
+// a stable serialisation: the database hands documents back with keys in alphabetical order, so comparisons must not depend on key order
+const canon = (x) => Array.isArray(x) ? '[' + x.map(canon).join(',') + ']' : (x && typeof x === 'object') ? '{' + Object.keys(x).sort().map((k) => JSON.stringify(k) + ':' + canon(x[k])).join(',') + '}' : JSON.stringify(x === undefined ? null : x);
+// video orientation: the file's own shape, and the admin's choice for the screen (defaults to the file)
+const fileOrient = (v) => { const r = v && v.ratio || ''; if (r === '16:9') return 'h'; if (r === '9:16') return 'v'; const m = r.match(/^(\d+)×(\d+)$/); return m && parseInt(m[1], 10) > parseInt(m[2], 10) ? 'h' : 'v'; };
+const orientOf = (v) => (v && (v.orient === 'h' || v.orient === 'v')) ? v.orient : fileOrient(v);
+const ORIENT_LABEL = { v: 'Vertikal 9:16', h: 'Horizontal 16:9' };
+const pageActive = (p, today) => p.showTab !== false && (!p.from || p.from <= today) && (!p.to || p.to >= today);
+const BLOCK_LABEL = { heading: 'Judul', text: 'Paragraf', list: 'Daftar poin', note: 'Catatan', image: 'Gambar', video: 'Video' };
+const FIELD_LABEL = { name: 'nama', cat: 'kategori', desc: 'deskripsi', price: 'harga', sessions: 'sesi', duration: 'durasi', downtime: 'downtime', after: 'setelah perawatan', concerns: 'keluhan', photo: 'foto', video: 'video', show: 'tampil di layar', order: 'urutan', title: 'judul', accent: 'bagian judul', eyebrow: 'label kecil', kind: 'jenis', value: 'nilai', valueLabel: 'label nilai', valueNote: 'keterangan nilai', lede: 'mekanisme', chip: 'perawatan terkait', from: 'berlaku dari', to: 'sampai', live: 'tayang', dur: 'durasi', asset: 'berkas', poster: 'poster', ai: 'label AI', ratio: 'rasio', orient: 'orientasi', tab: 'label tab', showTab: 'tampil sebagai tab', inSaver: 'screen saver', blocks: 'isi halaman', idleMin: 'waktu mulai screen saver', slideSecs: 'durasi slide', hideBandWhenEmpty: 'sembunyikan band', holdOnTouch: 'jeda sentuh', saverOn: 'screen saver', sound: 'suara', showTitles: 'judul video 16:9', heartInvite: 'ajakan heart di screen saver', playlist: 'urutan putar' };
+const byOrder = (a, b) => (a.order || 0) - (b.order || 0) || String(a.name || a.title || '').localeCompare(String(b.name || b.title || ''));
+// one normal form for drafts and the live snapshot, so a missing field and an empty one never count as a change
+const normT = (t) => ({ id: t.id, name: t.name || '', cat: t.cat || CATS[0], desc: t.desc || '', price: t.price || '', sessions: t.sessions || '', duration: t.duration || '', downtime: t.downtime || '', after: t.after || '', concerns: t.concerns || '', photo: t.photo || null, video: t.video || null, show: t.show !== false, order: t.order || 0 });
+const normP = (p) => ({ id: p.id, title: p.title || '', accent: p.accent || '', eyebrow: p.eyebrow || '', kind: p.kind || 'Paket', value: p.value || '', valueLabel: p.valueLabel || '', valueNote: p.valueNote || '', lede: p.lede || '', chip: p.chip || 'Semua perawatan', from: p.from || '', to: p.to || '', live: !!p.live, order: p.order || 0 });
+const normV = (v) => ({ id: v.id, title: v.title || '', desc: v.desc || '', dur: v.dur || 0, asset: v.asset || null, poster: v.poster || null, ai: !!v.ai, ratio: v.ratio || '', orient: orientOf(v) });
+const normB = (b) => ({ id: b.id || '', type: b.type || 'text', text: b.text || '', items: (b.items || []).map(String), asset: b.asset || null, alt: b.alt || '', video: b.video || null, orient: b.orient || '' });
+const normPage = (p) => ({ id: p.id, title: p.title || '', tab: p.tab || '', order: p.order || 0, showTab: p.showTab !== false, inSaver: !!p.inSaver, from: p.from || '', to: p.to || '', blocks: (p.blocks || []).map(normB) });
+const normS = (s, videos) => { const st = Object.assign({}, DEFAULT_SETTINGS, s || {}); const ids = new Set((videos || []).map((v) => v.id)); return { idleMin: st.idleMin || 2, slideSecs: st.slideSecs || 8, hideBandWhenEmpty: st.hideBandWhenEmpty !== false, holdOnTouch: st.holdOnTouch !== false, saverOn: st.saverOn !== false, sound: !!st.sound, showTitles: st.showTitles !== false, heartInvite: st.heartInvite !== false, playlist: (st.playlist || []).filter((id) => ids.has(id)) }; };
+const normSnap = (L) => { L = L || {}; const vids = L.videos || []; return { treatments: (L.treatments || []).map(normT).sort(byOrder), promos: (L.promos || []).map(normP).sort(byOrder), videos: vids.map(normV), pages: (L.pages || []).map(normPage).sort(byOrder), settings: normS(L.settings, vids) }; };
 
 let db = null, userNs = null, assets = null, me = null, canEdit = false;
-const S = { route: 'kiosk', tab: 'ringkasan', live: null, treatments: [], promos: [], videos: [], settings: Object.assign({}, DEFAULT_SETTINGS), log: [], ready: false, dbState: 'connecting' };
+const S = { route: 'kiosk', tab: 'ringkasan', embedded: false, live: null, treatments: [], promos: [], videos: [], pages: [], settings: Object.assign({}, DEFAULT_SETTINGS), log: [], history: [], restore: null, trash: [], ready: false, dbState: 'connecting' };
 let toastT = null;
 function toast(msg, err) { let t = $('#toast'); if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite'); document.body.appendChild(t); } t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, err ? 6000 : 2600); }
 
 /* ---------------- routing ---------------- */
-const ADMIN_TABS = { admin: 'ringkasan', perawatan: 'perawatan', promo: 'promo', video: 'video', heart: 'heart' };
+const ADMIN_TABS = { admin: 'ringkasan', perawatan: 'perawatan', promo: 'promo', video: 'video', heart: 'heart', halaman: 'halaman', tinjau: 'tinjau' };
 function route() {
   const h = (location.hash || '#kiosk').replace('#', '');
   const isAdmin = Object.prototype.hasOwnProperty.call(ADMIN_TABS, h);
-  S.route = isAdmin ? 'admin' : 'kiosk';
+  const preview = h === 'pratinjau' || h === 'pratinjau-embed';
+  S.route = isAdmin ? 'admin' : 'kiosk'; S.embedded = h === 'pratinjau-embed';
   if (isAdmin) S.tab = ADMIN_TABS[h];
   document.body.classList.toggle('route-admin', isAdmin);
   $('#kiosk').hidden = isAdmin; $('#admin').hidden = !isAdmin;
-  if (isAdmin) { Kiosk.stop(); Admin.show(); } else { Kiosk.start(); }
+  if (isAdmin) { Kiosk.stop(); Admin.show(); } else { Kiosk.start({ preview }); }
 }
 window.addEventListener('hashchange', route);
 
 /* ---------------- HEARTS (patient side) ---------------- */
 // Each screen keeps its own tally, heartTallies/<screen id>, so taps on two screens never overwrite each other. The clinic
 // total (admin only) is the sum of every tally on the current count, config/hearts.epoch; starting a new count bumps it.
+// Hearts are saved as they are given, outside the review-and-publish step: they are the patients' data, not screen content.
 const Hearts = (() => {
   const COOLDOWN_MS = 15000;
   const zeros = () => Object.fromEntries(DOCTORS.map((d) => [d.id, 0]));
@@ -765,6 +1026,7 @@ const Hearts = (() => {
   const cards = {};
   const heartSvg = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + HEART_PATH + '"/></svg>';
   const setState = (t) => { stateEl.textContent = t; };
+  const previewing = () => /pratinjau/.test(location.hash); // the admin's preview never writes a patient tally
 
   function build() {
     grid.innerHTML = '';
@@ -841,7 +1103,7 @@ const Hearts = (() => {
   /* --- saving: one writer per screen record; never write before this screen's saved record has been read back --- */
   function save() { H.dirty = true; prune(); clearTimeout(H.saveT); H.saveT = setTimeout(flush, 300); }
   async function flush(retried) {
-    if (!db || !H.dirty || !H.adopted) return;
+    if (!db || !H.dirty || !H.adopted || previewing()) return;
     H.dirty = false;
     try {
       await db.doc('heartTallies/' + screenId).set({ epoch: H.epoch, counts: Object.assign({}, H.mine), days: JSON.parse(JSON.stringify(H.days)), updatedAt: new Date().toISOString() });
@@ -928,21 +1190,24 @@ const Hearts = (() => {
 
 /* ---------------- KIOSK ---------------- */
 const Kiosk = (() => {
-  const K = { on: false, mode: 'saver', clip: 0, promo: 0, promoT: 0, hold: 0, cat: null, sel: null, lastTouch: Date.now(), timer: null, actives: [], activeKey: '', failed: new Set() };
+  const EMPTY = { treatments: [], promos: [], videos: [], pages: [], settings: DEFAULT_SETTINGS };
+  const K = { on: false, mode: 'saver', clip: 0, pageT: 0, promo: 0, promoT: 0, hold: 0, cat: null, sel: null, tab: 'perawatan', lastTouch: Date.now(), timer: null, actives: [], activeKey: '', failed: new Set(), preview: false, snap: null, inviting: false, inviteT: 0, sinceInvite: 0 };
   const stage = $('#stage'), zoneA = $('#zoneA'), zoneB = $('#zoneB'), saver = $('#saver'), sv = $('#saverVideo'), player = $('#player'), pv = $('#playerVideo'), dash = $('#dash'), hearts = $('#hearts');
   const INVITE_EVERY = 2, INVITE_SECS = 12; // the hearts invitation shows for 12 s after every second screen-saver video
   function fit() { const sc = Math.min(window.innerWidth / 1080, window.innerHeight / 1920); stage.style.transform = 'scale(' + sc + ')'; stage.style.left = Math.max(0, (window.innerWidth - 1080 * sc) / 2) + 'px'; stage.style.top = Math.max(0, (window.innerHeight - 1920 * sc) / 2) + 'px'; }
   window.addEventListener('resize', fit);
-  const live = () => S.live || { treatments: [], promos: [], videos: [], settings: DEFAULT_SETTINGS };
+  const live = () => K.snap || S.live || EMPTY;
   const settings = () => Object.assign({}, DEFAULT_SETTINGS, live().settings || {});
-  const vid = (id) => live().videos.find((v) => v.id === id);
+  const vid = (id) => (live().videos || []).find((v) => v.id === id);
   const playlist = () => (settings().playlist || []).map(vid).filter((v) => v && v.asset && !K.failed.has(v.id));
-  const visibleTreats = () => live().treatments.filter((t) => t.show !== false);
+  const activePages = () => { const today = todayISO(); return (live().pages || []).filter((p) => pageActive(p, today)).slice().sort(byOrder); };
+  const saverItems = () => playlist().map((v) => ({ kind: 'video', v })).concat((live().pages || []).filter((p) => p.inSaver && pageActive(p, todayISO()) && (p.blocks || []).length).slice().sort(byOrder).map((p) => ({ kind: 'page', p })));
+  const visibleTreats = () => (live().treatments || []).filter((t) => t.show !== false);
   const catsWith = () => CATS.filter((c) => visibleTreats().some((t) => t.cat === c));
 
-  function start() { if (K.on) return; K.on = true; fit(); K.lastTouch = Date.now(); K.decided = false; render(); K.timer = setInterval(tick, 1000); }
-  function stop() { K.on = false; clearInterval(K.timer); try { sv.pause(); pv.pause(); } catch (e) {} sv.removeAttribute('src'); pv.removeAttribute('src'); }
-  const canSave = () => settings().saverOn !== false && playlist().length > 0;
+  function start(opts) { K.preview = !!(opts && opts.preview); $('#kBack').hidden = !(K.preview && !S.embedded); if (K.on) { render(); return; } K.on = true; fit(); K.lastTouch = Date.now(); K.decided = false; render(); K.timer = setInterval(tick, 1000); }
+  function stop() { K.on = false; clearInterval(K.timer); clearTimeout(K.pageTimer); try { sv.pause(); pv.pause(); } catch (e) {} sv.removeAttribute('src'); sv.removeAttribute('data-src'); pv.removeAttribute('src'); $('#kBack').hidden = true; }
+  const canSave = () => settings().saverOn !== false && saverItems().length > 0;
 
   function touch() { K.lastTouch = Date.now(); }
   stage.addEventListener('pointerdown', touch, { capture: true, passive: true });
@@ -950,136 +1215,158 @@ const Kiosk = (() => {
   function tick() {
     if (!K.on) return;
     const st = settings();
-    const idle = Date.now() - K.lastTouch > (st.idleMin || 2) * 60000;
-    if (K.mode !== 'saver' && canSave() && idle) setMode('saver');
-    else if (K.mode === 'hearts' && !canSave() && idle) setMode('dash');
+    if (!K.preview && K.mode !== 'saver' && Date.now() - K.lastTouch > (st.idleMin || 2) * 60000) {
+      if (canSave()) setMode('saver'); else if (K.mode === 'hearts') setMode('dash'); else if (K.tab !== 'perawatan') { K.tab = 'perawatan'; renderDash(); }
+    }
     if (K.mode === 'saver' && K.inviting) { K.inviteT++; $('#svBar').style.width = Math.min(100, K.inviteT / INVITE_SECS * 100) + '%'; if (K.inviteT >= INVITE_SECS) { K.inviting = false; renderSaver(); } }
-    const clk = $('#kClock'); if (clk) { const n = new Date(); clk.querySelector('b').textContent = n.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'); clk.querySelector('span').textContent = n.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
+    const clk = $('#kClock'); if (clk) { const n = new Date(); clk.querySelector('b').textContent = fmtClock(); clk.querySelector('span').textContent = n.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
+    // a page slide in the screen saver holds for ten seconds
+    if (K.mode === 'saver' && K.saverItem && K.saverItem.kind === 'page') { K.pageT++; const pct = Math.min(100, K.pageT * 10) + '%'; $('#svBar').style.width = pct; $('#svBarH').style.width = pct; if (K.pageT >= 10) nextSaver(); }
     // promo band
     const acts = K.actives; if (acts.length > 1) {
       if (K.hold > 0) K.hold--; else { K.promoT++; if (K.promoT >= (st.slideSecs || 8)) { K.promo = (K.promo + 1) % acts.length; K.promoT = 0; renderBand(); } }
       const b = $('#pBar'); if (b) b.style.width = Math.min(100, Math.round(K.promoT / (st.slideSecs || 8) * 100)) + '%';
     }
   }
-  function setMode(m) { if (K.mode === m) return; if (m !== 'saver') K.inviting = false; K.mode = m; render(); }
+  function setMode(m) { if (m === 'saver') K.tab = 'perawatan'; if (m !== 'saver') K.inviting = false; if (K.mode === m) { if (m === 'dash') renderDash(); return; } K.mode = m; render(); }
 
   function render() {
     if (!K.on) return;
-    const hasLive = !!S.live && (live().treatments.length || live().videos.length || live().promos.length);
+    const L = live(); const hasLive = !!(K.snap || S.live) && ((L.treatments || []).length || (L.videos || []).length || (L.promos || []).length || (L.pages || []).length);
     $('#kioskEmpty').hidden = !!hasLive;
-    $('#kStatus').hidden = !!hasLive;
+    $('#kStatus').hidden = !!hasLive || K.preview;
     if (!hasLive) { saver.hidden = true; player.hidden = true; dash.hidden = true; hearts.hidden = true; renderBand(); return; }
-    if (!K.decided) { K.decided = true; K.mode = canSave() ? 'saver' : 'dash'; }
+    if (!K.decided) { K.decided = true; K.mode = (canSave() && !K.preview) ? 'saver' : 'dash'; }
     if (K.mode === 'saver' && !canSave()) K.mode = 'dash';
     saver.hidden = K.mode !== 'saver'; player.hidden = K.mode !== 'player'; dash.hidden = K.mode !== 'dash'; hearts.hidden = K.mode !== 'hearts';
-    if (K.mode === 'saver') renderSaver(); else { try { sv.pause(); } catch (e) {} }
+    if (K.mode === 'saver') renderSaver(); else { clearTimeout(K.pageTimer); try { sv.pause(); } catch (e) {} }
     if (K.mode === 'dash') renderDash();
     if (K.mode !== 'player') { try { pv.pause(); } catch (e) {} }
     renderBand();
   }
 
-  /* --- video fit: a portrait clip shows whole, with no overlay text (it carries its own title, AI label and subtitles); a landscape clip is letterboxed and gets the title overlay when the admin wants it --- */
-  function isPortrait(el, v) {
-    if (el.videoWidth && el.videoHeight) return el.videoHeight > el.videoWidth;
-    const r = v && v.ratio || ''; if (r === '9:16') return true; if (r === '16:9') return false;
-    const m = r.match(/^(\d+)×(\d+)$/); return m ? parseInt(m[2], 10) > parseInt(m[1], 10) : true;
-  }
-  function applyFit(el, box, v) { box.classList.toggle('whole', isPortrait(el, v) || settings().showTitles === false); }
+  // a clip whose chosen orientation differs from the file is cropped to fit; otherwise it shows whole
+  function applyFit(el, v, o) { el.style.objectFit = (v && o && o !== fileOrient(v)) ? 'cover' : 'contain'; }
 
   /* --- screen saver --- */
   function renderSaver() {
-    const pl = playlist(); if (!pl.length) return;
-    if (K.clip >= pl.length) K.clip = 0;
-    const v = pl[K.clip], st = settings(); K.saverClip = v;
+    const items = saverItems(); if (!items.length) return;
+    if (K.clip >= items.length) K.clip = 0;
+    const it = items[K.clip], st = settings(); K.saverItem = it; K.pageT = 0; clearTimeout(K.pageTimer);
+    saver.classList.remove('v', 'h', 'pg', 'notitles');
+    $('#svDots').innerHTML = items.map((_, i) => '<i class="' + (i === K.clip ? 'on' : '') + '"></i>').join('');
+    $('#svBar').style.width = '0%'; $('#svBarH').style.width = '0%';
+    // the hearts invitation takes the stage for twelve seconds between videos
     saver.classList.toggle('inviting', !!K.inviting); $('#svInvite').hidden = !K.inviting;
     $('#svCta').textContent = K.inviting ? 'Sentuh layar untuk memberi heart' : 'Sentuh layar untuk melihat perawatan';
     saver.setAttribute('aria-label', $('#svCta').textContent);
-    if (K.inviting) { try { sv.pause(); } catch (e) {} return; }
-    $('#svNum').textContent = (K.clip + 1) + ' / ' + pl.length;
-    $('#svAi').hidden = !v.ai;
+    if (K.inviting) { saver.classList.add('v'); try { sv.pause(); } catch (e) {} return; }
+    if (it.kind === 'page') {
+      saver.classList.add('pg'); try { sv.pause(); } catch (e) {}
+      $('#svPage').innerHTML = pageHTML(it.p, true);
+      return;
+    }
+    const v = it.v, o = orientOf(v);
+    saver.classList.add(o); if (o === 'h' && st.showTitles === false) saver.classList.add('notitles');
+    $('#svMeta').textContent = 'Video penjelasan · ' + (K.clip + 1) + ' / ' + items.length + ' · ' + fmtDur(v.dur) + (v.ai ? ' · Karakter virtual (AI)' : '');
     $('#svTitle').textContent = v.title || ''; $('#svDesc').textContent = v.desc || '';
-    $('#svDots').innerHTML = pl.map((_, i) => '<i class="' + (i === K.clip ? 'on' : '') + '"></i>').join('');
-    $('#svBar').style.width = '0%';
     const src = blob(v.asset);
     if (sv.getAttribute('data-src') !== src) { sv.setAttribute('data-src', src); sv.poster = blob(v.poster); sv.src = src; }
-    applyFit(sv, saver, v);
+    applyFit(sv, v, o);
     sv.muted = !st.sound; sv.loop = false; // "ended" must fire even for a single clip, so the invitation can follow it
     // retry muted only if autoplay was refused; a play aborted because the invitation (or another mode) took over stays stopped
     const p = sv.play(); if (p && p.catch) p.catch(() => { if (K.inviting || K.mode !== 'saver') return; sv.muted = true; sv.play().catch(() => {}); });
   }
-  sv.addEventListener('loadedmetadata', () => applyFit(sv, saver, K.saverClip));
-  sv.addEventListener('timeupdate', () => { if (sv.duration) $('#svBar').style.width = Math.min(100, sv.currentTime / sv.duration * 100) + '%'; });
-  sv.addEventListener('ended', () => {
-    const pl = playlist(); if (!pl.length) return; K.clip = (K.clip + 1) % pl.length; if (K.clip === 0) K.failed.clear();
+  function nextSaver() {
+    const items = saverItems(); if (!items.length) { setMode('dash'); return; } K.clip = (K.clip + 1) % items.length; if (K.clip === 0) K.failed.clear();
     K.sinceInvite = (K.sinceInvite || 0) + 1;
-    if (settings().heartInvite !== false && K.sinceInvite >= INVITE_EVERY) { K.sinceInvite = 0; K.inviting = true; K.inviteT = 0; $('#svBar').style.width = '0%'; }
+    if (!K.preview && settings().heartInvite !== false && K.sinceInvite >= INVITE_EVERY) { K.sinceInvite = 0; K.inviting = true; K.inviteT = 0; }
     renderSaver();
-  });
-  sv.addEventListener('error', () => { if (K.saverClip) K.failed.add(K.saverClip.id); sv.removeAttribute('data-src'); const pl = playlist(); if (!pl.length) { setMode('dash'); return; } K.clip = K.clip % pl.length; setTimeout(renderSaver, 800); });
+  }
+  sv.addEventListener('timeupdate', () => { if (sv.duration && K.saverItem && K.saverItem.kind === 'video') { const w = Math.min(100, sv.currentTime / sv.duration * 100) + '%'; $('#svBar').style.width = w; $('#svBarH').style.width = w; } });
+  sv.addEventListener('ended', () => { if (K.mode === 'saver') nextSaver(); });
+  sv.addEventListener('error', () => { if (K.saverItem && K.saverItem.kind === 'video') K.failed.add(K.saverItem.v.id); sv.removeAttribute('data-src'); if (!saverItems().length) { setMode('dash'); return; } setTimeout(() => { if (K.mode === 'saver') renderSaver(); }, 800); });
   saver.addEventListener('click', () => { touch(); setMode(K.inviting ? 'hearts' : 'dash'); });
   $('#hzBack').addEventListener('click', () => { touch(); setMode('dash'); });
 
   /* --- dashboard --- */
+  function head() {
+    const n = new Date();
+    return '<div class="dash-head"><div class="brand"><svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg><h1>Info perawatan</h1><p>Modern Technology for Modern People. Sentuh perawatan untuk melihat penjelasan dan videonya.</p></div><div class="side-r"><button class="hz-entry" data-act="hearts"><svg width="20" height="20"><use href="#i-heart"/></svg><span>Beri heart untuk dokter</span></button><div class="clock" id="kClock"><b class="tnum">' + fmtClock() + '</b><span>' + esc(n.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) + '</span></div></div></div>';
+  }
+  function foot() {
+    return '<div class="dfoot"><div class="row"><span class="wa"><svg width="22" height="22"><use href="#i-wa"/></svg><span>Buat janji via WhatsApp <b class="tnum">' + WA_NUMBER + '</b></span></span>' + (canSave() ? '<button class="ghost" data-act="sleep">Kembali ke video</button>' : '') + '<span class="hours">Sen–Jum 09.00–20.00 · Sab 09.00–18.00<br>Jl. Ir. H. Juanda No. 88, Bandung</span></div><p class="legal">Harga adalah perkiraan untuk perawatan standar dan dapat berbeda sesuai area. Hasil setiap pasien dapat berbeda tergantung kondisi masing-masing. Konsultasikan dengan dokter kami.</p></div>';
+  }
   function renderDash() {
-    const cats = catsWith(); if (!cats.length) { dash.innerHTML = '<div class="kiosk-empty" style="position:relative;flex:1"><b>Belum ada perawatan yang tampil</b><span>Aktifkan "Tampil di layar" pada perawatan di halaman admin, lalu publikasikan.</span></div>'; return; }
+    const pages = activePages(); if (!pages.some((p) => p.id === K.tab)) K.tab = 'perawatan';
+    let h = head();
+    if (pages.length) h += '<div class="tabs" role="tablist" aria-label="Halaman layar"><button role="tab" data-tab="perawatan" aria-selected="' + (K.tab === 'perawatan') + '" class="' + (K.tab === 'perawatan' ? 'on' : '') + '">Perawatan</button>' + pages.map((p) => '<button role="tab" data-tab="' + esc(p.id) + '" aria-selected="' + (K.tab === p.id) + '" class="' + (K.tab === p.id ? 'on' : '') + '">' + esc(p.tab || p.title) + '</button>').join('') + '</div>';
+    const pg = pages.find((p) => p.id === K.tab);
+    h += pg ? pageHTML(pg, false) : treatHTML();
+    h += foot();
+    dash.innerHTML = h;
+  }
+  function treatHTML() {
+    const cats = catsWith(); if (!cats.length) return '<div class="kiosk-empty" style="position:relative;flex:1"><b>Belum ada perawatan yang tampil</b><span>Aktifkan "Tampil di layar" pada perawatan di halaman admin, lalu publikasikan.</span></div>';
     if (!cats.includes(K.cat)) K.cat = cats[0];
-    const items = visibleTreats().filter((t) => t.cat === K.cat);
+    const items = visibleTreats().filter((t) => t.cat === K.cat).sort(byOrder);
     if (!items.some((t) => t.id === K.sel)) K.sel = items[0] ? items[0].id : null;
     const sel = items.find((t) => t.id === K.sel) || items[0];
-    const v = sel && sel.video ? vid(sel.video) : null;
-    const n = new Date();
-    let h = '<div class="dash-head"><div class="brand"><svg class="logo" aria-label="ADC Aesthetic Derma Centre"><use href="#adc-logo"/></svg><h1>Info perawatan</h1><p>Modern Technology for Modern People. Sentuh perawatan untuk melihat penjelasan dan videonya.</p></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:16px;flex:0 0 auto"><button class="hz-entry" data-act="hearts"><svg width="20" height="20"><use href="#i-heart"/></svg><span>Beri heart untuk dokter</span></button><div class="clock" id="kClock"><b class="tnum">' + n.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.') + '</b><span>' + esc(n.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) + '</span></div></div></div>';
+    const v = sel && sel.video ? vid(sel.video) : null; const hasVideo = !!(v && v.asset); const o = hasVideo ? orientOf(v) : 'v';
+    let h = '<div class="treat2"><div class="vcol">';
+    if (hasVideo) h += '<button class="vpanel ' + o + '" data-act="play" aria-label="Putar video penjelasan"><span class="vimg"><img src="' + esc(blob(v.poster)) + '" alt="" style="object-fit:cover"><span class="play"><svg width="28" height="28"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + '</span></span><span class="vdesc">' + esc(v.desc || '') + '</span></button><div class="vcap"><span class="m">Video penjelasan · ' + ORIENT_LABEL[o] + (v.ai ? ' · Karakter virtual (AI)' : '') + '</span><span class="t">' + esc(v.title) + '</span></div>';
+    else h += '<div class="vpanel none"><svg width="56" height="56"><use href="#i-video"/></svg><div class="txt"><span class="lbl">Video penjelasan</span><span class="ttl">Belum ada video untuk perawatan ini</span><span class="sub">Dokter kami akan menjelaskannya langsung saat konsultasi.</span></div></div>';
+    h += '</div><div class="tcol">';
     h += '<div class="cats">' + cats.map((c) => '<button data-cat="' + esc(c) + '" class="' + (c === K.cat ? 'on' : '') + '">' + esc(catLabel(c)) + '</button>').join('') + '</div>';
-    if (sel) {
-      const facts = [['Sesi', sel.sessions], ['Durasi', sel.duration], ['Downtime', sel.downtime]];
-      const filled = facts.filter((f) => f[1] && String(f[1]).trim()), missing = facts.filter((f) => !(f[1] && String(f[1]).trim())).map((f) => f[0]);
-      const listId = (a) => a.length === 1 ? a[0] : a.length === 2 ? a[0] + ' dan ' + a[1].toLowerCase() : a[0] + ', ' + a[1].toLowerCase() + ', dan ' + a[2].toLowerCase();
-      const hasVideo = !!(v && v.asset), price = or(sel.price, '');
-      h += '<section class="hero" aria-label="Perawatan terpilih"><div class="hero-main">'
-        + '<div class="hero-top"><h2' + (sel.name.length > 28 ? ' class="long"' : '') + '>' + esc(sel.name) + '</h2></div>'
-        + (price ? '<div class="hero-price"><span>Mulai dari</span><b class="tnum">' + esc(price) + '</b></div>' : '<div class="hero-price ask"><b>Harga: tanya resepsionis</b></div>')
-        + (sel.concerns ? '<p class="hero-concerns"><b>Untuk keluhan: </b>' + esc(sel.concerns) + '</p>' : '')
-        + (filled.length ? '<dl class="hero-facts">' + filled.map((f) => '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>').join('') + '</dl>' : '')
-        + (missing.length ? '<p class="hero-note">' + listId(missing) + ' ditentukan dokter saat konsultasi.</p>' : '')
-        + '<p class="hero-after"><b>Setelah perawatan: </b>' + esc(or(sel.after, AD)) + '</p>'
-        + (hasVideo ? '' : '<p class="hero-note">Belum ada video untuk perawatan ini. Dokter kami menjelaskannya langsung saat konsultasi.</p>')
-        + '</div>'
-        + (hasVideo ? '<button class="hero-video" data-act="play" aria-label="Putar video penjelasan"><span class="vthumb"><img src="' + esc(blob(v.poster)) + '" alt=""><span class="play"><svg width="30" height="30"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + '</span></span><span class="hero-vt">' + esc(v.title) + '</span><span class="hero-vm">Video penjelasan' + (v.ai ? ' · Karakter virtual (AI)' : '') + '</span></button>' : '')
-        + '</section>';
-    }
-    h += '<div class="tgrid">' + items.map((t) => '<button class="tcard ' + (t.id === sel.id ? 'on' : '') + '" data-sel="' + esc(t.id) + '">' + (t.photo ? '<img src="' + esc(blob(t.photo)) + '" alt="">' : '') + '<span class="n">' + esc(t.name) + '</span><span class="d">' + esc(t.desc) + '</span><span class="p tnum">' + esc(priceLine(t.price)) + '</span></button>').join('') + '</div>';
-    h += '<div class="dfoot"><div class="row"><span class="wa"><svg width="22" height="22"><use href="#i-wa"/></svg><span>Buat janji via WhatsApp <b class="tnum">' + WA_NUMBER + '</b></span></span>' + (canSave() ? '<button class="ghost" data-act="sleep">Kembali ke video</button>' : '') + '<span class="hours">Sen–Jum 09.00–20.00 · Sab 09.00–18.00<br>Jl. Ir. H. Juanda No. 88, Bandung</span></div><p class="legal">Harga adalah perkiraan untuk perawatan standar dan dapat berbeda sesuai area. Hasil setiap pasien dapat berbeda tergantung kondisi masing-masing. Konsultasikan dengan dokter kami.</p></div>';
-    dash.innerHTML = h;
+    h += '<div class="tlist">' + items.map((t) => { const tv = t.video ? vid(t.video) : null; return '<button class="tcard ' + (t.id === sel.id ? 'on' : '') + '" data-sel="' + esc(t.id) + '"><span class="row"><span class="n">' + esc(t.name) + '</span><span class="pr tnum">' + esc(or(t.price, '') ? 'mulai ' + t.price.trim() : 'Tanya resepsionis') + '</span></span><span class="d">' + esc(t.desc) + '</span>' + (tv && tv.asset ? '<span class="hv"><svg width="12" height="12"><use href="#i-play"/></svg>Ada video penjelasan</span>' : '') + '</button>'; }).join('') + '</div>';
+    if (sel) h += '<div class="detail"><div class="hd"><b>' + esc(sel.name) + '</b><span class="cat">' + esc(catLabel(sel.cat)) + '</span></div><dl class="facts"><div><dt>Sesi</dt><dd>' + esc(or(sel.sessions, DD)) + '</dd></div><div><dt>Durasi</dt><dd>' + esc(or(sel.duration, DD)) + '</dd></div><div><dt>Downtime</dt><dd>' + esc(or(sel.downtime, DD)) + '</dd></div><div><dt>Mulai dari</dt><dd class="tnum">' + esc(or(sel.price, 'Tanya resepsionis')) + '</dd></div></dl><p class="after"><b>Setelah perawatan: </b>' + esc(or(sel.after, AD)) + '</p></div>';
+    h += '</div></div>';
+    return h;
+  }
+  // a page the admin composed: blocks top to bottom; inside the screen saver the same blocks are shown, not scrollable
+  function pageHTML(p, inSaver) {
+    const blocks = (p.blocks || []).map((b) => {
+      if (b.type === 'heading') return '<h2>' + esc(b.text) + '</h2>';
+      if (b.type === 'text') return '<p>' + esc(b.text) + '</p>';
+      if (b.type === 'note') return '<div class="pnote">' + esc(b.text) + '</div>';
+      if (b.type === 'list') { const items = (b.items || []).filter((x) => String(x).trim()); return items.length ? '<div class="plist2">' + items.map((x) => '<div><i></i><span>' + esc(x) + '</span></div>').join('') + '</div>' : ''; }
+      if (b.type === 'image') return b.asset ? '<img class="pimg" src="' + esc(blob(b.asset)) + '" alt="' + esc(b.alt) + '">' : '';
+      if (b.type === 'video') { const v = b.video ? vid(b.video) : null; if (!v || !v.asset) return ''; const o = (b.orient === 'v' || b.orient === 'h') ? b.orient : orientOf(v); return '<div class="pvid ' + o + '">' + (inSaver ? '<span style="position:relative;display:block;width:' + (o === 'v' ? '360px' : '1000px') + ';height:' + (o === 'v' ? '640px' : '563px') + ';overflow:hidden;background:var(--text)">' : '<button data-play="' + esc(v.id) + '|' + o + '" aria-label="Putar video ' + esc(v.title) + '">') + '<img src="' + esc(blob(v.poster)) + '" alt=""><span class="play"><svg width="30" height="30"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + ' · ' + ORIENT_LABEL[o].split(' ')[1] + '</span>' + (inSaver ? '</span>' : '</button>') + '<span class="cap">' + esc(v.title) + (v.ai ? ' · Karakter virtual (AI)' : '') + '</span></div>'; }
+      return '';
+    }).join('');
+    return '<div class="page" aria-label="' + esc(p.title) + '">' + blocks + '</div>';
   }
   dash.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return; touch();
     if (b.dataset.cat) { K.cat = b.dataset.cat; K.sel = null; renderDash(); }
     else if (b.dataset.sel) { K.sel = b.dataset.sel; renderDash(); }
-    else if (b.dataset.act === 'play') openPlayer();
+    else if (b.dataset.tab) { K.tab = b.dataset.tab; renderDash(); }
+    else if (b.dataset.play) { const [id, o] = b.dataset.play.split('|'); openPlayer(vid(id), o); }
+    else if (b.dataset.act === 'play') { const sel = (live().treatments || []).find((t) => t.id === K.sel); openPlayer(sel && sel.video ? vid(sel.video) : null); }
     else if (b.dataset.act === 'sleep') setMode('saver');
     else if (b.dataset.act === 'hearts') setMode('hearts');
   });
 
   /* --- player --- */
-  function openPlayer() {
-    const sel = live().treatments.find((t) => t.id === K.sel); const v = sel && sel.video ? vid(sel.video) : null; if (!v || !v.asset) return;
-    $('#plTitle').textContent = v.title || ''; $('#plDesc').textContent = v.desc || ''; $('#plAi').hidden = !v.ai; $('#plBadge').textContent = 'Sedang diputar · ' + fmtDur(v.dur); $('#plBar').style.width = '0%';
-    K.playerClip = v; pv.poster = blob(v.poster); pv.src = blob(v.asset); pv.muted = !settings().sound; applyFit(pv, player, v);
+  function openPlayer(v, o) {
+    if (!v || !v.asset) return; o = (o === 'v' || o === 'h') ? o : orientOf(v);
+    player.classList.remove('v', 'h'); player.classList.add(o);
+    $('#plTitle').textContent = v.title || ''; $('#plDesc').textContent = v.desc || ''; $('#plAi').hidden = !v.ai; $('#plBar').style.width = '0%';
+    K.playerClip = v; K.playerO = o; pv.poster = blob(v.poster); pv.src = blob(v.asset); pv.muted = !settings().sound; applyFit(pv, v, o); badge();
     setMode('player');
     const p = pv.play(); if (p && p.catch) p.catch(() => { pv.muted = true; pv.play().catch(() => {}); });
   }
-  pv.addEventListener('loadedmetadata', () => applyFit(pv, player, K.playerClip));
   pv.addEventListener('timeupdate', () => { if (pv.duration) $('#plBar').style.width = Math.min(100, pv.currentTime / pv.duration * 100) + '%'; });
   pv.addEventListener('ended', () => { touch(); setMode('dash'); });
   pv.addEventListener('error', () => { if (K.playerClip) K.failed.add(K.playerClip.id); touch(); setMode('dash'); });
   // tap the picture to pause and resume; the badge says which
   pv.addEventListener('click', () => { touch(); if (pv.paused) { const p = pv.play(); if (p && p.catch) p.catch(() => {}); } else pv.pause(); });
-  const badge = () => { const d = K.playerClip ? fmtDur(K.playerClip.dur) : ''; const paused = pv.paused && !pv.ended; $('#plBadge').textContent = (paused ? 'Dijeda · ' : 'Sedang diputar · ') + d; $('#plHint').textContent = paused ? 'Ketuk gambar untuk lanjut' : 'Ketuk gambar untuk jeda'; };
+  const badge = () => { const v = K.playerClip; if (!v) return; const paused = pv.paused && !pv.ended && pv.currentTime > 0; $('#plBadge').textContent = (paused ? 'Dijeda · ' : 'Sedang diputar · ') + fmtDur(v.dur) + ' · ' + ORIENT_LABEL[K.playerO || 'v'] + (v.ai && K.playerO === 'v' ? ' · Karakter virtual (AI)' : ''); $('#plHint').textContent = paused ? 'Ketuk gambar untuk lanjut' : 'Ketuk gambar untuk jeda'; };
   pv.addEventListener('pause', badge); pv.addEventListener('play', badge);
   $('#plClose').addEventListener('click', () => { touch(); setMode('dash'); });
 
   /* --- promo band (zone B) --- */
-  function computeActives() { const today = todayISO(); return (live().promos || []).filter((p) => promoState(p, today) === 'Aktif').sort((a, b) => (a.order || 0) - (b.order || 0)); }
+  function computeActives() { const today = todayISO(); return (live().promos || []).filter((p) => promoState(p, today) === 'Aktif').slice().sort(byOrder); }
   function renderBand() {
     const st = settings(); const acts = computeActives(); const key = acts.map((p) => p.id).join('|');
     if (key !== K.activeKey) { K.activeKey = key; K.actives = acts; if (K.promo >= acts.length) { K.promo = 0; K.promoT = 0; } }
@@ -1095,18 +1382,32 @@ const Kiosk = (() => {
     const b = e.target.closest('button[data-p]'); if (!b) return; touch();
     const n = K.actives.length; if (!n) return; K.promo = (K.promo + n + parseInt(b.dataset.p, 10)) % n; K.promoT = 0; if (settings().holdOnTouch !== false) K.hold = 20; renderBand();
   });
+
+  /* --- preview: the admin's review page and page editor post a snapshot and a spot to look at --- */
+  window.addEventListener('message', (e) => {
+    const d = e.data; if (!d || d.type !== 'adc-preview' || e.source !== window.parent) return;
+    K.snap = d.snap || null; K.decided = true;
+    const f = d.focus || {};
+    K.mode = f.mode === 'saver' && canSave() ? 'saver' : 'dash';
+    if (f.tab) K.tab = f.tab; if (f.cat) K.cat = f.cat; if (f.sel) { K.sel = f.sel; const t = (live().treatments || []).find((x) => x.id === f.sel); if (t) K.cat = t.cat; }
+    if (f.clip != null) K.clip = f.clip;
+    K.activeKey = ''; K.actives = computeActives(); if (f.promo) { const i = K.actives.findIndex((p) => p.id === f.promo); if (i >= 0) { K.promo = i; K.promoT = 0; K.hold = 9999; } }
+    render();
+  });
   return { start, stop, render, touch };
 })();
 
 /* ---------------- ADMIN ---------------- */
 const Admin = (() => {
-  let shown = false, editingTreat = null, editingPromo = null, deleteArm = {}, saveQueue = Promise.resolve();
+  let shown = false, editingTreat = null, editingPromo = null, editingPage = null, deleteArm = {}, saveQueue = Promise.resolve(), pgFilter = 'semua', names = {}, namesPending = false;
+  const rv = { excluded: new Set(), sel: null, mode: 'after', banner: '' };
   const write = (fn) => { saveQueue = saveQueue.then(fn).catch((e) => { toast('Gagal menyimpan: ' + (e && e.message || e), true); }); return saveQueue; };
-  const byOrder = (a, b) => (a.order || 0) - (b.order || 0) || String(a.name || a.title || '').localeCompare(String(b.name || b.title || ''));
   const treats = () => S.treatments.slice().sort(byOrder);
   const promos = () => S.promos.slice().sort(byOrder);
+  const pages = () => S.pages.slice().sort(byOrder);
   const video = (id) => S.videos.find((v) => v.id === id);
-  const treatName = (id) => { const t = S.treatments.find((x) => x.id === id); return t ? t.name : ''; };
+  const who = (id) => id ? (names[id] && names[id].name) || '…' : '—';
+  function loadNames(ids) { ids = uniq(ids.filter((id) => id && !names[id])); if (!ids.length || !userNs || namesPending) return; namesPending = true; userNs.profiles(ids).then((r) => { Object.assign(names, r || {}); ids.forEach((id) => { if (!names[id]) names[id] = { name: 'Staf' }; }); namesPending = false; rerender(); }).catch(() => { namesPending = false; ids.forEach((id) => { names[id] = { name: 'Staf' }; }); }); }
 
   function show() {
     if (!S.ready) return;
@@ -1114,68 +1415,144 @@ const Admin = (() => {
     if (!db || !canEdit) { gate.hidden = false; body.hidden = true; $('#gateMsg').textContent = !db ? 'Basis data tidak tersedia pada tampilan ini. Buka halaman dari claude.ai dengan akun yang masuk.' : 'Akun ini tidak memiliki hak mengubah layar. Minta akses Editor dari menu Share halaman ini, lalu muat ulang.'; return; }
     gate.hidden = true; body.hidden = false;
     if (!shown) { shown = true; bind(); }
+    if (S.tab !== 'halaman') editingPage = null;
     document.querySelectorAll('.side nav a[data-tab]').forEach((a) => { if (a.dataset.tab === S.tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     document.querySelectorAll('.tab').forEach((t) => { t.hidden = t.id !== 'tab-' + S.tab; });
-    const titles = { ringkasan: ['Layar ruang tunggu', 'Ringkasan'], perawatan: ['Perawatan', editingTreat ? 'Ubah perawatan' : 'Perawatan baru'], promo: ['Band promo · zona bawah layar', 'Promo'], video: ['Zona utama layar', 'Video & screen saver'], heart: ['Apresiasi pasien · angka tidak tampil di layar', 'Heart untuk dokter'] };
-    $('#phEyebrow').textContent = titles[S.tab][0]; $('#phTitle').textContent = titles[S.tab][1];
     renderAll();
   }
+  const rerender = () => { if (shown && S.route === 'admin' && !$('#adminBody').hidden) renderAll(); };
 
-  /* ----- snapshot & diff ----- */
-  function buildSnapshot() {
-    const st = Object.assign({}, DEFAULT_SETTINGS, S.settings);
-    return {
-      treatments: treats().map((t) => ({ id: t.id, name: t.name, cat: t.cat, desc: t.desc || '', price: t.price || '', sessions: t.sessions || '', duration: t.duration || '', downtime: t.downtime || '', after: t.after || '', concerns: t.concerns || '', photo: t.photo || null, video: t.video || null, show: t.show !== false, order: t.order || 0 })),
-      promos: promos().map((p) => ({ id: p.id, title: p.title, accent: p.accent || '', eyebrow: p.eyebrow || '', kind: p.kind || 'Paket', value: p.value || '', valueLabel: p.valueLabel || '', valueNote: p.valueNote || '', lede: p.lede || '', chip: p.chip || 'Semua perawatan', from: p.from || '', to: p.to || '', live: !!p.live, order: p.order || 0 })),
-      videos: S.videos.map((v) => ({ id: v.id, title: v.title, desc: v.desc || '', dur: v.dur || 0, asset: v.asset || null, poster: v.poster || null, ai: !!v.ai, ratio: v.ratio || '' })),
-      settings: { idleMin: st.idleMin, slideSecs: st.slideSecs, hideBandWhenEmpty: st.hideBandWhenEmpty, holdOnTouch: st.holdOnTouch, saverOn: st.saverOn, sound: st.sound, showTitles: st.showTitles, heartInvite: st.heartInvite !== false, playlist: (st.playlist || []).filter((id) => video(id)) }
+  /* ----- snapshot, changes and the publish step ----- */
+  const liveNorm = () => normSnap(S.live);
+  const draftNorm = () => normSnap({ treatments: S.treatments, promos: S.promos, videos: S.videos, pages: S.pages, settings: S.settings });
+  const isReturned = (doc) => !!(doc && doc.review && doc.review.status === 'returned' && (!doc.updatedAt || doc.updatedAt <= doc.review.at));
+  const liveVersion = () => (S.live && S.live.version) || (S.live ? 1 : 0);
+  function changes() {
+    const L = liveNorm(), D = draftNorm(), out = [];
+    const texts = (d) => d ? Object.keys(d).filter((k) => typeof d[k] === 'string' && k !== 'id').map((k) => d[k]).concat(d.blocks ? d.blocks.map((b) => (b.text || '') + ' ' + (b.items || []).join(' ') + ' ' + (b.alt || '')) : []).join(' ') : '';
+    const fieldList = (f) => f.map((k) => FIELD_LABEL[k] || k).join(', ');
+    const coll = (kind, key, raw, titleOf, detailNew, extraAction, requireSent) => {
+      const lm = new Map(L[key].map((x) => [x.id, x])), dm = new Map(D[key].map((x) => [x.id, x]));
+      dm.forEach((d, id) => {
+        const doc = raw.find((x) => x.id === id); if (isReturned(doc)) return; if (requireSent && !(doc && doc.status === 'review')) return;
+        const l = lm.get(id);
+        if (!l) out.push({ key: key + ':' + id, kind, coll: key, id, action: 'Baru', title: titleOf(d), detail: detailNew(d), who: doc && doc.updatedBy, when: doc && doc.updatedAt, text: texts(d), d });
+        else if (canon(l) !== canon(d)) { const f = Object.keys(d).filter((k) => canon(d[k]) !== canon(l[k])); const act = extraAction ? extraAction(l, d, f) : null; out.push({ key: key + ':' + id, kind, coll: key, id, action: act || 'Diubah', title: titleOf(d), detail: act && act !== 'Diubah' && f.length === 1 ? detailNew(d) : 'Diubah: ' + fieldList(f) + '.', who: doc && doc.updatedBy, when: doc && doc.updatedAt, text: texts(d), d, l }); }
+      });
+      lm.forEach((l, id) => { if (!dm.has(id)) out.push({ key: key + ':' + id, kind, coll: key, id, action: 'Dihapus', title: titleOf(l), detail: 'Dihapus dari draf; hilang dari layar setelah dipublikasikan.', who: null, when: null, text: '', l }); });
     };
+    coll('Perawatan', 'treatments', S.treatments, (t) => t.name, (t) => catLabel(t.cat) + ' · ' + (t.price ? 'mulai dari ' + t.price : 'tanya resepsionis') + (t.video ? ' · dengan video' : '') + (t.show ? '' : ' · disembunyikan'));
+    coll('Promo', 'promos', S.promos, (p) => (p.title + ' ' + (p.accent || '')).trim(), (p) => validity(p) + ' · ' + (p.live ? 'tayang di band promo' : 'tidak tayang'), (l, d, f) => (f.includes('live') ? (d.live ? 'Mulai tayang' : 'Diakhiri') : null));
+    coll('Video', 'videos', S.videos, (v) => v.title, (v) => fmtDur(v.dur) + ' · ' + ORIENT_LABEL[v.orient] + (v.ai ? ' · Karakter virtual (AI)' : ''));
+    coll('Halaman', 'pages', S.pages, (p) => p.title || 'Halaman tanpa judul', (p) => 'Tab "' + (p.tab || p.title) + '" setelah Perawatan' + (p.inSaver ? ', ikut diputar di screen saver' : '') + (p.showTab ? '' : ' (tidak tampil sebagai tab)') + (p.from || p.to ? ' · ' + validity(p).toLowerCase() : ''), null, true);
+    if (!isReturned(S.settings) && canon(L.settings) !== canon(D.settings)) { const f = Object.keys(D.settings).filter((k) => canon(D.settings[k]) !== canon(L.settings[k])); out.push({ key: 'settings', kind: 'Pengaturan', coll: 'settings', id: 'settings', action: 'Diubah', title: 'Pengaturan layar', detail: 'Diubah: ' + fieldList(f) + '.', who: S.settings.updatedBy, when: S.settings.updatedAt, text: '', d: D.settings }); }
+    if (S.restore && S.restore.v) out.push({ key: 'restore', kind: 'Versi', coll: 'restore', id: 'restore', action: 'Kembalikan', title: 'Versi ' + S.restore.v, detail: 'Mengembalikan seluruh isi layar ke versi ' + S.restore.v + (S.restore.versionAt ? ' (' + fmtWhen(S.restore.versionAt) + ')' : '') + '. Tidak bisa digabung dengan perubahan lain dalam satu publikasi.', who: S.restore.by, when: S.restore.at, text: '' });
+    out.sort((a, b) => String(b.when || '').localeCompare(String(a.when || '')));
+    loadNames(out.map((c) => c.who));
+    return out;
   }
-  function diff() {
-    const live = S.live || { treatments: [], promos: [], videos: [], settings: {} }, snap = buildSnapshot();
-    const cmp = (a, b) => { const am = new Map(a.map((x) => [x.id, JSON.stringify(x)])); const bm = new Map(b.map((x) => [x.id, JSON.stringify(x)])); let n = 0; am.forEach((v, k) => { if (bm.get(k) !== v) n++; }); bm.forEach((v, k) => { if (!am.has(k)) n++; }); return n; };
-    const t = cmp(snap.treatments, live.treatments || []), p = cmp(snap.promos, live.promos || []), v = cmp(snap.videos, live.videos || []);
-    const s = JSON.stringify(snap.settings) !== JSON.stringify(Object.assign({}, DEFAULT_SETTINGS, live.settings || {}, { playlist: (live.settings && live.settings.playlist) || [] })) ? 1 : 0;
-    return { t, p, v, s, total: t + p + v + s };
+  const included = (list) => { const restore = list.find((c) => c.key === 'restore' && !rv.excluded.has('restore')); return restore ? [restore] : list.filter((c) => !rv.excluded.has(c.key)); };
+  // the screen after publishing the included changes: live plus each included record, nothing else
+  function afterSnapshot(inc) {
+    const res = liveNorm(), D = draftNorm();
+    inc.forEach((c) => {
+      if (c.coll === 'settings') { res.settings = D.settings; return; } if (c.coll === 'restore') return;
+      const arr = res[c.coll]; const d = D[c.coll].find((x) => x.id === c.id); const i = arr.findIndex((x) => x.id === c.id);
+      if (!d) { if (i >= 0) arr.splice(i, 1); } else if (i >= 0) arr[i] = d; else arr.push(d);
+    });
+    ['treatments', 'promos', 'pages'].forEach((k) => res[k].sort(byOrder));
+    const ids = new Set(res.videos.map((v) => v.id)); res.settings.playlist = res.settings.playlist.filter((id) => ids.has(id));
+    return res;
   }
-  function diffParts(d) { const parts = []; if (d.t) parts.push(kata(d.t) + ' perawatan'); if (d.p) parts.push(kata(d.p) + ' promo'); if (d.v) parts.push(kata(d.v) + ' video'); if (d.s) parts.push('pengaturan'); return parts; }
-  // publishing is the gate: name what goes live before it does; a plain republish (nothing changed) needs no second step
-  function askPublish() {
-    const d = diff(); if (!d.total) { publish(); return; }
-    $('#pubConfirmText').textContent = 'Tayangkan ' + kata(d.total) + ' perubahan (' + diffParts(d).join(', ') + ') ke layar?';
-    $('#btnPublish').hidden = true; $('#pubConfirm').hidden = false; $('#pubYes').focus();
-  }
-  function hidePubConfirm() { $('#pubConfirm').hidden = true; $('#btnPublish').hidden = false; }
-  async function publish() {
-    const btn = $('#btnPublish'); btn.disabled = true;
+  const versionCache = {};
+  async function getVersion(v) { if (versionCache[v]) return versionCache[v]; try { const s = await db.doc('versions/v' + v).get(); if (s.exists) { versionCache[v] = normSnap(s.data()); return versionCache[v]; } } catch (e) {} return null; }
+  async function publishIncluded() {
+    const list = changes(); const inc = included(list); if (!canEdit || !inc.length || !$('#rvConfirm').checked) return;
+    const btn = $('#rvPublish'); btn.disabled = true; const note = $('#rvNote').value.trim();
     try {
-      const snap = buildSnapshot(); snap.publishedAt = new Date().toISOString(); snap.by = me && me.id || null; await db.doc('published/live').set(snap); await logChange('Layar dipublikasikan');
-      // assets removed from drafts are only deleted once no live snapshot can reference them
-      if (assets && S.trash && S.trash.length) { for (const id of S.trash) { try { await assets.delete(id); } catch (e) {} } await db.doc('config/trash').set({ assets: [] }); }
-      toast('Dipublikasikan ke layar');
-    }
-    catch (e) { toast('Gagal mempublikasikan: ' + (e && e.message || e), true); }
-    btn.disabled = false;
+      const restore = inc.find((c) => c.key === 'restore'); let snap;
+      if (restore) { snap = await getVersion(S.restore.v); if (!snap) throw new Error('Versi ' + S.restore.v + ' tidak tersimpan lengkap, tidak bisa dikembalikan.'); } else snap = afterSnapshot(inc);
+      const v = liveVersion() + 1, at = new Date().toISOString(), by = me && me.id || null;
+      const doc = Object.assign({}, snap, { version: v, publishedAt: at, by, note: note || (restore ? 'Kembali ke versi ' + S.restore.v : cap(kata(inc.length)) + ' perubahan') });
+      await db.doc('published/live').set(doc);
+      await db.doc('versions/v' + v).set(doc);
+      await db.doc('published/history').set({ versions: [{ v, at, by, note: doc.note, count: inc.length }].concat(S.history.filter((h) => h.v !== v)).slice(0, 50) });
+      if (restore) { await syncDraftsTo(snap); await db.doc('config/restore').delete(); }
+      else for (const c of inc) { if (c.coll === 'pages' && c.d) await db.doc('pages/' + c.id).update({ status: 'draft' }); }
+      // assets of deleted records are removed only once no live snapshot references them
+      if (assets && S.trash && S.trash.length) { const used = new Set(); snap.treatments.forEach((t) => used.add(t.photo)); snap.videos.forEach((x) => { used.add(x.asset); used.add(x.poster); }); snap.pages.forEach((p) => p.blocks.forEach((b) => used.add(b.asset))); const keep = []; for (const id of S.trash) { if (used.has(id)) { keep.push(id); continue; } try { await assets.delete(id); } catch (e) {} } await db.doc('config/trash').set({ assets: keep }); }
+      await logChange('Versi ' + v + ' dipublikasikan ke layar (' + kata(inc.length) + ' perubahan)' + (note ? ': ' + note : ''));
+      rv.excluded.clear(); rv.banner = 'Versi ' + v + ' dipublikasikan ' + fmtWhen(at) + '. Layar di ruang tunggu diperbarui dalam sekitar satu menit.'; rv.mode = 'live'; $('#rvConfirm').checked = false; $('#rvNote').value = '';
+      toast('Dipublikasikan ke layar (versi ' + v + ')');
+    } catch (e) { toast('Gagal mempublikasikan: ' + (e && e.message || e), true); }
+    btn.disabled = false; rerender();
   }
-  async function trashAssets(ids) { ids = ids.filter(Boolean); if (!ids.length) return; await db.doc('config/trash').set({ assets: (S.trash || []).concat(ids) }); }
+  // bring the drafts back in line with a restored version, so the admin shows what the screen shows
+  async function syncDraftsTo(snap) {
+    const at = new Date().toISOString(), by = me && me.id || null;
+    const sync = async (key, cur) => { const ids = new Set(snap[key].map((x) => x.id)); for (const x of cur) if (!ids.has(x.id)) await db.doc(key + '/' + x.id).delete(); for (const x of snap[key]) await db.doc(key + '/' + x.id).set(Object.assign({}, x, key === 'pages' ? { status: 'draft' } : {}, { updatedAt: at, updatedBy: by })); };
+    await sync('treatments', S.treatments); await sync('promos', S.promos); await sync('videos', S.videos); await sync('pages', S.pages);
+    await db.doc('config/settings').set(Object.assign({}, snap.settings, { updatedAt: at, updatedBy: by }));
+  }
+  async function returnSelected() {
+    const inc = included(changes()); if (!inc.length) return;
+    const note = $('#rvNote').value.trim(); const review = { status: 'returned', note, by: me && me.id || null, at: new Date().toISOString() };
+    await write(async () => {
+      for (const c of inc) {
+        if (c.coll === 'restore') { await db.doc('config/restore').delete(); continue; }
+        if (c.coll === 'settings') { await db.doc('config/settings').update({ review }); continue; }
+        if (c.action === 'Dihapus') { await db.doc(c.coll + '/' + c.id).set(Object.assign({}, c.l, { updatedAt: review.at, updatedBy: review.by })); continue; }
+        await db.doc(c.coll + '/' + c.id).update(Object.assign({ review }, c.coll === 'pages' ? { status: 'draft' } : {}));
+      }
+      await logChange(cap(kata(inc.length)) + ' perubahan dikembalikan ke draf' + (note ? ': ' + note : ''));
+    });
+    rv.excluded.clear(); rv.banner = cap(kata(inc.length)) + ' perubahan dikembalikan ke draf' + (note ? ' dengan catatan untuk penulis.' : '.'); $('#rvConfirm').checked = false; $('#rvNote').value = '';
+    rerender();
+  }
+  async function requestRestore(v) { if (!canEdit) return; const h = S.history.find((x) => x.v === v); await write(async () => { await db.doc('config/restore').set({ v, versionAt: h ? h.at : '', by: me && me.id || null, at: new Date().toISOString() }); await logChange('Pengembalian ke versi ' + v + ' diajukan untuk tinjauan'); }); rv.excluded.clear(); rv.sel = 'restore'; }
   async function logChange(text) {
     try { const entries = [{ text, when: new Date().toISOString(), by: me && me.id || null }].concat(S.log || []).slice(0, 30); await db.doc('config/log').set({ entries }); } catch (e) {}
   }
-  const touchDoc = (d) => Object.assign(d, { updatedAt: new Date().toISOString() });
+  const touchDoc = (d) => Object.assign(d, { updatedAt: new Date().toISOString(), updatedBy: me && me.id || null });
+  function reviewChecks(inc, after) {
+    const out = [], today = todayISO();
+    const hits = []; inc.forEach((c) => bannedIn(c.text).forEach((w) => hits.push('"' + w + '" di ' + c.title)));
+    out.push(hits.length ? { warn: true, text: 'Kata yang dilarang untuk iklan kesehatan: ' + uniq(hits).join('; ') + '.' } : { ok: true, text: 'Tidak ada kata yang dilarang untuk iklan kesehatan di perubahan yang dipilih.' });
+    const ended = after.promos.filter((p) => p.live && p.to && p.to < today);
+    out.push(ended.length ? { warn: true, text: cap(kata(ended.length)) + ' promo masih berstatus tayang padahal masa berlakunya lewat: ' + ended.map((p) => p.title + ' (sampai ' + fmtDate(p.to) + ')').join(', ') + '. Layar tidak menampilkannya; matikan atau perbarui tanggalnya.', href: '#promo', link: 'Buka promo' } : { ok: true, text: 'Tidak ada promo tayang yang sudah lewat masa berlaku.' });
+    const elle = after.videos.filter((v) => /\belle\b|kasus kulit/i.test(v.title + ' ' + v.desc) && !v.ai);
+    out.push(elle.length ? { warn: true, text: 'Video dengan Elle tanpa label "Karakter virtual (AI)": ' + elle.map((v) => v.title).join(', ') + '.', href: '#video', link: 'Buka video' } : { ok: true, text: 'Video dengan Elle memakai label "Karakter virtual (AI)".' });
+    const tabs = after.pages.filter((p) => p.showTab); const bad = tabs.filter((p) => !(p.tab || '').trim() || (p.tab || '').length > 18);
+    out.push(bad.length ? { warn: true, text: 'Label tab kosong atau lebih dari 18 karakter: ' + bad.map((p) => p.title).join(', ') + '.', href: '#halaman', link: 'Buka halaman' } : { ok: true, text: tabs.length ? 'Label tab muat di layar (' + tabs.map((p) => '"' + p.tab + '" ' + p.tab.length + ' dari 18 karakter').join(', ') + ').' : 'Tidak ada tab halaman tambahan di layar.' });
+    return out;
+  }
 
   /* ----- render ----- */
-  function renderAll() { renderHeader(); if (S.tab === 'ringkasan') renderOverview(); if (S.tab === 'perawatan') { renderTreatForm(false); renderTreatList(); } if (S.tab === 'promo') { renderPromoList(); renderPromoForm(false); renderBandSettings(); } if (S.tab === 'video') { renderVideos(); renderSaverSettings(); } if (S.tab === 'heart') renderHearts(); }
+  function renderAll() {
+    renderHeader();
+    if (S.tab === 'ringkasan') renderOverview();
+    if (S.tab === 'perawatan') { renderTreatForm(false); renderTreatList(); }
+    if (S.tab === 'promo') { renderPromoList(); renderPromoForm(false); renderBandSettings(); }
+    if (S.tab === 'video') { renderVideos(); renderSaverSettings(); }
+    if (S.tab === 'heart') renderHearts();
+    if (S.tab === 'halaman') renderPages();
+    if (S.tab === 'tinjau') renderReview();
+  }
   function renderHeader() {
-    const ps = $('#pubState'); const d = diff();
-    if (S.live && S.live.publishedAt) { ps.dataset.state = 'live'; ps.textContent = 'Tayang · dipublikasikan ' + fmtWhen(S.live.publishedAt) + (d.total ? ' · ' + kata(d.total) + ' perubahan belum tayang' : ''); }
-    else { ps.dataset.state = 'none'; ps.textContent = 'Belum pernah dipublikasikan'; }
+    const n = changes().length; const badge = $('#navBadge'); badge.textContent = n; badge.dataset.n = n;
+    const titles = { ringkasan: ['Layar ruang tunggu', 'Ringkasan'], perawatan: ['Perawatan', editingTreat ? 'Ubah perawatan' : 'Perawatan baru'], promo: ['Band promo · zona bawah layar', 'Promo'], video: ['Zona utama layar', 'Video & screen saver'], heart: ['Apresiasi pasien · angka tidak tampil di layar', 'Heart untuk dokter'], halaman: editingPage ? ['Halaman / Ubah', (S.pages.find((p) => p.id === editingPage) || {}).title || 'Halaman tanpa judul'] : ['Tab di layar, setelah Perawatan', 'Halaman'], tinjau: ['Layar tayang: versi ' + liveVersion() + (S.live && S.live.publishedAt ? ' · ' + fmtWhen(S.live.publishedAt) : ''), 'Tinjau & publikasikan'] };
+    $('#phEyebrow').textContent = titles[S.tab][0]; $('#phTitle').textContent = titles[S.tab][1];
+    const a = $('#phActions');
+    if (S.tab === 'tinjau') a.innerHTML = '<span class="intro">Perubahan dari semua menu menunggu di sini. Pasien hanya melihatnya setelah Anda publikasikan.</span>';
+    else if (S.tab === 'halaman' && editingPage) { const p = S.pages.find((x) => x.id === editingPage); a.innerHTML = '<span class="pub-state" data-state="' + (p && p.status === 'review' ? 'live' : 'none') + '">' + (p && p.status === 'review' ? 'Menunggu tinjauan' : 'Draf') + ' · tersimpan ' + (pgSavedAt ? 'otomatis ' + pgSavedAt : fmtClock(p && p.updatedAt)) + '</span><button class="btn quiet" id="pgBack">Kembali ke daftar</button><button class="btn outline" id="pgSave">Simpan draf</button><button class="btn solid" id="pgSend" ' + (p && p.status === 'review' ? 'disabled' : '') + '><svg width="16" height="16"><use href="#i-eye"/></svg><span>' + (p && p.status === 'review' ? 'Sudah dikirim ke tinjauan' : 'Kirim ke tinjauan') + '</span></button>'; }
+    else a.innerHTML = '<span class="pub-state" data-state="' + (S.live && S.live.publishedAt ? 'live' : 'none') + '">' + (S.live && S.live.publishedAt ? 'Tayang · versi ' + liveVersion() + ' · ' + fmtWhen(S.live.publishedAt) : 'Belum pernah dipublikasikan') + '</span><a class="btn ' + (n ? 'solid' : 'outline') + '" href="#tinjau">Tinjau perubahan' + (n ? ' (' + n + ')' : '') + '</a>';
   }
   function renderOverview() {
     const today = todayISO(); const vis = S.treatments.filter((t) => t.show !== false).length;
     const states = S.promos.map((p) => promoState(p, today)); const nA = states.filter((s) => s === 'Aktif').length, nT = states.filter((s) => s === 'Terjadwal').length, nB = states.filter((s) => s === 'Berakhir').length;
     const pl = (S.settings.playlist || []).filter(video); const linked = S.videos.filter((v) => S.treatments.some((t) => t.video === v.id)).length;
-    const d = diff(); const parts = []; if (d.t) parts.push(kata(d.t) + ' perawatan'); if (d.p) parts.push(kata(d.p) + ' promo'); if (d.v) parts.push(kata(d.v) + ' video'); if (d.s) parts.push('pengaturan');
-    $('#tiles').innerHTML = '<div class="tile"><span>Perawatan tampil</span><b class="tnum">' + vis + '</b><span>dari ' + S.treatments.length + ' perawatan</span></div><div class="tile"><span>Promo di band</span><b class="tnum">' + nA + '</b><span>' + kata(nT) + ' terjadwal, ' + kata(nB) + ' berakhir</span></div><div class="tile"><span>Video di screen saver</span><b class="tnum">' + pl.length + '</b><span>' + kata(linked) + ' ditautkan ke perawatan</span></div><div class="tile"><span>Perubahan belum dipublikasikan</span><b class="tnum ' + (d.total ? 'warn' : '') + '">' + d.total + '</b><span>' + (parts.length ? esc(parts.join(', ')) : 'semua sudah tayang') + '</span></div>';
+    const ch = changes(); const kinds = uniq(ch.map((c) => c.kind.toLowerCase()));
+    $('#tiles').innerHTML = '<div class="tile"><span>Perawatan tampil</span><b class="tnum">' + vis + '</b><span>dari ' + S.treatments.length + ' perawatan</span></div><div class="tile"><span>Promo di band</span><b class="tnum">' + nA + '</b><span>' + kata(nT) + ' terjadwal, ' + kata(nB) + ' berakhir</span></div><div class="tile"><span>Video di screen saver</span><b class="tnum">' + pl.length + '</b><span>' + kata(linked) + ' ditautkan ke perawatan · ' + kata(S.pages.length) + ' halaman</span></div><div class="tile"><span>Perubahan menunggu tinjauan</span><b class="tnum ' + (ch.length ? 'warn' : '') + '">' + ch.length + '</b><span>' + (kinds.length ? esc(kinds.join(', ')) : 'layar sama dengan draf') + '</span></div>';
     renderTreatTable();
     $('#promoMini').innerHTML = promos().map((p) => { const s = promoState(p, today); return '<div><i class="' + (s === 'Aktif' ? 'on' : '') + '"></i><span>' + esc(p.title) + '</span><small>' + s + '</small></div>'; }).join('') || '<span class="note">Belum ada promo.</span>';
     $('#promoMiniNote').textContent = 'Berganti setiap ' + (S.settings.slideSecs || 8) + ' detik · terpisah dari konten utama';
@@ -1185,40 +1562,42 @@ const Admin = (() => {
   function renderTreatTable() {
     const q = ($('#cari').value || '').toLowerCase().trim(); let rows = treats().filter((t) => !q || (t.name + ' ' + t.cat).toLowerCase().includes(q));
     const total = rows.length; if (!allTreats && !q) rows = rows.slice(0, 7);
-    $('#treatTable').innerHTML = '<table><thead><tr><th>Nama</th><th>Kategori</th><th>Mulai dari</th><th>Video</th><th>Tampil</th><th></th></tr></thead><tbody>' + rows.map((t) => '<tr><td style="font-weight:500">' + esc(t.name) + '</td><td class="muted">' + esc(catLabel(t.cat)) + '</td><td class="tnum">' + esc(or(t.price, 'Tanya resepsionis')) + '</td><td class="muted">' + esc(t.video && video(t.video) ? video(t.video).title : '—') + '</td><td><label class="check"><input type="checkbox" data-show="' + esc(t.id) + '" ' + (t.show !== false ? 'checked' : '') + '><small>' + (t.show !== false ? 'Tampil' : 'Sembunyi') + '</small></label></td><td><button class="btn quiet sm" data-edit="' + esc(t.id) + '">Ubah</button></td></tr>').join('') + (rows.length ? '' : '<tr><td colspan="6" class="muted">Belum ada perawatan. Tekan "Tambah".</td></tr>') + '</tbody></table>';
+    $('#treatTable').innerHTML = '<table><thead><tr><th>Nama</th><th>Kategori</th><th>Mulai dari</th><th>Video</th><th>Tampil</th><th></th></tr></thead><tbody>' + rows.map((t) => '<tr><td style="font-weight:500">' + esc(t.name) + (isReturned(t) ? ' <span class="sbadge">Dikembalikan</span>' : '') + '</td><td class="muted">' + esc(catLabel(t.cat)) + '</td><td class="tnum">' + esc(or(t.price, 'Tanya resepsionis')) + '</td><td class="muted">' + esc(t.video && video(t.video) ? video(t.video).title : '—') + '</td><td><label class="check"><input type="checkbox" data-show="' + esc(t.id) + '" ' + (t.show !== false ? 'checked' : '') + '><small>' + (t.show !== false ? 'Tampil' : 'Sembunyi') + '</small></label></td><td><button class="btn quiet sm" data-edit="' + esc(t.id) + '">Ubah</button></td></tr>').join('') + (rows.length ? '' : '<tr><td colspan="6" class="muted">Belum ada perawatan. Tekan "Tambah".</td></tr>') + '</tbody></table>';
     $('#btnAllTreat').textContent = allTreats ? 'Tampilkan 7 teratas' : 'Lihat semua ' + total + ' perawatan'; $('#btnAllTreat').hidden = total <= 7 || !!q;
   }
-  async function renderChanges() {
-    const log = S.log || []; const ids = log.map((e) => e.by).filter(Boolean); let names = {};
-    if (userNs && ids.length) { try { names = await userNs.profiles(ids); } catch (e) {} }
+  function renderChanges() {
+    const log = S.log || []; loadNames(log.map((e) => e.by));
     $('#changes').innerHTML = log.slice(0, 6).map((e) => '<div><span>' + esc(e.text) + '</span><small>' + esc(fmtWhen(e.when)) + (e.by && names[e.by] && names[e.by].name ? ' · ' + esc(names[e.by].name) : '') + '</small></div>').join('') || '<span class="note">Belum ada perubahan tercatat.</span>';
   }
 
   /* ----- treatments ----- */
   function openTreat(id) { editingTreat = id || null; deleteArm = {}; location.hash = '#perawatan'; S.tab = 'perawatan'; renderTreatForm(true); show(); }
+  const videoOption = (v) => esc(v.title) + ' (' + fmtDur(v.dur) + ' · ' + (orientOf(v) === 'v' ? '9:16' : '16:9') + ')';
   function renderTreatForm(fill) {
     const f = $('#treatForm'); const t = editingTreat ? S.treatments.find((x) => x.id === editingTreat) : null;
     // the selects are rebuilt on every re-render (a db snapshot, a tab switch); keep what the staff member had chosen
     const keepCat = $('#tfCat').value, keepVideo = $('#tfVideo').value;
     $('#tfCat').innerHTML = CATS.map((c) => '<option value="' + esc(c) + '">' + esc(catLabel(c)) + '</option>').join('');
-    $('#tfVideo').innerHTML = '<option value="">— Tanpa video —</option>' + S.videos.map((v) => '<option value="' + esc(v.id) + '">' + esc(v.title) + ' (' + fmtDur(v.dur) + ')</option>').join('');
+    $('#tfVideo').innerHTML = '<option value="">— Tanpa video —</option>' + S.videos.map((v) => '<option value="' + esc(v.id) + '">' + videoOption(v) + '</option>').join('');
     if (!fill) { if (keepCat) $('#tfCat').value = keepCat; $('#tfVideo').value = keepVideo; }
     if (fill) {
       $('#tfName').value = t ? t.name : ''; $('#tfCat').value = t ? t.cat : CATS[0]; $('#tfDesc').value = t ? t.desc || '' : ''; $('#tfPrice').value = t ? t.price || '' : ''; $('#tfSessions').value = t ? t.sessions || '' : ''; $('#tfDuration').value = t ? t.duration || '' : ''; $('#tfDowntime').value = t ? t.downtime || '' : ''; $('#tfAfter').value = t ? t.after || '' : ''; $('#tfConcerns').value = t ? t.concerns || '' : ''; $('#tfShow').checked = t ? t.show !== false : true;
       f.dataset.photo = t && t.photo || '';
+      $('#tfVideo').value = t ? (t.video || '') : '';
     }
-    if (fill) { $('#tfVideo').value = t ? (t.video || '') : ''; delete $('#tfVideo').dataset.touched; }
     $('#tfTitle').textContent = t ? t.name : 'Perawatan baru'; $('#tfDeleteWrap').hidden = !t; $('#tfDeleteConfirm').hidden = true;
-    $('#tfPhotoDrop').hidden = !assets; if (!assets) $('#tfPhotoDrop').insertAdjacentHTML('afterend', '');
+    $('#tfPhotoDrop').hidden = !assets;
     updateTreatPreview();
   }
   function updateTreatPreview() {
     const f = $('#treatForm'); const name = $('#tfName').value || 'Nama perawatan', desc = $('#tfDesc').value, price = $('#tfPrice').value;
     $('#tfDescLen').textContent = desc.length + ' / 120';
     const photo = f.dataset.photo; const img = $('#tfPhotoImg'); img.hidden = !photo; if (photo) img.src = blob(photo); $('#tfPhotoRemove').hidden = !photo;
-    $('#tfPreview').innerHTML = (photo ? '<img src="' + esc(blob(photo)) + '" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:10px">' : '') + '<span class="n">' + esc(name) + '</span><span class="d">' + esc(desc || 'Deskripsi singkat tampil di sini.') + '</span><span class="p tnum">' + esc(priceLine(price)) + '</span>';
+    const v = video($('#tfVideo').value);
+    $('#tfPreview').innerHTML = '<span class="n">' + esc(name) + '</span><span class="d">' + esc(desc || 'Deskripsi singkat tampil di sini.') + '</span><span class="p tnum">' + esc(or(price, '') ? 'mulai ' + price.trim() : 'Tanya resepsionis') + '</span>' + (v ? '<span class="p">Ada video penjelasan · ' + ORIENT_LABEL[orientOf(v)] + '</span>' : '');
     $('#tfFacts').innerHTML = '<div><span>Sesi</span><b>' + esc(or($('#tfSessions').value, DD)) + '</b></div><div><span>Durasi</span><b>' + esc(or($('#tfDuration').value, DD)) + '</b></div><div><span>Downtime</span><b>' + esc(or($('#tfDowntime').value, DD)) + '</b></div>';
-    $('#tfCatNote').textContent = 'Kategori: ' + catLabel($('#tfCat').value);
+    const t = editingTreat ? S.treatments.find((x) => x.id === editingTreat) : null;
+    $('#tfCatNote').textContent = 'Kategori: ' + catLabel($('#tfCat').value) + (isReturned(t) ? ' · Dikembalikan ke draf' + (t.review.note ? ': ' + t.review.note : '') : '');
   }
   function renderTreatList() {
     const list = treats(); $('#treatCount').textContent = list.length + ' perawatan';
@@ -1230,14 +1609,15 @@ const Admin = (() => {
     const bad = bannedIn(name + ' ' + $('#tfDesc').value + ' ' + $('#tfAfter').value + ' ' + $('#tfConcerns').value); if (bad.length) { toast('Kata tidak diperbolehkan: ' + bad.join(', ') + '. Ubah dulu teksnya.', true); return; }
     const t = editingTreat ? S.treatments.find((x) => x.id === editingTreat) : null; const id = t ? t.id : uid();
     const doc = touchDoc({ id, name, cat: $('#tfCat').value, desc: $('#tfDesc').value.trim(), price: $('#tfPrice').value.trim(), sessions: $('#tfSessions').value.trim(), duration: $('#tfDuration').value.trim(), downtime: $('#tfDowntime').value.trim(), after: $('#tfAfter').value.trim(), concerns: $('#tfConcerns').value.trim(), video: $('#tfVideo').value || null, photo: $('#treatForm').dataset.photo || null, show: $('#tfShow').checked, order: t ? (t.order || 0) : (Math.max(0, ...S.treatments.map((x) => x.order || 0)) + 1) });
-    await write(async () => { await db.doc('treatments/' + id).set(doc); await logChange((t ? 'Perawatan "' : 'Perawatan baru "') + name + '" disimpan sebagai draf'); toast('Draf disimpan. Tekan "Publikasikan ke layar" agar tayang.'); });
+    await write(async () => { await db.doc('treatments/' + id).set(doc); await logChange((t ? 'Perawatan "' : 'Perawatan baru "') + name + '" disimpan sebagai draf'); toast('Draf disimpan. Tayang setelah dipublikasikan dari "Tinjau & publikasikan".'); });
     editingTreat = id; $('#tfTitle').textContent = name; $('#tfDeleteWrap').hidden = false; $('#phTitle').textContent = 'Ubah perawatan';
   }
   async function deleteTreat() {
     const t = S.treatments.find((x) => x.id === editingTreat); if (!t) return;
-    await write(async () => { await db.doc('treatments/' + t.id).delete(); await logChange('Perawatan "' + t.name + '" dihapus'); await trashAssets([t.photo]); toast('Perawatan dihapus dari draf. Publikasikan agar hilang dari layar.'); });
+    await write(async () => { await db.doc('treatments/' + t.id).delete(); await logChange('Perawatan "' + t.name + '" dihapus'); await trashAssets([t.photo]); toast('Perawatan dihapus dari draf. Hilang dari layar setelah dipublikasikan.'); });
     editingTreat = null; renderTreatForm(true); show();
   }
+  async function trashAssets(ids) { ids = ids.filter(Boolean); if (!ids.length) return; await db.doc('config/trash').set({ assets: (S.trash || []).concat(ids) }); }
   async function toggleShow(id, on) { const t = S.treatments.find((x) => x.id === id); if (!t) return; await write(async () => { await db.doc('treatments/' + id).update(touchDoc({ show: on })); await logChange('"' + t.name + '" ' + (on ? 'ditampilkan di layar' : 'disembunyikan dari layar')); }); }
   async function uploadPhoto(file) {
     if (!assets || !file) return; if (file.size > 5 * 1024 * 1024) { toast('Foto lebih dari 5 MB. Perkecil dulu.', true); return; }
@@ -1247,7 +1627,7 @@ const Admin = (() => {
   /* ----- promos ----- */
   function renderPromoList() {
     const today = todayISO(); const list = promos();
-    $('#promoList').innerHTML = list.map((p, i) => { const s = promoState(p, today); return '<div class="prow"><div class="ord"><button class="ib" data-pmove="' + esc(p.id) + '|-1" aria-label="Naikkan urutan" ' + (i === 0 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-up"/></svg></button><button class="ib" data-pmove="' + esc(p.id) + '|1" aria-label="Turunkan urutan" ' + (i === list.length - 1 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-down"/></svg></button></div><div class="body"><div class="t"><span>' + esc(p.title) + (p.accent ? ' ' + esc(p.accent) : '') + '</span><span class="status ' + (s === 'Aktif' ? 'on' : '') + '">' + s + '</span></div><span class="l">' + esc(p.lede) + '</span><div class="m"><span class="chip">' + esc(p.chip || 'Semua perawatan') + '</span><span>' + esc(validity(p)) + '</span><span>' + esc(p.kind + (p.value ? ' · ' + p.value : '')) + '</span></div></div><div class="act"><button class="toggle" data-ptoggle="' + esc(p.id) + '" role="switch" aria-checked="' + (p.live ? 'true' : 'false') + '"><span class="trk"></span><span>' + (p.live ? 'Tayang' : 'Tidak tayang') + '</span></button><button class="link muted" data-pedit="' + esc(p.id) + '">Ubah</button></div></div>'; }).join('') || '<p class="note" style="padding:0 4px">Belum ada promo. Tambahkan lewat formulir di samping.</p>';
+    $('#promoList').innerHTML = list.map((p, i) => { const s = promoState(p, today); const ended = s === 'Berakhir'; return '<div class="prow"><div class="ord"><button class="ib" data-pmove="' + esc(p.id) + '|-1" aria-label="Naikkan urutan" ' + (i === 0 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-up"/></svg></button><button class="ib" data-pmove="' + esc(p.id) + '|1" aria-label="Turunkan urutan" ' + (i === list.length - 1 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-down"/></svg></button></div><div class="body"><div class="t"><span>' + esc(p.title) + (p.accent ? ' ' + esc(p.accent) : '') + '</span><span class="status ' + (s === 'Aktif' ? 'on' : '') + '">' + s + '</span>' + (isReturned(p) ? '<span class="sbadge">Dikembalikan</span>' : '') + '</div><span class="l">' + esc(p.lede) + '</span><div class="m"><span class="chip">' + esc(p.chip || 'Semua perawatan') + '</span><span>' + esc(validity(p)) + '</span><span>' + esc(p.kind + (p.value ? ' · ' + p.value : '')) + '</span>' + (isReturned(p) && p.review.note ? '<span>Catatan: ' + esc(p.review.note) + '</span>' : '') + '</div></div><div class="act">' + (ended ? '<button class="toggle" role="switch" aria-checked="false" disabled title="Masa berlaku sudah lewat"><span class="trk"></span><span>Tidak tayang</span></button><span class="ended">Berakhir · tidak tampil di layar</span>' : '<button class="toggle" data-ptoggle="' + esc(p.id) + '" role="switch" aria-checked="' + (p.live ? 'true' : 'false') + '"><span class="trk"></span><span>' + (p.live ? 'Tayang' : 'Tidak tayang') + '</span></button>') + '<button class="link muted" data-pedit="' + esc(p.id) + '">Ubah</button></div></div>'; }).join('') || '<p class="note" style="padding:0 4px">Belum ada promo. Tambahkan lewat formulir di samping.</p>';
   }
   function renderPromoForm(fill) {
     const p = editingPromo ? S.promos.find((x) => x.id === editingPromo) : null;
@@ -1268,23 +1648,23 @@ const Admin = (() => {
     const from = $('#pfFrom').value, to = $('#pfTo').value; if (from && to && to < from) { toast('Tanggal "Sampai" harus setelah "Berlaku dari".', true); return; }
     const p = editingPromo ? S.promos.find((x) => x.id === editingPromo) : null; const id = p ? p.id : uid(); const kind = $('#pfKind').value;
     const doc = touchDoc({ id, title, accent: $('#pfAccent').value.trim(), kind, value: $('#pfValue').value.trim(), valueLabel: VALUE_LABEL[kind], valueNote: $('#pfValueNote').value.trim(), lede: $('#pfLede').value.trim(), from, to, eyebrow: $('#pfEyebrow').value.trim(), chip: $('#pfChip').value, live: $('#pfLive').checked, order: p ? (p.order || 0) : (Math.max(0, ...S.promos.map((x) => x.order || 0)) + 1) });
-    await write(async () => { await db.doc('promos/' + id).set(doc); await logChange((p ? 'Promo "' : 'Promo baru "') + title + '" disimpan' + (doc.live ? (doc.from && doc.from > todayISO() ? ', dijadwalkan ' + fmtDate(doc.from) : '') : ' (tidak tayang)')); toast(p ? 'Promo diperbarui. Publikasikan agar tayang.' : 'Promo ditambahkan ke daftar. Publikasikan agar tayang.'); });
+    await write(async () => { await db.doc('promos/' + id).set(doc); await logChange((p ? 'Promo "' : 'Promo baru "') + title + '" disimpan' + (doc.live ? (doc.from && doc.from > todayISO() ? ', dijadwalkan ' + fmtDate(doc.from) : '') : ' (tidak tayang)')); toast(p ? 'Promo diperbarui. Tayang setelah dipublikasikan.' : 'Promo ditambahkan ke daftar. Tayang setelah dipublikasikan.'); });
     editingPromo = null; renderPromoForm(true);
   }
   async function togglePromo(id) { const p = S.promos.find((x) => x.id === id); if (!p) return; await write(async () => { await db.doc('promos/' + id).update(touchDoc({ live: !p.live })); await logChange('Promo "' + p.title + '" ' + (!p.live ? 'diaktifkan' : 'dimatikan')); }); }
   async function movePromo(id, d) {
     const list = promos(); const i = list.findIndex((p) => p.id === id); const j = i + d; if (i < 0 || j < 0 || j >= list.length) return;
     const a = list[i], b = list[j]; const ao = i + 1, bo = j + 1;
-    await write(async () => { await db.doc('promos/' + a.id).update({ order: bo }); await db.doc('promos/' + b.id).update({ order: ao }); for (let k = 0; k < list.length; k++) { if (k !== i && k !== j && (list[k].order || 0) !== k + 1) await db.doc('promos/' + list[k].id).update({ order: k + 1 }); } });
+    await write(async () => { await db.doc('promos/' + a.id).update(touchDoc({ order: bo })); await db.doc('promos/' + b.id).update(touchDoc({ order: ao })); for (let k = 0; k < list.length; k++) { if (k !== i && k !== j && (list[k].order || 0) !== k + 1) await db.doc('promos/' + list[k].id).update({ order: k + 1 }); } });
   }
-  async function deletePromo(id) { const p = S.promos.find((x) => x.id === id); if (!p) return; await write(async () => { await db.doc('promos/' + id).delete(); await logChange('Promo "' + p.title + '" dihapus'); toast('Promo dihapus'); }); editingPromo = null; renderPromoForm(true); }
+  async function deletePromo(id) { const p = S.promos.find((x) => x.id === id); if (!p) return; await write(async () => { await db.doc('promos/' + id).delete(); await logChange('Promo "' + p.title + '" dihapus'); toast('Promo dihapus dari draf'); }); editingPromo = null; renderPromoForm(true); }
   function renderBandSettings() { const st = S.settings; const set = (id, v, chk) => { const el = $(id); if (document.activeElement === el) return; if (chk) el.checked = !!v; else el.value = v; }; set('#setSlide', st.slideSecs || 8); set('#setHide', st.hideBandWhenEmpty !== false, true); set('#setHold', st.holdOnTouch !== false, true); }
 
   /* ----- settings ----- */
   let settingsT = null;
   function saveSettings(patch, label) {
     Object.assign(S.settings, patch); clearTimeout(settingsT);
-    settingsT = setTimeout(() => write(async () => { const doc = Object.assign({}, DEFAULT_SETTINGS, S.settings, { updatedAt: new Date().toISOString() }); await db.doc('config/settings').set(doc); if (label) await logChange(label); }), 500);
+    settingsT = setTimeout(() => write(async () => { const doc = Object.assign({}, DEFAULT_SETTINGS, S.settings, { updatedAt: new Date().toISOString(), updatedBy: me && me.id || null }); delete doc.review; await db.doc('config/settings').set(doc); if (label) await logChange(label); }), 500);
   }
 
   /* ----- videos ----- */
@@ -1292,19 +1672,20 @@ const Admin = (() => {
     const pl = S.settings.playlist || [];
     $('#vCount').textContent = S.videos.length + ' video · ' + kata(S.videos.filter((v) => S.treatments.some((t) => t.video === v.id)).length) + ' ditautkan ke perawatan';
     $('#vDrop').hidden = !assets; if (!assets) $('#vCount').textContent += ' · unggah hanya untuk Editor';
-    $('#vGrid').innerHTML = S.videos.map((v) => { const linkedTo = S.treatments.filter((t) => t.video === v.id).map((t) => t.name); const inList = pl.includes(v.id); const editing = deleteArm.vedit === v.id;
+    $('#vGrid').innerHTML = S.videos.map((v) => { const linkedTo = S.treatments.filter((t) => t.video === v.id).map((t) => t.name); const inList = pl.includes(v.id); const editing = deleteArm.vedit === v.id; const o = orientOf(v), fo = fileOrient(v);
       return '<div class="vcard"><div class="ph"><img src="' + esc(blob(v.poster)) + '" alt=""><span class="play"><svg width="20" height="20"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + (v.ratio ? ' · ' + esc(v.ratio) : '') + '</span></div>' +
         (editing ? '<div class="field"><label for="ve-t-' + esc(v.id) + '">Judul</label><input id="ve-t-' + esc(v.id) + '" value="' + esc(v.title) + '" maxlength="80"></div><div class="field"><label for="ve-d-' + esc(v.id) + '">Deskripsi di layar</label><textarea id="ve-d-' + esc(v.id) + '" rows="2" maxlength="160">' + esc(v.desc) + '</textarea></div><label class="check"><input type="checkbox" id="ve-ai-' + esc(v.id) + '" ' + (v.ai ? 'checked' : '') + '><span>Karakter virtual (AI)</span></label><div class="acts"><button class="btn outline sm" data-vsave="' + esc(v.id) + '">Simpan</button><button class="btn quiet sm" data-vcancel="1">Batal</button></div>'
-          : '<span class="t">' + esc(v.title) + '</span><div class="m"><span>' + esc(linkedTo.length ? 'Ditautkan ke ' + linkedTo.join(', ') : 'Belum ditautkan ke perawatan') + '</span><span class="status ' + (linkedTo.length ? 'on' : '') + '">' + (linkedTo.length ? 'Terpasang' : 'Pustaka') + '</span></div><div class="acts">' +
-            (deleteArm.vlink === v.id ? '<select class="search" style="min-height:32px;border-radius:999px;font-size:13px;flex:1 1 160px" data-vlinksel="' + esc(v.id) + '"><option value="">Pilih perawatan…</option>' + treats().map((t) => '<option value="' + esc(t.id) + '">' + esc(t.name) + '</option>').join('') + '</select>' : '<button class="btn outline sm" data-vlink="' + esc(v.id) + '">Tautkan ke perawatan</button>') +
+          : '<span class="t">' + esc(v.title) + '</span><div class="m"><span>' + esc(linkedTo.length ? 'Ditautkan ke ' + linkedTo.join(', ') : 'Belum ditautkan ke perawatan') + '</span><span class="status ' + (linkedTo.length ? 'on' : '') + '">' + (linkedTo.length ? 'Terpasang' : 'Pustaka') + '</span></div>' +
+            '<div class="orient"><div class="seg sm" role="group" aria-label="Tampilan di layar"><button data-vorient="' + esc(v.id) + '|v" aria-pressed="' + (o === 'v') + '">Vertikal 9:16</button><button data-vorient="' + esc(v.id) + '|h" aria-pressed="' + (o === 'h') + '">Horizontal 16:9</button></div><span class="note' + (o !== fo ? ' warnc' : '') + '">' + (o === fo ? 'Mengikuti bentuk berkas (' + esc(v.ratio || ORIENT_LABEL[fo]) + ').' : 'Berbeda dari berkas (' + esc(v.ratio || ORIENT_LABEL[fo]) + '): video akan dipotong agar pas.') + '</span></div><div class="acts">' +
+            (deleteArm.vlink === v.id ? '<select class="search" style="min-height:32px;font-size:13px;flex:1 1 160px" data-vlinksel="' + esc(v.id) + '"><option value="">Pilih perawatan…</option>' + treats().map((t) => '<option value="' + esc(t.id) + '">' + esc(t.name) + '</option>').join('') + '</select>' : '<button class="btn outline sm" data-vlink="' + esc(v.id) + '">Tautkan ke perawatan</button>') +
             '<button class="btn quiet sm" data-vlist="' + esc(v.id) + '" ' + (inList ? 'disabled' : '') + '>' + (inList ? 'Di urutan putar' : 'Ke urutan putar') + '</button><button class="btn quiet sm" data-vedit="' + esc(v.id) + '">Ubah</button>' +
             (deleteArm.vdel === v.id ? '<span class="confirm">' + esc(videoDeleteText(v)) + ' <button class="link" data-vdelyes="' + esc(v.id) + '">Ya, hapus</button> · <button class="link muted" data-vcancel="1">Batal</button></span>' : '<button class="link muted" data-vdel="' + esc(v.id) + '">Hapus</button>') + '</div>') + '</div>'; }).join('') || '<p class="note">Pustaka masih kosong. Unggah video pertama di atas.</p>';
     renderPlaylist();
   }
   function renderPlaylist() {
-    const pl = (S.settings.playlist || []).filter(video); const total = pl.reduce((a, id) => a + (video(id).dur || 0), 0);
-    $('#plInfo').textContent = pl.length + ' video · ' + fmtDur(total) + ' mnt';
-    $('#playlist').innerHTML = pl.map((id, i) => { const v = video(id); return '<div class="it"><span class="num tnum">' + (i + 1) + '</span><span class="t">' + esc(v.title) + '</span><span class="d tnum">' + fmtDur(v.dur) + '</span><span class="ctrls"><button class="ib sm" data-plmove="' + i + '|-1" aria-label="Naikkan" ' + (i === 0 ? 'disabled' : '') + '><svg width="12" height="12"><use href="#i-up"/></svg></button><button class="ib sm" data-plmove="' + i + '|1" aria-label="Turunkan" ' + (i === pl.length - 1 ? 'disabled' : '') + '><svg width="12" height="12"><use href="#i-down"/></svg></button><button class="ib sm bare" data-plrm="' + i + '" aria-label="Keluarkan dari urutan"><svg width="14" height="14"><use href="#i-x"/></svg></button></span></div>'; }).join('') || '<span class="note">Urutan putar kosong: screen saver tidak akan tampil.</span>';
+    const pl = (S.settings.playlist || []).filter(video); const total = pl.reduce((a, id) => a + (video(id).dur || 0), 0); const nPg = S.pages.filter((p) => p.inSaver).length;
+    $('#plInfo').textContent = pl.length + ' video · ' + fmtDur(total) + ' mnt' + (nPg ? ' · ' + kata(nPg) + ' halaman' : '');
+    $('#playlist').innerHTML = pl.map((id, i) => { const v = video(id); return '<div class="it"><span class="num tnum">' + (i + 1) + '</span><span class="t">' + esc(v.title) + '</span><span class="d tnum">' + fmtDur(v.dur) + ' · ' + (orientOf(v) === 'v' ? '9:16' : '16:9') + '</span><span class="ctrls"><button class="ib sm" data-plmove="' + i + '|-1" aria-label="Naikkan" ' + (i === 0 ? 'disabled' : '') + '><svg width="12" height="12"><use href="#i-up"/></svg></button><button class="ib sm" data-plmove="' + i + '|1" aria-label="Turunkan" ' + (i === pl.length - 1 ? 'disabled' : '') + '><svg width="12" height="12"><use href="#i-down"/></svg></button><button class="ib sm bare" data-plrm="' + i + '" aria-label="Keluarkan dari urutan"><svg width="14" height="14"><use href="#i-x"/></svg></button></span></div>'; }).join('') || '<span class="note">Urutan putar kosong: screen saver hanya menampilkan halaman yang diikutkan, atau tidak tampil sama sekali.</span>';
   }
   function renderSaverSettings() { const st = S.settings; $('#setSaver').setAttribute('aria-checked', st.saverOn !== false ? 'true' : 'false'); $('#setSaverLabel').textContent = st.saverOn !== false ? 'Aktif' : 'Mati'; const set = (id, v, chk) => { const el = $(id); if (document.activeElement === el) return; if (chk) el.checked = !!v; else el.value = v; }; set('#setIdle', st.idleMin || 2); set('#setSound', !!st.sound, true); set('#setTitles', st.showTitles !== false, true); set('#setInvite', st.heartInvite !== false, true); }
   function uplShow(name, pct, stage) { const r = $('#uplRow'); r.hidden = false; $('#uplName').textContent = name; $('#uplPct').textContent = pct == null ? '' : pct + '%'; $('#uplBar').style.width = (pct == null ? 100 : pct) + '%'; $('#uplStage').textContent = stage; }
@@ -1325,16 +1706,18 @@ const Admin = (() => {
       let r; try { r = await assets.upload(file, { type }); } finally { clearInterval(tk); }
       uplShow(name, 100, 'Selesai');
       const ratio = meta.w && meta.h ? (Math.abs(meta.w / meta.h - 9 / 16) < 0.05 ? '9:16' : Math.abs(meta.w / meta.h - 16 / 9) < 0.05 ? '16:9' : meta.w + '×' + meta.h) : '';
+      const orient = meta.w && meta.h && meta.h > meta.w ? 'v' : 'h';
       const id = uid(); const title = name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
-      const doc = touchDoc({ id, title, desc: '', dur: Math.round(meta.dur), asset: r.id, poster: posterId, ai: true, ratio, sizeBytes: r.sizeBytes });
-      await write(async () => { await db.doc('videos/' + id).set(doc); await logChange('Video "' + title + '" diunggah ke pustaka'); });
-      deleteArm = { vedit: id }; toast('Video terunggah. Beri judul dan deskripsi, lalu tambahkan ke urutan putar.');
+      const doc = touchDoc({ id, title, desc: '', dur: Math.round(meta.dur), asset: r.id, poster: posterId, ai: true, ratio, orient, sizeBytes: r.sizeBytes });
+      await write(async () => { await db.doc('videos/' + id).set(doc); await logChange('Video "' + title + '" diunggah ke pustaka (' + ORIENT_LABEL[orient] + ')'); });
+      deleteArm = { vedit: id }; toast('Video terunggah (' + ORIENT_LABEL[orient].toLowerCase() + '). Beri judul dan deskripsi, lalu tambahkan ke urutan putar.');
       setTimeout(() => { $('#uplRow').hidden = true; }, 2500);
     } catch (e) { $('#uplRow').hidden = true; toast('Unggah gagal: ' + (e && (e.message || e.code) || e), true); }
   }
   async function saveVideoMeta(id) { const v = video(id); if (!v) return; const title = $('#ve-t-' + id).value.trim() || v.title; const desc = $('#ve-d-' + id).value.trim(); const ai = $('#ve-ai-' + id).checked; const bad = bannedIn(title + ' ' + desc); if (bad.length) { toast('Kata tidak diperbolehkan: ' + bad.join(', '), true); return; } await write(async () => { await db.doc('videos/' + id).update(touchDoc({ title, desc, ai })); }); deleteArm = {}; renderVideos(); }
+  async function setOrient(id, o) { const v = video(id); if (!v || orientOf(v) === o) return; await write(async () => { await db.doc('videos/' + id).update(touchDoc({ orient: o })); await logChange('Video "' + v.title + '" ditampilkan ' + ORIENT_LABEL[o].toLowerCase()); }); }
   async function linkVideo(vidId, treatId) { const t = S.treatments.find((x) => x.id === treatId); if (!t) return; await write(async () => { await db.doc('treatments/' + treatId).update(touchDoc({ video: vidId })); await logChange('Video "' + video(vidId).title + '" ditautkan ke ' + t.name); }); deleteArm = {}; }
-  async function deleteVideo(id) { const v = video(id); if (!v) return; await write(async () => { for (const t of S.treatments.filter((x) => x.video === id)) await db.doc('treatments/' + t.id).update(touchDoc({ video: null })); const pl = (S.settings.playlist || []).filter((x) => x !== id); await db.doc('config/settings').set(Object.assign({}, DEFAULT_SETTINGS, S.settings, { playlist: pl, updatedAt: new Date().toISOString() })); await db.doc('videos/' + id).delete(); await logChange('Video "' + v.title + '" dihapus dari pustaka'); await trashAssets([v.asset, v.poster]); toast('Video dihapus dari draf. Layar masih memutarnya sampai dipublikasikan ulang.'); }); deleteArm = {}; }
+  async function deleteVideo(id) { const v = video(id); if (!v) return; await write(async () => { for (const t of S.treatments.filter((x) => x.video === id)) await db.doc('treatments/' + t.id).update(touchDoc({ video: null })); const pl = (S.settings.playlist || []).filter((x) => x !== id); await db.doc('config/settings').set(Object.assign({}, DEFAULT_SETTINGS, S.settings, { playlist: pl, updatedAt: new Date().toISOString(), updatedBy: me && me.id || null })); await db.doc('videos/' + id).delete(); await logChange('Video "' + v.title + '" dihapus dari pustaka'); await trashAssets([v.asset, v.poster]); toast('Video dihapus dari draf. Layar masih memutarnya sampai dipublikasikan ulang.'); }); deleteArm = {}; }
   function videoDeleteText(v) { const linked = S.treatments.filter((t) => t.video === v.id).map((t) => t.name); const inList = (S.settings.playlist || []).includes(v.id); const facts = []; if (linked.length) facts.push('terpasang di ' + linked.join(', ')); if (inList) facts.push('ada di urutan putar'); return 'Hapus video ini?' + (facts.length ? ' Video ini ' + facts.join(' dan ') + '; tautan itu ikut dilepas.' : '') + ' Layar tetap memutarnya sampai Anda mempublikasikan ulang.'; }
 
   /* ----- heart tally ----- */
@@ -1385,16 +1768,124 @@ const Admin = (() => {
       : '<p class="note">Belum ada heart pada hitungan ini. Heart muncul di sini begitu pasien menyentuhnya di layar.</p>';
   }
 
+  /* ----- pages ----- */
+  const TEMPLATES = {
+    blank: { title: 'Halaman baru', tab: 'Halaman baru', blocks: [{ type: 'heading', text: 'Judul halaman' }, { type: 'text', text: '' }] },
+    klinik: { title: 'Tentang ADC', tab: 'Tentang ADC', blocks: [{ type: 'image', asset: null, alt: '' }, { type: 'heading', text: 'Klinik estetika medis di Dago, Bandung' }, { type: 'text', text: 'Perawatan di ADC ditangani dokter spesialis kulit (Sp.DVE) dan dokter spesialis gizi klinik (Sp.GK), dengan teknologi yang dipilih sesuai kebutuhan kulit Anda.' }, { type: 'list', items: ['[Penghargaan atau sertifikasi klinik]', '[Teknologi unggulan klinik]', 'Jl. Ir. H. Juanda No. 88, Bandung', 'Sen–Jum 09.00–20.00 · Sab 09.00–18.00'] }, { type: 'note', text: 'Ingin tahu perawatan yang sesuai? Tanyakan ke resepsionis untuk jadwal konsultasi dokter.' }] },
+    panduan: { title: 'Panduan perawatan [nama perawatan]', tab: 'Panduan', blocks: [{ type: 'heading', text: 'Persiapan sebelum perawatan' }, { type: 'list', items: ['[Langkah persiapan pertama]', '[Langkah persiapan kedua]'] }, { type: 'heading', text: 'Setelah perawatan' }, { type: 'list', items: ['[Anjuran setelah tindakan]'] }, { type: 'note', text: 'Dokter akan menyesuaikan persiapan dengan kondisi kulit Anda saat konsultasi.' }] },
+    event: { title: 'Event klinik [judul event]', tab: '[judul tab]', blocks: [{ type: 'heading', text: '[Judul event]' }, { type: 'text', text: '[Tanggal, tempat dan detail event]' }, { type: 'list', items: ['[Tanggal]', '[Tempat]', '[Cara mendaftar]'] }, { type: 'note', text: 'Tanyakan ke resepsionis untuk mendaftar.' }] }
+  };
+  let pgDraft = null, pgSaveT = null, pgSavedAt = '', pgPrevT = null;
+  function pageState(p) { const l = ((S.live && S.live.pages) || []).find((x) => x.id === p.id); if (l && canon(normPage(l)) === canon(normPage(p))) return 'Tayang'; if (p.status === 'review') return 'Menunggu tinjauan'; return 'Draf'; }
+  const pageWhere = (p) => p.showTab !== false && p.inSaver ? 'Tab layar dan screen saver' : p.showTab !== false ? 'Tab layar' : p.inSaver ? 'Screen saver' : 'Belum diatur';
+  function renderPages() {
+    $('#pgList').hidden = !!editingPage; $('#pgEditor').hidden = !editingPage;
+    if (editingPage) { renderPageEditor(); return; }
+    const F = [['semua', 'Semua'], ['Tayang', 'Tayang'], ['Menunggu tinjauan', 'Menunggu tinjauan'], ['Draf', 'Draf']];
+    $('#pgFilters').innerHTML = F.map((f) => '<button data-pgf="' + f[0] + '" aria-pressed="' + (pgFilter === f[0]) + '">' + f[1] + '</button>').join('');
+    const rows = pages().map((p) => Object.assign({ st: pageState(p) }, p)).filter((p) => pgFilter === 'semua' || p.st === pgFilter);
+    loadNames(rows.map((p) => p.updatedBy));
+    const badge = (st) => '<span class="sbadge ' + (st === 'Tayang' ? 'live' : st === 'Menunggu tinjauan' ? 'review' : '') + '">' + st + '</span>';
+    $('#pgTable').innerHTML = rows.length ? '<table><thead><tr><th>Halaman</th><th>Status</th><th>Tampil di</th><th>Terakhir diubah</th><th></th></tr></thead><tbody>' + rows.map((p) => '<tr><td><span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:500">' + esc(p.title || 'Halaman tanpa judul') + '</span><span style="font-size:13px;color:var(--muted)">Tab: ' + esc(p.tab || '—') + '</span></span></td><td>' + badge(p.st) + (isReturned(p) ? ' <span class="sbadge">Dikembalikan</span>' : '') + '</td><td class="muted">' + esc(pageWhere(p)) + '</td><td class="muted">' + esc(fmtWhen(p.updatedAt)) + (p.updatedBy ? ' · ' + esc(who(p.updatedBy)) : '') + '</td><td><button class="btn quiet sm" data-pgedit="' + esc(p.id) + '">Ubah</button></td></tr>').join('') + '</tbody></table>' : '<p class="note" style="padding:8px 0 16px">' + (S.pages.length ? 'Tidak ada halaman dengan status ini.' : 'Belum ada halaman. Mulai dari salah satu template di atas.') + '</p>';
+  }
+  async function createPage(tpl) {
+    const t = TEMPLATES[tpl] || TEMPLATES.blank; const id = uid();
+    const doc = touchDoc({ id, title: t.title, tab: t.tab.slice(0, 18), order: Math.max(0, ...S.pages.map((p) => p.order || 0)) + 1, showTab: true, inSaver: false, from: '', to: '', status: 'draft', blocks: t.blocks.map((b) => Object.assign({ id: uid() }, JSON.parse(JSON.stringify(b)))) });
+    S.pages.push(doc); editingPage = id; pgDraft = JSON.parse(JSON.stringify(doc)); pgSavedAt = '';
+    await write(async () => { await db.doc('pages/' + id).set(doc); await logChange('Halaman baru "' + doc.title + '" dibuat dari template'); });
+    show();
+  }
+  function openPage(id) { editingPage = id; pgDraft = null; pgSavedAt = ''; deleteArm = {}; location.hash = '#halaman'; S.tab = 'halaman'; show(); }
+  function renderPageEditor() {
+    const p = S.pages.find((x) => x.id === editingPage); if (!p) { editingPage = null; renderPages(); return; }
+    if (!pgDraft || pgDraft.id !== p.id) pgDraft = JSON.parse(JSON.stringify(p));
+    const d = pgDraft; const act = document.activeElement; const focusId = act && $('#pgEditor').contains(act) ? act.id : null; const selStart = focusId && act.selectionStart != null ? act.selectionStart : null;
+    const set = (id, v, chk) => { const el = $(id); if (el === act) return; if (chk) el.checked = !!v; else el.value = v == null ? '' : v; };
+    set('#pgTitle', d.title); set('#pgTab', d.tab); set('#pgFrom', d.from); set('#pgTo', d.to); set('#pgShowTab', d.showTab !== false, true); set('#pgInSaver', !!d.inSaver, true);
+    $('#pgTabLen').textContent = (d.tab || '').length + ' / 18'; $('#pgTabLen').classList.toggle('over', (d.tab || '').length >= 18);
+    const others = pages().filter((x) => x.id !== d.id); const pos = others.filter((x) => (x.order || 0) < (d.order || 0)).length;
+    $('#pgPos').innerHTML = ['<option value="0">Setelah Perawatan</option>'].concat(others.map((x, i) => '<option value="' + (i + 1) + '">Setelah ' + esc(x.tab || x.title) + '</option>')).join(''); if ($('#pgPos') !== act) $('#pgPos').value = String(Math.min(pos, others.length));
+    const rn = $('#pgReviewNote'); rn.hidden = !isReturned(p); if (isReturned(p)) rn.textContent = 'Dikembalikan ke draf' + (p.review.by ? ' oleh ' + who(p.review.by) : '') + ' (' + fmtWhen(p.review.at) + ')' + (p.review.note ? ': ' + p.review.note : '.');
+    $('#pgBlockCount').textContent = kata(d.blocks.length) + ' blok · urutan dari atas ke bawah';
+    const blocks = d.blocks; const vsel = (b, i) => '<select id="pgb-video-' + i + '" data-bi="' + i + '" data-f="video" aria-label="Pilih video"><option value="">— Pilih video —</option>' + S.videos.map((v) => '<option value="' + esc(v.id) + '" ' + (b.video === v.id ? 'selected' : '') + '>' + videoOption(v) + '</option>').join('') + '</select>';
+    $('#pgBlocks').innerHTML = blocks.map((b, i) => {
+      const hd = '<div class="bh"><span class="tag">' + (i + 1) + ' · ' + BLOCK_LABEL[b.type] + '</span><span class="sp"></span><button class="ib sm" data-bmove="' + i + '|-1" aria-label="Naikkan blok" ' + (i === 0 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-up"/></svg></button><button class="ib sm" data-bmove="' + i + '|1" aria-label="Turunkan blok" ' + (i === blocks.length - 1 ? 'disabled' : '') + '><svg width="14" height="14"><use href="#i-down"/></svg></button><button class="ib sm bare" data-brm="' + i + '" aria-label="Hapus blok"><svg width="16" height="16"><use href="#i-x"/></svg></button></div>';
+      let body = '';
+      if (b.type === 'heading') body = '<input id="pgb-text-' + i + '" class="hd" type="text" data-bi="' + i + '" data-f="text" value="' + esc(b.text) + '" aria-label="Teks judul" maxlength="90">';
+      else if (b.type === 'text') body = '<textarea id="pgb-text-' + i + '" rows="3" data-bi="' + i + '" data-f="text" aria-label="Paragraf" maxlength="600">' + esc(b.text) + '</textarea>';
+      else if (b.type === 'note') body = '<textarea id="pgb-text-' + i + '" class="notein" rows="2" data-bi="' + i + '" data-f="text" aria-label="Catatan" maxlength="300">' + esc(b.text) + '</textarea>';
+      else if (b.type === 'list') body = '<textarea id="pgb-items-' + i + '" rows="4" data-bi="' + i + '" data-f="items" aria-label="Daftar poin, satu poin per baris">' + esc((b.items || []).join('\n')) + '</textarea><span class="note" style="font-size:13px">Satu poin per baris · ' + kata((b.items || []).filter((x) => String(x).trim()).length) + ' poin</span>';
+      else if (b.type === 'image') body = '<div class="imgrow"><label class="drop" for="pgimg-' + i + '" tabindex="0">' + (b.asset ? '<img src="' + esc(blob(b.asset)) + '" alt="">' : '<svg width="22" height="22"><use href="#i-upload"/></svg><small>Pilih foto · JPG/PNG maks. 5 MB</small>') + '</label><input id="pgimg-' + i + '" class="sr" type="file" accept="image/png,image/jpeg,image/webp" data-bimg="' + i + '"><div class="field"><label for="pgb-alt-' + i + '">Deskripsi foto (untuk pembaca layar)</label><input id="pgb-alt-' + i + '" type="text" data-bi="' + i + '" data-f="alt" value="' + esc(b.alt) + '" placeholder="mis. Ruang perawatan PicoSure Pro" maxlength="120">' + (b.asset ? '<button type="button" class="link muted" data-bimgrm="' + i + '" style="align-self:flex-start">Hapus foto</button>' : '') + '</div></div>';
+      else if (b.type === 'video') { const v = video(b.video); const fo = v ? orientOf(v) : 'v'; const o = (b.orient === 'v' || b.orient === 'h') ? b.orient : fo; body = '<div class="vidrow"><div class="field"><label for="pgb-video-' + i + '">Video dari pustaka</label>' + vsel(b, i) + '</div><div class="field"><span style="font-size:14px;font-weight:500">Tampilan</span><div class="seg" role="group" aria-label="Orientasi video di halaman"><button type="button" data-bo="' + i + '|v" aria-pressed="' + (o === 'v') + '">Vertikal 9:16</button><button type="button" data-bo="' + i + '|h" aria-pressed="' + (o === 'h') + '">Horizontal 16:9</button></div></div></div><span class="note' + (v && o !== fo ? ' warnc' : '') + '" style="font-size:13px">' + (!v ? 'Pilih video dari pustaka. Unggah video baru di menu Video & screen saver.' : o === fo ? 'Mengikuti orientasi video (' + ORIENT_LABEL[fo] + '). Di layar: ' + (o === 'v' ? 'tampil di tengah, 360×640.' : 'tampil selebar halaman, 1000×563.') : 'Berbeda dari video (' + ORIENT_LABEL[fo] + '): video akan dipotong agar pas.') + '</span>'; }
+      return '<div class="blk">' + hd + body + '</div>';
+    }).join('') || '<p class="note">Belum ada blok. Tambahkan dari tombol di bawah.</p>';
+    if (focusId) { const el = document.getElementById(focusId); if (el && el !== document.activeElement) { el.focus(); try { if (selStart != null) el.setSelectionRange(selStart, selStart); } catch (e) {} } }
+    $('#pgDeleteConfirm').hidden = !deleteArm.pgdel;
+    const st = pageState(p); $('#pgPrevState').textContent = st === 'Tayang' ? (canon(normPage(d)) === canon(normPage(p)) ? 'Tayang · draf sama dengan layar' : 'Tayang · ada perubahan belum dikirim') : st === 'Menunggu tinjauan' ? 'Menunggu tinjauan' : 'Draf, belum tayang';
+    const hits = pageHits(d);
+    $('#pgChecks').innerHTML = hits.length ? hits.map((h) => '<div class="chk warn"><svg width="18" height="18" style="color:var(--error)"><use href="#i-warn"/></svg><span>Kata <strong>"' + esc(h.word) + '"</strong> di ' + esc(h.where) + '. Ganti sebelum dikirim ke tinjauan.</span></div>').join('') : '<div class="chk"><svg width="18" height="18"><use href="#i-check"/></svg><span>Tidak ada kata yang dilarang untuk iklan kesehatan (mis. "sembuh", "terbaik", "dijamin").</span></div>';
+    postPagePreview();
+  }
+  function pageHits(d) { const hits = []; const chk = (t, w) => bannedIn(t).forEach((word) => hits.push({ word, where: w })); chk(d.title, 'judul halaman'); chk(d.tab, 'label tab'); (d.blocks || []).forEach((b, i) => { chk(b.text, 'blok ' + (i + 1)); chk((b.items || []).join(' '), 'blok ' + (i + 1)); chk(b.alt, 'blok ' + (i + 1)); }); return hits; }
+  function pgChange(patch) { Object.assign(pgDraft, patch); schedulePageSave(); }
+  function schedulePageSave() { clearTimeout(pgSaveT); pgSaveT = setTimeout(() => savePage(false), 1200); renderPageEditor(); }
+  async function savePage(send) {
+    clearTimeout(pgSaveT); const d = pgDraft; if (!d || !editingPage) return;
+    const hits = pageHits(d); if (send && hits.length) { toast('Kata tidak diperbolehkan: ' + uniq(hits.map((h) => h.word)).join(', ') + '. Ganti dulu sebelum dikirim ke tinjauan.', true); return; }
+    const p = S.pages.find((x) => x.id === editingPage) || {};
+    const doc = touchDoc(Object.assign({}, p, { id: d.id, title: (d.title || '').trim(), tab: (d.tab || '').trim().slice(0, 18), order: d.order || p.order || 0, showTab: d.showTab !== false, inSaver: !!d.inSaver, from: d.from || '', to: d.to || '', blocks: d.blocks.map(normB), status: send ? 'review' : (p.status || 'draft') }));
+    if (send) delete doc.review;
+    await write(async () => { await db.doc('pages/' + d.id).set(doc); if (send) { await logChange('Halaman "' + doc.title + '" dikirim ke tinjauan'); toast('Dikirim ke tinjauan. Tayang setelah dipublikasikan dari "Tinjau & publikasikan".'); } });
+    pgSavedAt = fmtClock(); if (!send) { const el = $('#phActions .pub-state'); if (el) el.textContent = (doc.status === 'review' ? 'Menunggu tinjauan' : 'Draf') + ' · tersimpan otomatis ' + pgSavedAt; }
+  }
+  async function movePage(toIndex) {
+    const d = pgDraft; const others = pages().filter((x) => x.id !== d.id); others.splice(toIndex, 0, d);
+    await write(async () => { for (let i = 0; i < others.length; i++) { if ((others[i].order || 0) !== i + 1) { if (others[i].id === d.id) d.order = i + 1; else await db.doc('pages/' + others[i].id).update({ order: i + 1 }); } } });
+    schedulePageSave();
+  }
+  async function uploadBlockImage(i, file) {
+    if (!assets || !file) return; if (file.size > 5 * 1024 * 1024) { toast('Foto lebih dari 5 MB. Perkecil dulu.', true); return; }
+    try { const r = await assets.upload(file); pgDraft.blocks[i].asset = r.id; schedulePageSave(); toast('Foto terunggah.'); } catch (e) { toast('Unggah foto gagal: ' + (e && e.code || e), true); }
+  }
+  async function deletePage() { const p = S.pages.find((x) => x.id === editingPage); if (!p) return; clearTimeout(pgSaveT); await write(async () => { await db.doc('pages/' + p.id).delete(); await logChange('Halaman "' + p.title + '" dihapus'); await trashAssets((p.blocks || []).map((b) => b.asset)); toast('Halaman dihapus dari draf. Hilang dari layar setelah dipublikasikan.'); }); editingPage = null; pgDraft = null; deleteArm = {}; show(); }
+  // the editor's mini screen: the live snapshot with this draft page merged in, opened on its tab
+  const frames = {};
+  const fitFrames = () => document.querySelectorAll('.mini iframe').forEach((f) => { const w = f.parentElement.clientWidth; if (w) f.style.transform = 'scale(' + (w / 1080) + ')'; });
+  window.addEventListener('resize', fitFrames);
+  function framePost(id, msg) { const f = $('#' + id); if (!f) return; const src = location.pathname + location.search + '#pratinjau-embed'; if (!f.getAttribute('src')) { f.setAttribute('src', src); } fitFrames(); if (!frames[id]) { frames[id] = { pending: msg }; return; } frames[id].pending = msg; if (frames[id].ready) { try { f.contentWindow.postMessage(msg, '*'); } catch (e) {} } }
+  window.addEventListener('message', (e) => { if (!e.data || e.data.type !== 'adc-preview-ready') return; ['pgFrame', 'rvFrame'].forEach((id) => { const f = $('#' + id); if (f && f.contentWindow === e.source) { frames[id] = frames[id] || {}; frames[id].ready = true; if (frames[id].pending) { try { f.contentWindow.postMessage(frames[id].pending, '*'); } catch (err) {} } } }); });
+  function postPagePreview() { clearTimeout(pgPrevT); pgPrevT = setTimeout(() => { if (!pgDraft) return; const snap = liveNorm(); const np = normPage(Object.assign({}, pgDraft, { showTab: true, from: '', to: '' })); const i = snap.pages.findIndex((x) => x.id === np.id); if (i >= 0) snap.pages[i] = np; else snap.pages.push(np); snap.pages.sort(byOrder); const vids = new Set(snap.videos.map((v) => v.id)); S.videos.forEach((v) => { if (!vids.has(v.id)) snap.videos.push(normV(v)); }); framePost('pgFrame', { type: 'adc-preview', snap, focus: { tab: np.id, mode: 'dash' } }); }, 250); }
+
+  /* ----- review ----- */
+  function renderReview() {
+    const list = changes(); const inc = included(list); const restoreOn = inc.some((c) => c.key === 'restore');
+    if (rv.sel && !list.some((c) => c.key === rv.sel)) rv.sel = null; if (!rv.sel && list.length) rv.sel = list[0].key;
+    $('#rvBanner').hidden = !rv.banner; $('#rvBannerText').textContent = rv.banner;
+    $('#rvCount').textContent = inc.length + ' dari ' + list.length + ' dipilih';
+    $('#rvChanges').innerHTML = list.length ? list.map((c) => { const on = inc.some((x) => x.key === c.key); const blocked = restoreOn && c.key !== 'restore'; return '<div class="chg' + (c.key === rv.sel ? ' sel' : '') + (on ? '' : ' off') + '"><input type="checkbox" data-rvinc="' + esc(c.key) + '" ' + (on ? 'checked' : '') + ' ' + (blocked ? 'disabled' : '') + ' aria-label="Sertakan perubahan ini"><div class="body"><div class="tags"><span class="kind">' + esc(c.kind) + '</span><span class="act">' + esc(c.action) + '</span><span class="ttl">' + esc(c.title) + '</span></div><span class="det">' + esc(c.detail) + '</span><span class="who">' + esc(who(c.who)) + (c.when ? ' · ' + esc(fmtWhen(c.when)) : '') + (blocked ? ' · tidak ikut selama pengembalian versi dipilih' : '') + '</span></div><div class="sidebtns"><button class="btn outline sm" data-rvsel="' + esc(c.key) + '" aria-pressed="' + (c.key === rv.sel) + '" style="min-height:32px;font-size:11px">Lihat di pratinjau</button>' + (c.coll !== 'restore' && c.action !== 'Dihapus' ? '<button class="link" data-rvopen="' + esc(c.coll) + '|' + esc(c.id) + '">Buka untuk diubah</button>' : '') + '</div></div>'; }).join('') : '<div class="card" style="color:var(--muted)">Tidak ada perubahan yang menunggu. Layar sudah sama dengan draf terbaru.</div>';
+    const after = restoreOn ? liveNorm() : afterSnapshot(inc);
+    $('#rvChecks').innerHTML = reviewChecks(inc, after).map((k) => '<div class="chk' + (k.warn ? ' warn' : '') + '">' + (k.warn ? '<svg width="18" height="18" style="color:var(--error)"><use href="#i-warn"/></svg>' : '<svg width="18" height="18"><use href="#i-check"/></svg>') + '<span>' + esc(k.text) + '</span>' + (k.href ? '<a class="link" href="' + k.href + '" style="flex:0 0 auto">' + esc(k.link) + '</a>' : '') + '</div>').join('');
+    $('#rvConfirmText').textContent = 'Saya sudah memeriksa pratinjau dan isi ' + kata(inc.length) + ' perubahan yang dipilih.';
+    $('#rvPublishText').textContent = restoreOn ? 'Publikasikan versi ' + S.restore.v + ' ke layar' : 'Publikasikan ' + kata(inc.length) + ' perubahan ke layar';
+    $('#rvPublish').disabled = !(inc.length && $('#rvConfirm').checked && canEdit); $('#rvReturn').disabled = !inc.length;
+    $('#rvAfter').setAttribute('aria-pressed', rv.mode === 'after'); $('#rvLive').setAttribute('aria-pressed', rv.mode !== 'after');
+    const hist = S.history.length ? S.history : (S.live && S.live.publishedAt ? [{ v: 1, at: S.live.publishedAt, by: S.live.by, note: 'Layar mulai dipakai', count: 0, nosnap: true }] : []);
+    loadNames(hist.map((h) => h.by));
+    $('#rvHistory').innerHTML = hist.length ? hist.map((h, i) => '<div class="row"><div class="b"><span>Versi ' + h.v + ' <span style="font-weight:400;color:var(--muted)">· ' + esc(h.note || '') + '</span></span><small>' + esc(fmtWhen(h.at)) + ' · ' + esc(who(h.by)) + '</small></div>' + (i === 0 ? '<span class="sbadge live">Tayang</span>' : h.nosnap ? '' : '<button class="btn outline sm" data-rvrestore="' + h.v + '" style="min-height:32px;font-size:11px" ' + (S.restore && S.restore.v === h.v ? 'disabled' : '') + '>' + (S.restore && S.restore.v === h.v ? 'Menunggu tinjauan' : 'Kembalikan') + '</button>') + '</div>').join('') : '<span class="note">Belum pernah dipublikasikan.</span>';
+    // preview frame: the chosen version of the screen, opened on the selected change
+    const sel = list.find((c) => c.key === rv.sel); const focus = { mode: 'dash' };
+    if (sel) { if (sel.coll === 'treatments') { focus.sel = sel.id; focus.cat = sel.d ? sel.d.cat : (sel.l && sel.l.cat); } else if (sel.coll === 'pages') { focus.tab = sel.id; } else if (sel.coll === 'promos') { focus.promo = sel.id; } else if (sel.coll === 'videos') { const t = (rv.mode === 'after' ? after : liveNorm()).treatments.find((x) => x.video === sel.id); if (t) { focus.sel = t.id; focus.cat = t.cat; } else { focus.mode = 'saver'; focus.clip = Math.max(0, after.settings.playlist.indexOf(sel.id)); } } else if (sel.coll === 'settings') focus.mode = 'saver'; }
+    framePost('rvFrame', { type: 'adc-preview', snap: rv.mode === 'after' ? after : liveNorm(), focus });
+  }
+
   /* ----- bind ----- */
   function bind() {
-    $('#btnPublish').addEventListener('click', askPublish);
-    $('#pubYes').addEventListener('click', () => { hidePubConfirm(); publish(); });
-    $('#pubNo').addEventListener('click', hidePubConfirm);
     $('#pfDelete').addEventListener('click', () => { $('#pfDeleteConfirm').hidden = false; });
     $('#pfDeleteNo').addEventListener('click', () => { $('#pfDeleteConfirm').hidden = true; });
     $('#pfDeleteYes').addEventListener('click', () => { if (editingPromo) deletePromo(editingPromo); });
     // keyboard users reach the drop zones through the label, not the hidden input
-    document.querySelectorAll('label.drop').forEach((l) => { l.setAttribute('tabindex', '0'); l.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const inp = document.getElementById(l.getAttribute('for')); if (inp) inp.click(); } }); });
+    document.querySelectorAll('label.drop').forEach((l) => { l.setAttribute('tabindex', '0'); });
+    document.addEventListener('keydown', (e) => { const l = e.target.closest && e.target.closest('label.drop'); if (l && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); const inp = document.getElementById(l.getAttribute('for')); if (inp) inp.click(); } });
     ['tfPhoto', 'vUpload'].forEach((id) => { $('#' + id).setAttribute('tabindex', '-1'); });
     $('#cari').addEventListener('input', renderTreatTable);
     $('#btnAllTreat').addEventListener('click', () => { allTreats = !allTreats; renderTreatTable(); });
@@ -1412,18 +1903,63 @@ const Admin = (() => {
       else if (b.dataset.vcancel) { deleteArm = {}; renderVideos(); }
       else if (b.dataset.vdel) { deleteArm = { vdel: b.dataset.vdel }; renderVideos(); }
       else if (b.dataset.vdelyes) deleteVideo(b.dataset.vdelyes);
+      else if (b.dataset.vorient) { const [id, o] = b.dataset.vorient.split('|'); setOrient(id, o); }
       else if (b.dataset.plmove) { const [i, d] = b.dataset.plmove.split('|').map(Number); const pl = (S.settings.playlist || []).filter(video); const j = i + d; if (j < 0 || j >= pl.length) return; const t = pl[i]; pl[i] = pl[j]; pl[j] = t; saveSettings({ playlist: pl }, 'Urutan putar screen saver diubah'); renderPlaylist(); }
       else if (b.dataset.plrm != null) { const pl = (S.settings.playlist || []).filter(video); const v = video(pl[b.dataset.plrm]); pl.splice(Number(b.dataset.plrm), 1); saveSettings({ playlist: pl }, v ? 'Video "' + v.title + '" dikeluarkan dari screen saver' : ''); renderPlaylist(); renderVideos(); }
+      // pages
+      else if (b.dataset.tpl) createPage(b.dataset.tpl);
+      else if (b.dataset.pgf) { pgFilter = b.dataset.pgf; renderPages(); }
+      else if (b.dataset.pgedit) openPage(b.dataset.pgedit);
+      else if (b.id === 'pgBack') { clearTimeout(pgSaveT); savePage(false); editingPage = null; pgDraft = null; show(); }
+      else if (b.id === 'pgSave') { savePage(false).then(() => toast('Draf disimpan.')); }
+      else if (b.id === 'pgSend') savePage(true).then(() => rerender());
+      else if (b.dataset.addblk) { const t = b.dataset.addblk; const nb = { id: uid(), type: t, text: t === 'heading' ? 'Judul baru' : '', items: t === 'list' ? ['Poin pertama'] : [], asset: null, alt: '', video: t === 'video' && S.videos[0] ? S.videos[0].id : null, orient: '' }; pgDraft.blocks.push(nb); schedulePageSave(); const el = $('#pgb-text-' + (pgDraft.blocks.length - 1)) || $('#pgb-items-' + (pgDraft.blocks.length - 1)); if (el) el.focus(); }
+      else if (b.dataset.bmove) { const [i, d] = b.dataset.bmove.split('|').map(Number); const j = i + d; if (j < 0 || j >= pgDraft.blocks.length) return; const t = pgDraft.blocks[i]; pgDraft.blocks[i] = pgDraft.blocks[j]; pgDraft.blocks[j] = t; schedulePageSave(); }
+      else if (b.dataset.brm != null) { pgDraft.blocks.splice(Number(b.dataset.brm), 1); schedulePageSave(); }
+      else if (b.dataset.bo) { const [i, o] = b.dataset.bo.split('|'); pgDraft.blocks[Number(i)].orient = o; schedulePageSave(); }
+      else if (b.dataset.bimgrm != null) { const i = Number(b.dataset.bimgrm); trashAssets([pgDraft.blocks[i].asset]); pgDraft.blocks[i].asset = null; schedulePageSave(); }
+      else if (b.id === 'pgDelete') { deleteArm = { pgdel: true }; $('#pgDeleteConfirm').hidden = false; }
+      else if (b.id === 'pgDeleteNo') { deleteArm = {}; $('#pgDeleteConfirm').hidden = true; }
+      else if (b.id === 'pgDeleteYes') deletePage();
+      // review
+      else if (b.dataset.rvsel) { rv.sel = b.dataset.rvsel; rv.mode = 'after'; renderReview(); }
+      else if (b.dataset.rvopen) { const [coll, id] = b.dataset.rvopen.split('|'); if (coll === 'treatments') openTreat(id); else if (coll === 'promos') { editingPromo = id; location.hash = '#promo'; S.tab = 'promo'; show(); renderPromoForm(true); } else if (coll === 'pages') openPage(id); else if (coll === 'videos') { deleteArm = { vedit: id }; location.hash = '#video'; } else location.hash = '#video'; }
+      else if (b.dataset.rvrestore) requestRestore(Number(b.dataset.rvrestore));
+      else if (b.id === 'rvPublish') publishIncluded();
+      else if (b.id === 'rvReturn') returnSelected();
+      else if (b.id === 'rvAfter') { rv.mode = 'after'; renderReview(); }
+      else if (b.id === 'rvLive') { rv.mode = 'live'; renderReview(); }
     });
     document.addEventListener('change', (e) => {
       const el = e.target;
       if (el.dataset.show) toggleShow(el.dataset.show, el.checked);
       else if (el.dataset.vlinksel) { if (el.value) linkVideo(el.dataset.vlinksel, el.value); else { deleteArm = {}; renderVideos(); } }
+      else if (el.dataset.rvinc) { if (el.checked) rv.excluded.delete(el.dataset.rvinc); else rv.excluded.add(el.dataset.rvinc); $('#rvConfirm').checked = false; renderReview(); }
+      else if (el.id === 'rvConfirm') renderReview();
+      else if (el.dataset.bimg != null) { uploadBlockImage(Number(el.dataset.bimg), el.files[0]); el.value = ''; }
+      else if (el.id === 'pgPos') movePage(parseInt(el.value, 10) || 0);
+    });
+    // page editor fields: every edit lands in the draft, the preview follows, the save is debounced
+    const pe = $('#pgEditor');
+    pe.addEventListener('input', (e) => {
+      const el = e.target; if (!pgDraft) return;
+      if (el.id === 'pgTitle') pgChange({ title: el.value });
+      else if (el.id === 'pgTab') pgChange({ tab: el.value.slice(0, 18) });
+      else if (el.id === 'pgFrom') pgChange({ from: el.value });
+      else if (el.id === 'pgTo') pgChange({ to: el.value });
+      else if (el.dataset.bi != null) { const b = pgDraft.blocks[Number(el.dataset.bi)]; if (!b) return; if (el.dataset.f === 'items') b.items = el.value.split('\n'); else if (el.dataset.f === 'video') { b.video = el.value || null; b.orient = ''; } else b[el.dataset.f] = el.value; schedulePageSave(); }
+    });
+    pe.addEventListener('change', (e) => {
+      const el = e.target; if (!pgDraft) return;
+      if (el.id === 'pgShowTab') pgChange({ showTab: el.checked });
+      else if (el.id === 'pgInSaver') pgChange({ inSaver: el.checked });
+      else if (el.id === 'pgFrom') pgChange({ from: el.value });
+      else if (el.id === 'pgTo') pgChange({ to: el.value });
+      else if (el.dataset.f === 'video') { const b = pgDraft.blocks[Number(el.dataset.bi)]; if (b) { b.video = el.value || null; b.orient = ''; schedulePageSave(); } }
     });
     // treatment form
     const tf = $('#treatForm'); tf.addEventListener('submit', saveTreat);
     tf.addEventListener('input', updateTreatPreview); tf.addEventListener('change', updateTreatPreview);
-    $('#tfVideo').addEventListener('change', () => { $('#tfVideo').dataset.touched = '1'; });
     $('#tfCancel').addEventListener('click', () => { editingTreat = null; renderTreatForm(true); $('#phTitle').textContent = 'Perawatan baru'; });
     $('#tfPhoto').addEventListener('change', () => uploadPhoto($('#tfPhoto').files[0]));
     $('#tfPhotoRemove').addEventListener('click', () => { tf.dataset.photo = ''; updateTreatPreview(); });
@@ -1446,13 +1982,13 @@ const Admin = (() => {
     $('#setTitles').addEventListener('change', () => saveSettings({ showTitles: $('#setTitles').checked }));
     $('#setInvite').addEventListener('change', () => saveSettings({ heartInvite: $('#setInvite').checked }, 'Ajakan heart di screen saver ' + ($('#setInvite').checked ? 'dinyalakan' : 'dimatikan')));
     // heart tally
-    document.querySelectorAll('.seg button[data-hr]').forEach((b) => b.addEventListener('click', () => { heartRange = b.dataset.hr; document.querySelectorAll('.seg button[data-hr]').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); renderHearts(); }));
+    document.querySelectorAll('.hseg button[data-hr]').forEach((b) => b.addEventListener('click', () => { heartRange = b.dataset.hr; document.querySelectorAll('.hseg button[data-hr]').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); renderHearts(); }));
     $('#hReset').addEventListener('click', () => { $('#hReset').hidden = true; $('#hResetConfirm').hidden = false; $('#hResetYes').focus(); });
     $('#hResetNo').addEventListener('click', () => { $('#hResetConfirm').hidden = true; $('#hReset').hidden = false; });
     $('#hResetYes').addEventListener('click', () => { $('#hResetConfirm').hidden = true; $('#hReset').hidden = false; write(async () => { await db.doc('config/hearts').set({ epoch: heartEpoch() + 1, resetAt: new Date().toISOString() }); await logChange('Hitungan heart dimulai dari 0'); toast('Hitungan baru dimulai. Semua layar kembali ke 0.'); }); });
     renderTreatForm(true); renderPromoForm(true);
   }
-  return { show, rerender: () => { if (shown && S.route === 'admin' && !$('#adminBody').hidden) renderAll(); } };
+  return { show, rerender };
 })();
 
 /* ---------------- boot ---------------- */
@@ -1466,16 +2002,20 @@ async function boot() {
   if (me) { $('#meName').textContent = me.name || (me.isOwner ? 'Pemilik' : 'Staf'); $('#meRole').textContent = me.isOwner ? 'Pemilik' : canEdit ? 'Editor' : 'Hanya melihat'; const init = (me.name || 'S').split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase(); $('#meInit').textContent = init; if (me.avatarUrl) { $('#meAvatar').src = me.avatarUrl; $('#meAvatar').hidden = false; $('#meInit').hidden = true; } }
   const onErr = (e) => { st.dataset.state = 'offline'; st.textContent = 'Koneksi terputus'; };
   db.doc('published/live').onSnapshot((snap) => { S.live = snap.exists ? snap.data() : null; S.ready = true; st.dataset.state = 'live'; st.textContent = 'Terhubung'; if (S.route === 'kiosk') Kiosk.render(); else { Admin.show(); } }, onErr);
-  if (canEdit) {
+  // the embedded preview frame only shows what its parent posts; it needs no draft subscriptions
+  if (canEdit && !S.embedded) {
     const sub = (coll, key) => db.collection(coll).onSnapshot((qs) => { S[key] = qs.docs.map((x) => Object.assign({ id: x.id }, x.data())); Admin.rerender(); }, onErr);
-    sub('treatments', 'treatments'); sub('promos', 'promos'); sub('videos', 'videos');
+    sub('treatments', 'treatments'); sub('promos', 'promos'); sub('videos', 'videos'); sub('pages', 'pages');
     db.doc('config/settings').onSnapshot((snap) => { S.settings = Object.assign({}, DEFAULT_SETTINGS, snap.exists ? snap.data() : {}); Admin.rerender(); }, onErr);
     db.doc('config/log').onSnapshot((snap) => { S.log = snap.exists ? (snap.data().entries || []) : []; Admin.rerender(); }, onErr);
     db.doc('config/trash').onSnapshot((snap) => { S.trash = snap.exists ? (snap.data().assets || []) : []; }, onErr);
+    db.doc('config/restore').onSnapshot((snap) => { S.restore = snap.exists ? snap.data() : null; Admin.rerender(); }, onErr);
+    db.doc('published/history').onSnapshot((snap) => { S.history = snap.exists ? (snap.data().versions || []) : []; Admin.rerender(); }, onErr);
     db.collection('heartTallies').onSnapshot((qs) => { S.heartTallies = qs.docs.map((x) => Object.assign({ id: x.id }, x.data())); Admin.rerender(); }, onErr);
     db.doc('config/hearts').onSnapshot((snap) => { S.heartCfg = snap.exists ? snap.data() : {}; Admin.rerender(); }, onErr);
   }
   Hearts.connect();
+  if (S.embedded && window.parent !== window) { try { window.parent.postMessage({ type: 'adc-preview-ready' }, '*'); } catch (e) {} }
   setTimeout(() => { if (!S.ready) { S.ready = true; if (S.route === 'kiosk') Kiosk.render(); else Admin.show(); } }, 4000);
 }
 boot();

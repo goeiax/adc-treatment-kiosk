@@ -1,0 +1,26 @@
+[
+ {
+  "op": "set",
+  "collection": "pages",
+  "doc_id": "tentang",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\pg-tentang.json"
+ },
+ {
+  "op": "set",
+  "collection": "pages",
+  "doc_id": "sebelumlaser",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\pg-sebelumlaser.json"
+ },
+ {
+  "op": "set",
+  "collection": "pages",
+  "doc_id": "event1",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\pg-event1.json"
+ },
+ {
+  "op": "set",
+  "collection": "published",
+  "doc_id": "live",
+  "file_path": "C:\\Alex Workspace\\ADC Files\\kiosk\\seed\\live-harness.json"
+ }
+]

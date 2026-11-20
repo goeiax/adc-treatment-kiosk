@@ -1,8 +1,10 @@
 // Local test shim: stands in for window.claude.use('db' | 'user' | 'assets') with in-memory data seeded from window.__SEED__.
+// Documents come back with their keys sorted, as the real artifact database returns them, so key-order bugs show up here too.
 (function () {
   const data = window.__SEED__ || {};
   const listeners = {};
-  const clone = (x) => JSON.parse(JSON.stringify(x));
+  const sortKeys = (x) => Array.isArray(x) ? x.map(sortKeys) : (x && typeof x === 'object') ? Object.keys(x).sort().reduce((o, k) => { o[k] = sortKeys(x[k]); return o; }, {}) : x;
+  const clone = (x) => sortKeys(JSON.parse(JSON.stringify(x)));
   const notify = (k) => (listeners[k] || []).forEach((fn) => fn());
   const snap = (c, id) => { const d = data[c] && data[c][id]; return { id, exists: !!d, data: () => (d ? clone(d) : undefined), metadata: { fromCache: false, hasPendingWrites: false } }; };
   const split = (path) => { const i = path.lastIndexOf('/'); return [path.slice(0, i), path.slice(i + 1)]; };
@@ -25,7 +27,8 @@
   });
   const db = { doc: docRef, collection: colRef };
   const meObj = { id: 'u_test', name: 'Staf Uji', avatarUrl: '', color: '#888888', email: null, isOwner: true, canEdit: true };
-  const user = { me: async () => meObj, canEdit: async () => true, isOwner: async () => true, can: async () => true, id: async () => 'u_test', name: async () => 'Staf Uji', profiles: async (ids) => Object.fromEntries([].concat(ids).map((i) => [i, { id: i, name: 'Staf Uji', avatarUrl: '', color: '#888', email: null, isMe: true, guest: false }])), search: async () => [] };
+  const PEOPLE = { u_test: 'Staf Uji', u_mkt: 'Marketing', u_resep: 'Staf resepsionis' };
+  const user = { me: async () => meObj, canEdit: async () => true, isOwner: async () => true, can: async () => true, id: async () => 'u_test', name: async () => 'Staf Uji', profiles: async (ids) => Object.fromEntries([].concat(ids).map((i) => [i, { id: i, name: PEOPLE[i] || 'Staf', avatarUrl: '', color: '#888', email: null, isMe: i === 'u_test', guest: false }])), search: async () => [] };
   const assets = { upload: async (b) => { const id = 'local' + Math.random().toString(36).slice(2); const url = URL.createObjectURL(b); return { id, url, sizeBytes: b.size, contentType: b.type }; }, list: async () => ({ assets: [], usage: { files: 0, bytes: 0, maxFiles: 0, maxBytes: 0 } }), delete: async () => ({ deleted: true }) };
   window.claude = { use: (n) => Promise.resolve({ db, user, assets }[n] || null) };
   window.__HARNESS__ = { data };

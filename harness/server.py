@@ -26,22 +26,40 @@ BLOBS = {
     'dd62fca52ba90e26d4dbf9660d412b12': ('doctors/shiela-stefani.jpg', 'image/jpeg'),
     'd4f4260f22fa0116dd0215005d02cb9f': ('doctors/annisa-fauziah.jpg', 'image/jpeg'),
 }
+# harness-only driver for headless screenshots: ?act=click:<css>,wait:<ms>,... runs after the page has booted (selectors URL-encoded)
+DRIVER = '''<script>(function(){var q=new URLSearchParams(location.search).get('act');if(!q)return;var steps=q.split(',');var i=0;function run(){if(i>=steps.length)return;var st=steps[i++];var m=st.indexOf(':');var k=st.slice(0,m),v=decodeURIComponent(st.slice(m+1));if(k==='wait'){setTimeout(run,parseInt(v,10)||500);return;}if(k==='click'){var el=document.querySelector(v);if(el)el.click();}if(k==='hash'){location.hash=v;}if(k==='type'){var t=document.querySelector(v.split('|')[0]);if(t){t.value=v.split('|')[1];t.dispatchEvent(new Event('input',{bubbles:true}));t.dispatchEvent(new Event('change',{bubbles:true}));}}setTimeout(run,400);}setTimeout(run,1800);})();</script>'''
 SKEL = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>'
 
-def seed():
+def seed(query=''):
     d = {}
-    for w in json.load(open(os.path.join(SEED, 'writes.json'))):
-        d.setdefault(w['collection'], {})[w['doc_id']] = json.load(open(w['file_path'], encoding='utf-8'))
+    # writes.json is the real seed; writes-harness.json adds the canvas sample pages and a live snapshot with one page (never written live)
+    for name in ('writes.json', 'writes-harness.json'):
+        fp = os.path.join(SEED, name)
+        if not os.path.exists(fp): continue
+        for w in json.load(open(fp)):
+            d.setdefault(w['collection'], {})[w['doc_id']] = json.load(open(w['file_path'], encoding='utf-8'))
+    # ?h=v1 shows a video as horizontal 16:9 in this harness only, for layout checks
+    # ?live=p1,p4 clears those promos' end dates in this harness only, to look at band layouts for expired October titles
+    for part in [x for x in query.split('&') if x.startswith('live=')]:
+        for pid in part[5:].split(','):
+            for doc in [d.get('promos', {}).get(pid)] + [v for v in d.get('published', {}).get('live', {}).get('promos', []) if v['id'] == pid]:
+                if doc: doc['to'] = ''; doc['live'] = True
+    for part in [x for x in query.split('&') if x.startswith('h=')]:
+        vid = part[2:]
+        doc = d.get('videos', {}).get(vid)
+        if doc: doc['orient'] = 'h'
+        for v in d.get('published', {}).get('live', {}).get('videos', []):
+            if v['id'] == vid: v['orient'] = 'h'
     return d
 
 class H(http.server.SimpleHTTPRequestHandler):
     def log_message(self, f, *a): sys.stderr.write('%s\n' % (f % a))
     def do_GET(self):
-        p = self.path.split('?')[0]
+        p = self.path.split('?')[0]; q = self.path.split('?')[1] if '?' in self.path else ''
         if p in ('/', '/index.html'):
             page = open(PAGE, encoding='utf-8').read()
             shim = open(os.path.join(HERE, 'shim.js'), encoding='utf-8').read()
-            body = (SKEL + '<script>window.__SEED__=' + json.dumps(seed(), ensure_ascii=False) + ';</script><script>' + shim + '</script>' + page + '</body></html>').encode('utf-8')
+            body = (SKEL + '<script>window.__SEED__=' + json.dumps(seed(q), ensure_ascii=False) + ';</script><script>' + shim + '</script>' + DRIVER + page + '</body></html>').encode('utf-8')
             self.send_response(200); self.send_header('Content-Type', 'text/html; charset=utf-8'); self.send_header('Content-Length', str(len(body))); self.end_headers(); self.wfile.write(body); return
         m = re.match(r'^/_blob/([0-9a-f]{32})$', p)
         if m and m.group(1) in BLOBS:
