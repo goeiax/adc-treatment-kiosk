@@ -124,69 +124,78 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
         </div>
 
         <sc-if value="{{ showTreat }}" hint-placeholder-val="{{ true }}">
-        <div style="display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; min-height: 0;">
-        <!-- Panel video: ukuran thumbnail mengikuti orientasi video -->
-        <div style="display: flex; gap: 24px; padding: 16px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+        <div style="display: flex; gap: 24px; flex: 1 1 auto; min-height: 0;">
+        <!-- Kolom kiri: video besar (9:16 setinggi kolom). Kolom kanan: pilihan perawatan -->
+        <div style="flex: 0 0 480px; width: 480px; display: flex; flex-direction: column; gap: 12px;">
           <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ true }}">
-            <button onClick="{{ play }}" aria-label="Putar video penjelasan" style="position: relative; flex: 0 0 {{ vp.thumbW }}; width: {{ vp.thumbW }}; height: {{ vp.thumbH }}; overflow: hidden; background: #212121;">
+            <button onClick="{{ play }}" aria-label="Putar video penjelasan" style="display: flex; flex-direction: column; justify-content: center; gap: 20px; flex: 0 0 auto; width: 480px; height: 853px; overflow: hidden; background: {{ vp.panelBg }};">
+              <span style="position: relative; display: block; flex: 0 0 auto; width: 480px; height: {{ vp.imgH }}; background: #212121;">
               <img src="{{ vp.poster }}" alt="{{ vp.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
               <span style="position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;">
                 <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg>
               </span>
               <span style="position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #ffffff; font-size: 13px; line-height: 16px; font-variant-numeric: tabular-nums;">{{ vp.dur }}</span>
-            </button>
-            <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 0;">
-              <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan · {{ vp.ratioLabel }}</span>
-              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: 0;">{{ vp.title }}</span>
-              <span style="font-size: 18px; line-height: 26px; color: #545454;">{{ vp.desc }}</span>
-              <sc-if value="{{ vp.ai }}" hint-placeholder-val="{{ false }}">
-                <span style="align-self: flex-start; padding: 4px 10px; background: #e9d2c2; font-size: 13px; line-height: 16px;">Karakter virtual (AI)</span>
+              </span>
+              <sc-if value="{{ vp.isH }}" hint-placeholder-val="{{ false }}">
+                <span style="display: block; padding: 0 24px; font-size: 18px; line-height: 26px; color: #545454;">{{ vp.desc }}</span>
               </sc-if>
+            </button>
+            <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+              <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan · {{ vp.ratioLabel }}{{ vp.aiNote }}</span>
+              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 20px; line-height: 26px; font-weight: 500; letter-spacing: 0;">{{ vp.title }}</span>
             </div>
           </sc-if>
           <sc-if value="{{ noVideo }}" hint-placeholder-val="{{ false }}">
-            <div style="display: flex; align-items: center; justify-content: center; flex: 0 0 400px; width: 400px; height: 225px; background: #eae6dd; color: #545454;">
-              <svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="13" height="12" rx="1"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg>
-            </div>
-            <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; flex: 0 0 auto; width: 480px; height: 853px; padding: 40px; box-sizing: border-box; background: #eae6dd; color: #545454; text-align: center;">
+              <svg aria-hidden="true" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="13" height="12" rx="1"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; color: #212121;">
               <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan</span>
               <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 24px; line-height: 30px; font-weight: 500; letter-spacing: 0;">Belum ada video untuk perawatan ini</span>
               <span style="font-size: 18px; line-height: 26px; color: #545454;">Dokter kami akan menjelaskannya langsung saat konsultasi.</span>
             </div>
+            </div>
           </sc-if>
         </div>
 
+        <!-- Kolom kanan: kategori, daftar perawatan, detail -->
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
         <!-- Kategori -->
-        <div class="hs" style="display: flex; gap: 8px; overflow-x: auto; flex: 0 0 auto; padding-bottom: 2px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; flex: 0 0 auto;">
           <sc-for list="{{ cats }}" as="c" hint-placeholder-count="10">
-            <button onClick="{{ c.pick }}" style="flex: 0 0 auto; min-height: 48px; padding: 0 20px; background: {{ c.bg }}; color: {{ c.fg }}; border: 1px solid {{ c.border }}; font-size: 18px; line-height: 22px; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap;">{{ c.label }}</button>
+            <button onClick="{{ c.pick }}" style="flex: 0 0 auto; min-height: 48px; padding: 0 14px; background: {{ c.bg }}; color: {{ c.fg }}; border: 1px solid {{ c.border }}; font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap;">{{ c.label }}</button>
           </sc-for>
         </div>
 
         <!-- Daftar perawatan -->
-        <div class="hs" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-content: start; overflow-y: auto; flex: 1 1 auto; min-height: 0; padding: 2px;">
+        <div class="hs" style="display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1 1 auto; min-height: 0; padding: 2px;">
           <sc-for list="{{ items }}" as="t" hint-placeholder-count="3">
-            <button onClick="{{ t.pick }}" style="display: flex; flex-direction: column; gap: 8px; min-height: 152px; padding: 24px; box-sizing: border-box; background: #fcfbf9; box-shadow: {{ t.ring }};">
-              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">{{ t.name }}</span>
-              <span style="font-size: 16px; line-height: 22px; color: #545454;">{{ t.desc }}</span>
-              <span style="margin-top: auto; font-size: 14px; line-height: 18px; color: #545454; font-variant-numeric: tabular-nums;">{{ t.priceLine }}</span>
+            <button onClick="{{ t.pick }}" style="display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; padding: 16px 20px; box-sizing: border-box; background: #fcfbf9; box-shadow: {{ t.ring }};">
+              <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+                <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 20px; line-height: 26px; font-weight: 500; letter-spacing: 0;">{{ t.name }}</span>
+                <span style="flex: 0 0 auto; font-size: 14px; line-height: 18px; color: #545454; font-variant-numeric: tabular-nums;">{{ t.priceShort }}</span>
+              </span>
+              <span style="font-size: 15px; line-height: 20px; color: #545454;">{{ t.desc }}</span>
+              <sc-if value="{{ t.hasVideo }}" hint-placeholder-val="{{ false }}">
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; line-height: 16px; color: #212121;"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"></path></svg>Ada video penjelasan</span>
+              </sc-if>
             </button>
           </sc-for>
         </div>
 
         <!-- Detail perawatan terpilih -->
-        <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+        <div style="display: flex; flex-direction: column; gap: 12px; flex: 0 0 auto; padding: 20px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
           <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
-            <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: 0;">{{ sel.name }}</span>
+            <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">{{ sel.name }}</span>
             <span style="padding: 4px 10px; background: #e9d2c2; font-size: 13px; line-height: 16px;">{{ sel.catLabel }}</span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
-            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Sesi</span><span style="font-size: 18px; line-height: 24px; font-weight: 500;">{{ sel.sessions }}</span></div>
-            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Durasi</span><span style="font-size: 18px; line-height: 24px; font-weight: 500;">{{ sel.duration }}</span></div>
-            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Downtime</span><span style="font-size: 18px; line-height: 24px; font-weight: 500;">{{ sel.downtime }}</span></div>
-            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Mulai dari</span><span style="font-size: 18px; line-height: 24px; font-weight: 500; font-variant-numeric: tabular-nums;">{{ sel.price }}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Sesi</span><span style="font-size: 16px; line-height: 22px; font-weight: 500;">{{ sel.sessions }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Durasi</span><span style="font-size: 16px; line-height: 22px; font-weight: 500;">{{ sel.duration }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Downtime</span><span style="font-size: 16px; line-height: 22px; font-weight: 500;">{{ sel.downtime }}</span></div>
+            <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 13px; line-height: 16px; color: #545454;">Mulai dari</span><span style="font-size: 16px; line-height: 22px; font-weight: 500; font-variant-numeric: tabular-nums;">{{ sel.price }}</span></div>
           </div>
-          <div style="font-size: 16px; line-height: 22px; color: #545454;"><span style="color: #212121; font-weight: 500;">Setelah perawatan: </span>{{ sel.after }}</div>
+          <div style="font-size: 14px; line-height: 20px; color: #545454;"><span style="color: #212121; font-weight: 500;">Setelah perawatan: </span>{{ sel.after }}</div>
+        </div>
         </div>
         </div>
         </sc-if>
@@ -427,7 +436,8 @@ class Component extends DCLogic {
     pv.chipBg = pv.isV ? 'rgba(255,255,255,0.12)' : '#eae6dd';
     pv.closeBg = pv.isV ? '#fcfbf9' : '#212121';
     pv.closeFg = pv.isV ? '#212121' : '#ffffff';
-    var vp = video ? Object.assign({}, video, { thumbW: video.isV ? '180px' : '400px', thumbH: video.isV ? '320px' : '225px' }) : { thumbW: '400px', thumbH: '225px' };
+    // Panel video kiri selalu 480×853: video vertikal mengisi penuh, video horizontal 480×270 di tengah dengan deskripsi
+    var vp = video ? Object.assign({}, video, { panelBg: video.isV ? '#212121' : '#eae6dd', imgH: video.isV ? '853px' : '270px', aiNote: video.ai ? ' · Karakter virtual (AI)' : '' }) : { panelBg: '#eae6dd', imgH: '270px', aiNote: '' };
     return {
       showSaver: s.idle,
       showPlayer: !s.idle && s.playing,
@@ -474,6 +484,8 @@ class Component extends DCLogic {
       items: this.TREATS.filter((t) => t.cat === s.cat).map((t) => ({
         name: t.name, desc: t.desc,
         priceLine: t.price === 'Tanya resepsionis' ? 'Harga: tanya resepsionis' : 'Mulai dari ' + t.price,
+        priceShort: t.price === 'Tanya resepsionis' ? 'Tanya resepsionis' : 'mulai ' + t.price,
+        hasVideo: !!t.video,
         ring: t.id === s.sel ? '0 0 0 2px #212121, ' + CARD : CARD,
         pick: () => this.setState({ sel: t.id, sinceTap: 0 })
       })),

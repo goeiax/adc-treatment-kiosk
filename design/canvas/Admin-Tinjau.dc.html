@@ -153,12 +153,23 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
                 </div>
               </sc-if>
               <sc-if value="{{ pShowTreat }}" hint-placeholder-val="{{ true }}">
-                <div style="display: flex; gap: 4px; font-size: 8px;">
+                <div style="display: flex; gap: 8px; flex: 1 1 auto; min-height: 0;">
+                <div style="position: relative; flex: 0 0 150px; width: 150px; height: 267px; overflow: hidden; background: #212121; box-shadow: {{ pVidRing }};">
+                  <sc-if value="{{ pDpcVideo }}" hint-placeholder-val="{{ false }}">
+                    <img src="/_blob/287d899870863bb281d2386f6d49c55e" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover;">
+                    <span style="position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg></span>
+                  </sc-if>
+                  <sc-if value="{{ pDpcNoVideo }}" hint-placeholder-val="{{ true }}">
+                    <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 12px; background: #eae6dd; color: #545454; font-size: 8px; line-height: 11px; text-align: center;">Belum ada video untuk perawatan ini</span>
+                  </sc-if>
+                </div>
+                <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 8px;">
                   <span style="padding: 3px 6px; border: 1px solid #d1cdc4;">Laser</span>
                   <span style="padding: 3px 6px; background: #212121; color: #ffffff;">Facial</span>
                   <span style="padding: 3px 6px; border: 1px solid #d1cdc4;">Hair</span>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px;">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
                   <div style="display: flex; flex-direction: column; gap: 3px; padding: 8px; background: #fcfbf9; box-shadow: {{ pDpcRing }};">
                     <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 9px; line-height: 12px; letter-spacing: 0;">Deep Pore Cleansing</span>
                     <span style="font-size: 7px; line-height: 9px; color: #545454;">Pembersihan pori mendalam, perawatan dasar rutin.</span>
@@ -172,6 +183,8 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
                     <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 9px; line-height: 12px; letter-spacing: 0;">Deep Pore Combo</span>
                     <span style="font-size: 7px; line-height: 9px; color: #545454;">Deep Pore Cleansing dipadukan dengan peeling.</span>
                   </div>
+                </div>
+                </div>
                 </div>
               </sc-if>
             </div>
@@ -326,6 +339,8 @@ class Component extends DCLogic {
       pShowTreat: !showPage,
       pDpcVideo: has('treat'),
       pDpcRing: after && selId === 'treat' ? RING : CARD,
+      pDpcNoVideo: !has('treat'),
+      pVidRing: after && selId === 'treat' ? RING : 'none',
       pBandRing: after && (selId === 'promoNew' || selId === 'promoEnd') ? 'inset 0 0 0 2px #212121' : 'none',
       pBandTitle: band.t,
       pBandLede: band.l,
