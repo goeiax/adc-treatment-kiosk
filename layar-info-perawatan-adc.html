@@ -294,6 +294,7 @@
   .avatar { width: 40px; height: 40px; border-radius: 999px; background: var(--peach); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; object-fit: cover; }
   .side .who small { font-size: 13px; color: var(--muted); display: block; }
   .main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 32px; padding: 40px 48px 48px; box-sizing: border-box; }
+  #adminBody > .tab { margin-top: 32px; }
   @media (max-width: 760px) { .side { max-width: none; border-right: 0; border-bottom: 1px solid var(--border); gap: 16px; } .side nav { flex-direction: row; flex-wrap: wrap; } .side .who { margin-top: 0; } .main { padding: 24px 0 40px; } }
   .phead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
   .phead h1 { margin: 0; font-family: var(--ff-head); font-weight: 400; font-size: 36px; line-height: 44px; letter-spacing: 0; text-wrap: balance; }
@@ -323,7 +324,10 @@
   .cols { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
   .cols > .wide { flex: 999 1 520px; min-width: 0; }
   .cols > .narrow { flex: 1 1 300px; max-width: 400px; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
-  @media (max-width: 900px) { .cols > .narrow { max-width: none; } }
+  #tab-halaman .cols > .narrow, #tab-tinjau .cols > .narrow { flex-basis: 400px; max-width: 420px; }
+  /* once the side column no longer fits beside the main card (script sets .stacked from the measured width) it drops below it and spans the width, its cards two-up where they fit */
+  #adminBody .cols.stacked > .narrow { flex-basis: 100%; max-width: none; flex-direction: row; flex-wrap: wrap; }
+  #adminBody .cols.stacked > .narrow > * { flex: 1 1 320px; min-width: 0; }
   .card { display: flex; flex-direction: column; gap: 16px; padding: 24px; background: var(--card); box-shadow: var(--shadow); min-width: 0; }
   .card h2 { margin: 0; font-family: var(--ff-head); font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0; }
   .card h3 { margin: 0; font-family: var(--ff-head); font-size: 18px; line-height: 24px; font-weight: 500; letter-spacing: 0; }
@@ -393,8 +397,11 @@
   .vgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   @media (max-width: 560px) { .vgrid { grid-template-columns: 1fr; } }
   .vcard { display: flex; flex-direction: column; gap: 12px; padding: 16px; background: var(--card); box-shadow: var(--shadow); min-width: 0; }
-  .vcard .ph { position: relative; height: 152px; overflow: hidden; background: var(--text); }
+  /* the thumbnail follows the video's orientation: a 16:9 well for horizontal clips, a 300px portrait well showing the whole 9:16 poster */
+  .vcard .ph { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--text); }
   .vcard .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .vcard .ph.v { aspect-ratio: auto; height: 300px; }
+  .vcard .ph.v img { object-fit: contain; object-position: 50% 50%; }
   .vcard .ph .play { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; background: var(--text); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
   .vcard .ph .dur { position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; background: rgba(33,33,33,0.78); color: #fff; font-size: 13px; line-height: 18px; }
   .vcard .t { font-family: var(--ff-head); font-size: 17px; line-height: 22px; font-weight: 500; letter-spacing: 0; }
@@ -409,6 +416,11 @@
   .plist .it .d { grid-column: 3; font-size: 13px; color: var(--muted); white-space: nowrap; }
   .plist .it .ctrls { grid-column: 2 / span 2; display: flex; gap: 6px; }
   .plist .it > .btn { grid-column: 2 / span 2; justify-self: start; }
+  /* the treatment list: name and category on the left, "Ubah" on the same row */
+  .plist.treats .it { display: flex; align-items: center; gap: 12px; }
+  .plist.treats .it .t { flex: 1 1 auto; }
+  .plist.treats .it .d { flex: 0 0 auto; white-space: normal; }
+  .plist.treats .it > .btn { flex: 0 0 auto; }
   .upl { display: flex; align-items: center; gap: 16px; padding: 16px 24px; background: var(--card); box-shadow: var(--shadow); }
   .upl .body { display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; min-width: 0; }
   .upl .body .t { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; line-height: 22px; }
@@ -487,7 +499,6 @@
   /* the mini screen keeps the kiosk's 9:16 and scales the full 1080×1920 frame to whatever width the column gives it */
   .mini { align-self: center; position: relative; width: 100%; max-width: 360px; aspect-ratio: 9 / 16; overflow: hidden; background: var(--bg); box-shadow: 0 0 0 1px var(--border), var(--shadow); }
   .mini iframe { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; border: 0; transform: scale(0.33333); transform-origin: 0 0; background: var(--bg); }
-  #tab-halaman .cols > .narrow, #tab-tinjau .cols > .narrow { flex-basis: 400px; }
   .chg { display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; background: var(--card); box-shadow: var(--shadow); }
   .chg.sel { box-shadow: 0 0 0 2px var(--text), var(--shadow); }
   .chg.off .body { opacity: 0.55; }
@@ -722,7 +733,7 @@
           </form>
           <div class="narrow">
             <section class="card lined"><h3>Pratinjau kartu di layar</h3><div class="preview-card" id="tfPreview"></div><div class="facts3" id="tfFacts"></div><span class="note" id="tfCatNote"></span></section>
-            <section class="card"><div class="hd"><h2>Semua perawatan</h2><span class="note" id="treatCount"></span></div><div class="plist" id="treatList"></div></section>
+            <section class="card"><div class="hd"><h2>Semua perawatan</h2><span class="note" id="treatCount"></span></div><div class="plist treats" id="treatList"></div></section>
           </div>
         </div>
       </div>
@@ -868,7 +879,7 @@
               <span class="confirm" id="pgDeleteWrap"><button type="button" class="link muted" id="pgDelete">Hapus halaman</button><span id="pgDeleteConfirm" hidden>Hapus halaman ini dari draf? <button type="button" class="link" id="pgDeleteYes">Ya, hapus</button> · <button type="button" class="link muted" id="pgDeleteNo">Batal</button></span></span>
             </section>
           </div>
-          <div class="narrow" style="max-width:420px">
+          <div class="narrow">
             <section class="card" style="gap:12px">
               <div class="hd"><h2>Pratinjau layar</h2><span class="note" id="pgPrevState">Draf, belum tayang</span></div>
               <div class="mini"><iframe id="pgFrame" title="Pratinjau layar halaman" tabindex="-1"></iframe></div>
@@ -903,7 +914,7 @@
               <span class="note" style="font-size:13px;line-height:18px">Perubahan yang tidak dipilih tetap menunggu di sini. Layar diperbarui dalam sekitar satu menit setelah dipublikasikan.</span>
             </section>
           </div>
-          <div class="narrow" style="max-width:420px">
+          <div class="narrow">
             <section class="card" style="gap:12px">
               <h2>Pratinjau layar</h2>
               <div class="seg" role="group" aria-label="Versi pratinjau"><button id="rvAfter" aria-pressed="true">Setelah dipublikasikan</button><button id="rvLive" aria-pressed="false">Tayang sekarang</button></div>
@@ -1528,6 +1539,9 @@ const Admin = (() => {
   }
 
   /* ----- render ----- */
+  // the side column stacks under the main card when the two no longer fit side by side (main 520px + side 300/400px + gap)
+  function fitCols() { document.querySelectorAll('.cols').forEach((c) => { if (!c.querySelector(':scope > .narrow') || !c.clientWidth) return; const basis = c.closest('#tab-halaman, #tab-tinjau') ? 400 : 300; c.classList.toggle('stacked', c.clientWidth < 520 + basis + 24); }); }
+  window.addEventListener('resize', fitCols);
   function renderAll() {
     renderHeader();
     if (S.tab === 'ringkasan') renderOverview();
@@ -1537,6 +1551,7 @@ const Admin = (() => {
     if (S.tab === 'heart') renderHearts();
     if (S.tab === 'halaman') renderPages();
     if (S.tab === 'tinjau') renderReview();
+    fitCols(); // after the tab's own markup is in place, so a column shown by the render (the page editor) is measured too
   }
   function renderHeader() {
     const n = changes().length; const badge = $('#navBadge'); badge.textContent = n; badge.dataset.n = n;
@@ -1673,7 +1688,7 @@ const Admin = (() => {
     $('#vCount').textContent = S.videos.length + ' video · ' + kata(S.videos.filter((v) => S.treatments.some((t) => t.video === v.id)).length) + ' ditautkan ke perawatan';
     $('#vDrop').hidden = !assets; if (!assets) $('#vCount').textContent += ' · unggah hanya untuk Editor';
     $('#vGrid').innerHTML = S.videos.map((v) => { const linkedTo = S.treatments.filter((t) => t.video === v.id).map((t) => t.name); const inList = pl.includes(v.id); const editing = deleteArm.vedit === v.id; const o = orientOf(v), fo = fileOrient(v);
-      return '<div class="vcard"><div class="ph"><img src="' + esc(blob(v.poster)) + '" alt=""><span class="play"><svg width="20" height="20"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + (v.ratio ? ' · ' + esc(v.ratio) : '') + '</span></div>' +
+      return '<div class="vcard"><div class="ph ' + o + '"><img src="' + esc(blob(v.poster)) + '" alt=""><span class="play"><svg width="20" height="20"><use href="#i-play"/></svg></span><span class="dur tnum">' + fmtDur(v.dur) + (v.ratio ? ' · ' + esc(v.ratio) : '') + '</span></div>' +
         (editing ? '<div class="field"><label for="ve-t-' + esc(v.id) + '">Judul</label><input id="ve-t-' + esc(v.id) + '" value="' + esc(v.title) + '" maxlength="80"></div><div class="field"><label for="ve-d-' + esc(v.id) + '">Deskripsi di layar</label><textarea id="ve-d-' + esc(v.id) + '" rows="2" maxlength="160">' + esc(v.desc) + '</textarea></div><label class="check"><input type="checkbox" id="ve-ai-' + esc(v.id) + '" ' + (v.ai ? 'checked' : '') + '><span>Karakter virtual (AI)</span></label><div class="acts"><button class="btn outline sm" data-vsave="' + esc(v.id) + '">Simpan</button><button class="btn quiet sm" data-vcancel="1">Batal</button></div>'
           : '<span class="t">' + esc(v.title) + '</span><div class="m"><span>' + esc(linkedTo.length ? 'Ditautkan ke ' + linkedTo.join(', ') : 'Belum ditautkan ke perawatan') + '</span><span class="status ' + (linkedTo.length ? 'on' : '') + '">' + (linkedTo.length ? 'Terpasang' : 'Pustaka') + '</span></div>' +
             '<div class="orient"><div class="seg sm" role="group" aria-label="Tampilan di layar"><button data-vorient="' + esc(v.id) + '|v" aria-pressed="' + (o === 'v') + '">Vertikal 9:16</button><button data-vorient="' + esc(v.id) + '|h" aria-pressed="' + (o === 'h') + '">Horizontal 16:9</button></div><span class="note' + (o !== fo ? ' warnc' : '') + '">' + (o === fo ? 'Mengikuti bentuk berkas (' + esc(v.ratio || ORIENT_LABEL[fo]) + ').' : 'Berbeda dari berkas (' + esc(v.ratio || ORIENT_LABEL[fo]) + '): video akan dipotong agar pas.') + '</span></div><div class="acts">' +
