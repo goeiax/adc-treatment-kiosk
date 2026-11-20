@@ -1,0 +1,17 @@
+{
+  "after": "Skincare lembut, hindari sinar matahari, sunscreen setiap hari, tanpa makeup 3 hari.",
+  "cat": "Laser",
+  "concerns": "Flek, melasma, bekas jerawat, pori, garis halus, tato",
+  "desc": "Laser picosecond untuk flek, melasma, dan bekas jerawat.",
+  "downtime": "Kemerahan ringan, hilang dalam hitungan jam",
+  "duration": "±45 mnt anestesi + 15–20 mnt laser",
+  "id": "picosure",
+  "name": "PicoSure Pro",
+  "order": 1,
+  "photo": null,
+  "price": "Rp4.500.000",
+  "sessions": "3–5 sesi",
+  "show": true,
+  "updatedAt": "2026-10-24T10:46:03.458424Z",
+  "video": "v1"
+}

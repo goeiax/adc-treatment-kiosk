@@ -1,0 +1,5 @@
+# accounts and passwords
+config.json
+# documents, uploaded files, session secret
+data/
+node_modules/

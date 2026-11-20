@@ -1,0 +1,13 @@
+{
+  "port": 8080,
+  "host": "127.0.0.1",
+  "dataDir": "./data",
+  "pageFile": "../layar-info-perawatan-adc.html",
+  "secureCookies": "auto",
+  "editorSessionDays": 30,
+  "displaySessionDays": 400,
+  "users": [
+    { "id": "marketing", "role": "editor", "username": "marketing", "name": "Marketing ADC", "password": "GANTI-kata-sandi-admin" },
+    { "id": "layar", "role": "display", "username": "layar", "name": "Layar klinik", "password": "GANTI-kata-sandi-layar" }
+  ]
+}

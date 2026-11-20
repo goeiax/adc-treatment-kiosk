@@ -1,0 +1,17 @@
+{
+  "accent": "dari ADC",
+  "chip": "Semua perawatan",
+  "eyebrow": "Bulan ulang tahun",
+  "from": "",
+  "id": "p3",
+  "kind": "Voucher",
+  "lede": "Voucher Rp100.000 untuk perawatan di bulan ulang tahun Anda, minimum transaksi Rp1.000.000.",
+  "live": true,
+  "order": 3,
+  "title": "Selamat ulang tahun",
+  "to": "",
+  "updatedAt": "2026-10-24T10:46:03.458424Z",
+  "value": "Rp100.000",
+  "valueLabel": "Voucher",
+  "valueNote": "min. transaksi Rp1.000.000"
+}

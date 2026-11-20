@@ -1,0 +1,17 @@
+{
+  "after": "",
+  "cat": "Blepharoplasty",
+  "concerns": "Kantung mata",
+  "desc": "Tindakan bedah minor, diawali konsultasi dokter.",
+  "downtime": "",
+  "duration": "",
+  "id": "eyebag",
+  "name": "Eye Bag Removal",
+  "order": 30,
+  "photo": null,
+  "price": "",
+  "sessions": "1 kali",
+  "show": true,
+  "updatedAt": "2026-10-24T10:46:03.458424Z",
+  "video": null
+}

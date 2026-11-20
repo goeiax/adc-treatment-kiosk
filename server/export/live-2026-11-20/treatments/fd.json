@@ -1,0 +1,17 @@
+{
+  "after": "",
+  "cat": "Body Health",
+  "concerns": "Intoleransi makanan",
+  "desc": "Tes intoleransi makanan.",
+  "downtime": "Tidak ada",
+  "duration": "",
+  "id": "fd",
+  "name": "Food Detective Test",
+  "order": 18,
+  "photo": null,
+  "price": "",
+  "sessions": "1 kali",
+  "show": true,
+  "updatedAt": "2026-10-24T10:46:03.458424Z",
+  "video": null
+}

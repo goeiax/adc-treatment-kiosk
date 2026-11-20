@@ -1,0 +1,17 @@
+{
+  "accent": "dapat voucher",
+  "chip": "Program referral",
+  "eyebrow": "Program referral",
+  "from": "2026-10-01",
+  "id": "p4",
+  "kind": "Voucher",
+  "lede": "Voucher Rp200.000 untuk Anda saat teman yang Anda ajak melakukan perawatan pertamanya di ADC.",
+  "live": true,
+  "order": 4,
+  "title": "Ajak teman,",
+  "to": "2026-10-31",
+  "updatedAt": "2026-10-24T10:46:03.458424Z",
+  "value": "Rp200.000",
+  "valueLabel": "Voucher",
+  "valueNote": "untuk setiap teman baru"
+}

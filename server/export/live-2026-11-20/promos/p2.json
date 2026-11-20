@@ -1,0 +1,17 @@
+{
+  "accent": "6 sesi",
+  "chip": "PicoSure Pro",
+  "eyebrow": "Paket perawatan",
+  "from": "2026-10-01",
+  "id": "p2",
+  "kind": "Paket",
+  "lede": "Enam sesi PicoSure Glow dengan Signature Facial gratis. Paket berlaku 6 bulan sejak pembelian.",
+  "live": true,
+  "order": 2,
+  "title": "Paket PicoSure Glow",
+  "to": "2026-10-31",
+  "updatedAt": "2026-10-24T10:46:03.458424Z",
+  "value": "Rp21.600.000",
+  "valueLabel": "Harga paket",
+  "valueNote": "6 sesi + Signature Facial"
+}

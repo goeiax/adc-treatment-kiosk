@@ -1,0 +1,15 @@
+{
+  "name": "adc-kiosk-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-hosted backend for the ADC waiting-room kiosk page (db, user, assets, sign-in)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init": "node server.js init",
+    "migrate": "node migrate.js",
+    "test": "node test.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED"
+}
