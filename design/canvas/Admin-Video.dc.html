@@ -59,15 +59,15 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
           <span style="width: 52px; height: 52px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M6 10l6-6 6 6"></path><path d="M4 20h16"></path></svg></span>
           <span style="display: flex; flex-direction: column; gap: 4px;">
             <span style="font-size: 18px; line-height: 24px; font-weight: 500;">Seret video ke sini atau pilih berkas</span>
-            <span style="font-size: 14px; line-height: 20px; color: #545454;">MP4 atau MOV · 9:16 (1080×1920) paling pas untuk layar berdiri; 16:9 diterima dan diberi bingkai · maks. 200 MB · tanpa suara di ruang tunggu</span>
+            <span style="font-size: 14px; line-height: 20px; color: #545454;">MP4 atau MOV · vertikal 9:16 (1080×1920) atau horizontal 16:9 (1920×1080) · maks. 200 MB · tanpa suara di ruang tunggu. Orientasi terdeteksi dari ukuran berkas dan bisa diubah di kartu video.</span>
           </span>
         </label>
-        <input id="unggah" type="file" accept="video/mp4,video/quicktime" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">
+        <input id="unggah" type="file" accept="video/mp4,video/quicktime" style="position: absolute; width: 1px; height: 1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0);">
 
         <div style="display: flex; align-items: center; gap: 16px; padding: 16px 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="flex: 0 0 auto;"><rect x="3" y="6" width="13" height="12"></rect><path d="M16 10l5-3v10l-5-3z"></path></svg>
           <div style="display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; min-width: 0;">
-            <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 16px; line-height: 22px;"><span style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">elle-microneedling-penjelasan.mp4</span><span style="color: #545454; font-variant-numeric: tabular-nums; flex: 0 0 auto;">64% · 38 MB dari 59 MB</span></div>
+            <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 16px; line-height: 22px;"><span style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">elle-microneedling-penjelasan.mp4 · terdeteksi vertikal 9:16</span><span style="color: #545454; font-variant-numeric: tabular-nums; flex: 0 0 auto;">64% · 38 MB dari 59 MB</span></div>
             <div style="height: 6px; background: #eae6dd;"><div style="height: 100%; width: 64%; background: #212121;"></div></div>
           </div>
           <button class="lk" style="font-size: 14px; color: #545454; min-height: 32px; flex: 0 0 auto; text-decoration: underline;">Batalkan</button>
@@ -75,20 +75,28 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
 
         <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 8px;">
           <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Pustaka video</h2>
-          <span style="font-size: 13px; color: #545454;">{{ count }} video · {{ linkedCount }} ditautkan ke perawatan</span>
+          <span style="font-size: 13px; color: #545454;">{{ count }} video · {{ vCount }} vertikal · {{ hCount }} horizontal</span>
         </div>
         <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
-          <sc-for list="{{ videos }}" as="v" hint-placeholder-count="4">
+          <sc-for list="{{ videos }}" as="v" hint-placeholder-count="5">
             <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-              <div style="position: relative; height: 152px; overflow: hidden; background: #212121;">
-                <img src="{{ v.poster }}" alt="{{ v.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%;">
+              <div style="position: relative; height: 200px; display: flex; justify-content: center; overflow: hidden; background: #212121;">
+                <img src="{{ v.poster }}" alt="{{ v.alt }}" style="display: block; width: {{ v.imgW }}; height: 100%; object-fit: cover;">
                 <span style="position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg></span>
-                <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; background: rgba(33,33,33,0.78); color: #ffffff; font-size: 13px; line-height: 18px; font-variant-numeric: tabular-nums;">{{ v.dur }} · {{ v.ratio }}</span>
+                <span style="position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; background: rgba(33,33,33,0.78); color: #ffffff; font-size: 13px; line-height: 18px; font-variant-numeric: tabular-nums;">{{ v.dur }}</span>
               </div>
               <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 17px; line-height: 22px; font-weight: 500; letter-spacing: 0;">{{ v.title }}</span>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 13px; line-height: 16px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Tampilan di layar</span>
+                <div role="group" aria-label="Orientasi video {{ v.title }}" style="display: flex;">
+                  <button onClick="{{ v.setV }}" aria-pressed="{{ v.isV }}" style="flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 8px; background: {{ v.vBg }}; color: {{ v.vFg }}; border: 1px solid #212121; font-size: 14px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="1" width="10" height="16"></rect></svg><span>Vertikal 9:16</span></button>
+                  <button onClick="{{ v.setH }}" aria-pressed="{{ v.isH }}" style="flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 8px; background: {{ v.hBg }}; color: {{ v.hFg }}; border: 1px solid #212121; border-left: 0; font-size: 14px; font-weight: 500; letter-spacing: 0.05em;"><svg aria-hidden="true" width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="1" width="16" height="10"></rect></svg><span>Horizontal 16:9</span></button>
+                </div>
+                <span style="font-size: 13px; line-height: 18px; color: {{ v.noteFg }};">{{ v.note }}</span>
+              </div>
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 18px; color: #545454;">
                 <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ v.linkLabel }}</span>
-                <span style="padding: 2px 8px; background: {{ v.statusBg }}; color: {{ v.statusFg }}; border: 1px solid {{ v.statusBorder }}; flex: 0 0 auto;">{{ v.status }}</span>
+                <span style="padding: 2px 8px; background: {{ v.statusBg }}; color: #212121; border: 1px solid {{ v.statusBorder }}; flex: 0 0 auto;">{{ v.status }}</span>
               </div>
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <button class="bs" onClick="{{ v.link }}" style="min-height: 32px; padding: 0 12px; background: #c0bcb4; border: 1px solid #545454; font-size: 11px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">{{ v.linkBtn }}</button>
@@ -99,22 +107,51 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
             </div>
           </sc-for>
         </div>
-        <p style="margin: 0; font-size: 13px; line-height: 18px; color: #545454;">Video dengan karakter Elle otomatis memakai label "Karakter virtual (AI)" di layar. Video tidak menyebut harga promo dan tidak menampilkan foto sebelum–sesudah.</p>
+        <p style="margin: 0; font-size: 13px; line-height: 18px; color: #545454;">Video dengan karakter Elle memakai label "Karakter virtual (AI)". Video tidak menyebut harga promo dan tidak menampilkan foto sebelum–sesudah.</p>
       </section>
 
       <div style="flex: 1 1 320px; max-width: 380px; display: flex; flex-direction: column; gap: 24px;">
+        <section style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+          <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Tata letak di layar</h2>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+              <div aria-hidden="true" style="width: 120px; height: 213px; display: flex; flex-direction: column; background: #212121; box-shadow: 0 0 0 1px #d1cdc4;">
+                <div style="flex: 1 1 auto; display: flex; justify-content: center;"><div style="width: 75px; background: #c0bcb4;"></div></div>
+                <div style="flex: 0 0 14px; display: flex; align-items: center; gap: 4px; padding: 0 6px;"><span style="width: 28px; height: 3px; background: #ffffff;"></span><span style="margin-left: auto; width: 30px; height: 6px; background: #fcfbf9;"></span></div>
+                <div style="flex: 0 0 60px; background: #eae6dd; border-top: 1px solid #d1cdc4;"></div>
+              </div>
+              <span style="font-size: 14px; font-weight: 600;">Vertikal 9:16</span>
+              <span style="font-size: 13px; line-height: 18px; color: #545454; text-align: center;">Video utuh setinggi layar, tanpa teks di atasnya. Logo dan ajakan sentuh di bilah bawah.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+              <div aria-hidden="true" style="width: 120px; height: 213px; display: flex; flex-direction: column; background: #f5f2ec; box-shadow: 0 0 0 1px #d1cdc4;">
+                <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 4px; padding: 6px;">
+                  <span style="width: 36px; height: 4px; background: #212121;"></span>
+                  <span style="margin-top: 10px; height: 61px; background: #c0bcb4;"></span>
+                  <span style="width: 80px; height: 5px; background: #212121;"></span>
+                  <span style="width: 96px; height: 3px; background: #c0bcb4;"></span>
+                  <span style="margin-top: auto; align-self: flex-end; width: 34px; height: 7px; background: #212121;"></span>
+                </div>
+                <div style="flex: 0 0 60px; background: #eae6dd; border-top: 1px solid #d1cdc4;"></div>
+              </div>
+              <span style="font-size: 14px; font-weight: 600;">Horizontal 16:9</span>
+              <span style="font-size: 13px; line-height: 18px; color: #545454; text-align: center;">Video selebar layar di latar terang, dengan judul dan deskripsi di bawahnya.</span>
+            </div>
+          </div>
+          <span style="font-size: 13px; line-height: 18px; color: #545454;">Berlaku di screen saver, panel video perawatan, pemutar layar penuh dan blok video di halaman. Band promo di bawah tidak berubah.</span>
+        </section>
+
         <section style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
             <h2 style="margin: 0; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: 0;">Mode screen saver</h2>
             <button onClick="{{ toggleSaver }}" aria-pressed="{{ saverOn }}" aria-label="Putar video saat layar tidak digunakan" style="width: 44px; height: 26px; background: {{ saverTrack }}; position: relative; display: inline-block;"><span style="position: absolute; top: 3px; left: {{ saverKnob }}; width: 20px; height: 20px; background: #ffffff;"></span></button>
           </div>
-          <span style="font-size: 15px; line-height: 22px; color: #545454;">Saat tidak ada sentuhan, zona utama memutar video berikut bergantian. Band promo di bawahnya tetap berjalan sendiri.</span>
+          <span style="font-size: 15px; line-height: 22px; color: #545454;">Saat tidak ada sentuhan, zona utama memutar video berikut bergantian, masing-masing dengan tata letak sesuai orientasinya.</span>
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
             <label for="idle" style="font-size: 16px;">Mulai setelah tidak disentuh</label>
             <span style="display: inline-flex; align-items: center; gap: 8px;"><input id="idle" type="number" min="1" max="30" value="{{ idleMin }}" onChange="{{ setIdle }}" style="width: 56px; min-height: 40px; padding: 0 8px; border: 1px solid #d1cdc4; background: #f5f2ec; font-size: 16px; text-align: right;"><span style="font-size: 14px; color: #545454;">menit</span></span>
           </div>
           <label style="display: flex; align-items: center; gap: 12px; font-size: 16px; min-height: 28px;"><input type="checkbox" style="width: 20px; height: 20px; margin: 0; accent-color: #212121;"><span>Suara (mati untuk ruang tunggu)</span></label>
-          <label style="display: flex; align-items: center; gap: 12px; font-size: 16px; min-height: 28px;"><input type="checkbox" defaultChecked="{{ yes }}" style="width: 20px; height: 20px; margin: 0; accent-color: #212121;"><span>Tampilkan judul video dan label di atas video</span></label>
         </section>
 
         <section style="display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
@@ -123,11 +160,11 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
             <span style="font-size: 13px; color: #545454;">{{ playCount }} video · {{ playTotal }}</span>
           </div>
           <div style="display: flex; flex-direction: column; gap: 4px;">
-            <sc-for list="{{ playlist }}" as="p" hint-placeholder-count="4">
+            <sc-for list="{{ playlist }}" as="p" hint-placeholder-count="5">
               <div style="display: flex; align-items: center; gap: 8px; padding: 8px; background: #f5f2ec;">
-                <span style="width: 24px; font-size: 13px; color: #545454; font-variant-numeric: tabular-nums;">{{ p.num }}</span>
+                <span style="width: 20px; font-size: 13px; color: #545454; font-variant-numeric: tabular-nums;">{{ p.num }}</span>
+                <span style="flex: 0 0 auto; padding: 1px 6px; border: 1px solid #d1cdc4; font-size: 12px; line-height: 16px;">{{ p.ratio }}</span>
                 <span style="flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px;">{{ p.title }}</span>
-                <span style="font-size: 13px; color: #545454; font-variant-numeric: tabular-nums;">{{ p.dur }}</span>
                 <button class="bs" onClick="{{ p.up }}" aria-label="Naikkan" style="width: 28px; height: 28px; background: #c0bcb4; border: 1px solid #545454; display: inline-flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 15l6-6 6 6"></path></svg></button>
                 <button class="bs" onClick="{{ p.down }}" aria-label="Turunkan" style="width: 28px; height: 28px; background: #c0bcb4; border: 1px solid #545454; display: inline-flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></button>
                 <button class="lk" onClick="{{ p.remove }}" aria-label="Keluarkan dari urutan" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; color: #545454;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
@@ -149,12 +186,13 @@ class Component extends DCLogic {
       saverOn: true,
       idleMin: 2,
       videos: [
-        { id: 'v1', title: 'PicoSure Pro: apa yang terjadi saat laser bekerja', dur: '1:10', secs: 70, ratio: '16:9', poster: '/_blob/9b88038b9016ab1758c63bbd30c8f065', alt: 'Pasien dan dokter di ruang perawatan PicoSure Pro', linked: 'PicoSure Pro' },
-        { id: 'v2', title: 'Kasus Kulit #1: Melasma', dur: '0:42', secs: 42, ratio: '9:16', poster: '/_blob/287d899870863bb281d2386f6d49c55e', alt: 'Elle, karakter virtual ADC, di lobi klinik', linked: null },
-        { id: 'v3', title: 'Flek hitam: kenapa muncul dan apa pilihannya', dur: '0:56', secs: 56, ratio: '9:16', poster: '/_blob/1a0aaf8e3f8130d8456bcc2f82653cb4', alt: 'Elle, karakter virtual ADC, menjelaskan flek hitam', linked: null },
-        { id: 'v4', title: 'Jerawat: empat faktor penyebabnya', dur: '0:30', secs: 30, ratio: '9:16', poster: '/_blob/287d899870863bb281d2386f6d49c55e', alt: 'Elle, karakter virtual ADC, menjelaskan jerawat', linked: 'Deep Pore Cleansing' }
+        { id: 'v1', title: 'PicoSure Pro: apa yang terjadi saat laser bekerja', dur: '0:53', secs: 53, file: 'v', orient: 'v', poster: '/_blob/74794fbf6779c2ea11d22569cab49ba0', alt: 'Pasien dan dokter di ruang perawatan PicoSure Pro', linked: 'PicoSure Pro' },
+        { id: 'v5', title: '[Judul video horizontal 16:9]', dur: '[durasi]', secs: 40, file: 'h', orient: 'h', poster: '/_blob/56fa8079951cce6f11e97db1c373ccc2', alt: 'Lounge Aesthetic Derma Centre', linked: 'Halaman Tentang ADC' },
+        { id: 'v2', title: 'Kasus Kulit #1: Melasma', dur: '0:42', secs: 42, file: 'v', orient: 'v', poster: '/_blob/287d899870863bb281d2386f6d49c55e', alt: 'Elle, karakter virtual ADC, di lobi klinik', linked: null },
+        { id: 'v3', title: 'Flek hitam: kenapa muncul dan apa pilihannya', dur: '0:56', secs: 56, file: 'v', orient: 'v', poster: '/_blob/1a0aaf8e3f8130d8456bcc2f82653cb4', alt: 'Elle, karakter virtual ADC, menjelaskan flek hitam', linked: null },
+        { id: 'v4', title: 'Jerawat: empat faktor penyebabnya', dur: '0:30', secs: 30, file: 'v', orient: 'v', poster: '/_blob/287d899870863bb281d2386f6d49c55e', alt: 'Elle, karakter virtual ADC, menjelaskan jerawat', linked: 'Deep Pore Cleansing' }
       ],
-      playlist: ['v1', 'v2', 'v3', 'v4']
+      playlist: ['v1', 'v5', 'v2', 'v3', 'v4']
     };
   }
   move(i, d) {
@@ -164,39 +202,56 @@ class Component extends DCLogic {
     var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
     this.setState({ playlist: arr });
   }
+  setOrient(i, o) {
+    var arr = this.state.videos.slice();
+    arr[i] = Object.assign({}, arr[i], { orient: o });
+    this.setState({ videos: arr });
+  }
   renderVals() {
     var s = this.state;
     var byId = (id) => s.videos.find((v) => v.id === id);
     var inList = (id) => s.playlist.indexOf(id) >= 0;
     var total = s.playlist.reduce((a, id) => a + (byId(id) ? byId(id).secs : 0), 0);
+    var RATIO = { v: '9:16', h: '16:9' };
     return {
-      yes: true,
       count: s.videos.length,
-      linkedCount: s.videos.filter((v) => v.linked).length,
+      vCount: s.videos.filter((v) => v.orient === 'v').length,
+      hCount: s.videos.filter((v) => v.orient === 'h').length,
       saverOn: s.saverOn,
       saverTrack: s.saverOn ? '#212121' : '#c0bcb4',
       saverKnob: s.saverOn ? '21px' : '3px',
       toggleSaver: () => this.setState({ saverOn: !s.saverOn }),
       idleMin: s.idleMin,
       setIdle: (e) => this.setState({ idleMin: parseInt(e.target.value, 10) || 1 }),
-      videos: s.videos.map((v, i) => ({
-        title: v.title, dur: v.dur, ratio: v.ratio, poster: v.poster, alt: v.alt,
-        linkLabel: v.linked ? 'Ditautkan ke ' + v.linked : 'Belum ditautkan ke perawatan',
-        status: v.linked ? 'Terpasang' : 'Pustaka',
-        statusBg: v.linked ? '#e9d2c2' : 'transparent',
-        statusFg: '#212121',
-        statusBorder: v.linked ? '#e9d2c2' : '#d1cdc4',
-        linkBtn: v.linked ? 'Lepas tautan' : 'Tautkan',
-        link: () => { var arr = s.videos.slice(); arr[i] = Object.assign({}, v, { linked: v.linked ? null : 'PicoSure Pro' }); this.setState({ videos: arr }); },
-        listBtn: inList(v.id) ? 'Di urutan putar' : 'Ke urutan putar',
-        addToList: () => { if (!inList(v.id)) this.setState({ playlist: s.playlist.concat([v.id]) }); }
-      })),
+      videos: s.videos.map((v, i) => {
+        var isV = v.orient === 'v';
+        var mismatch = v.orient !== v.file;
+        return {
+          title: v.title, dur: v.dur, poster: v.poster, alt: v.alt,
+          isV: isV, isH: !isV,
+          imgW: isV ? '113px' : '100%',
+          vBg: isV ? '#212121' : 'transparent', vFg: isV ? '#ffffff' : '#212121',
+          hBg: !isV ? '#212121' : 'transparent', hFg: !isV ? '#ffffff' : '#212121',
+          setV: () => this.setOrient(i, 'v'),
+          setH: () => this.setOrient(i, 'h'),
+          note: mismatch ? 'Berbeda dari ukuran berkas (' + RATIO[v.file] + '): video akan dipotong agar pas.' : 'Sesuai ukuran berkas (' + RATIO[v.file] + ').',
+          noteFg: mismatch ? '#c85c42' : '#545454',
+          linkLabel: v.linked ? 'Dipakai di ' + v.linked : 'Belum ditautkan',
+          status: v.linked ? 'Terpasang' : 'Pustaka',
+          statusBg: v.linked ? '#e9d2c2' : 'transparent',
+          statusBorder: v.linked ? '#e9d2c2' : '#d1cdc4',
+          linkBtn: v.linked ? 'Lepas tautan' : 'Tautkan',
+          link: () => { var arr = s.videos.slice(); arr[i] = Object.assign({}, v, { linked: v.linked ? null : 'PicoSure Pro' }); this.setState({ videos: arr }); },
+          listBtn: inList(v.id) ? 'Di urutan putar' : 'Ke urutan putar',
+          addToList: () => { if (!inList(v.id)) this.setState({ playlist: s.playlist.concat([v.id]) }); }
+        };
+      }),
       playCount: s.playlist.length,
       playTotal: Math.floor(total / 60) + ':' + ('0' + (total % 60)).slice(-2) + ' mnt',
       playlist: s.playlist.map((id, i) => {
-        var v = byId(id) || { title: id, dur: '' };
+        var v = byId(id) || { title: id, orient: 'v' };
         return {
-          num: i + 1, title: v.title, dur: v.dur,
+          num: i + 1, title: v.title, ratio: RATIO[v.orient],
           up: () => this.move(i, -1),
           down: () => this.move(i, 1),
           remove: () => this.setState({ playlist: s.playlist.filter((x) => x !== id) })

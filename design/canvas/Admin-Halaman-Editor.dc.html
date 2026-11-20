@@ -140,12 +140,26 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
                 </div>
               </sc-if>
               <sc-if value="{{ b.isVideo }}" hint-placeholder-val="{{ false }}">
-                <select aria-label="Pilih video" style="min-height: 44px; padding: 0 12px; border: 1px solid #d1cdc4; border-radius: 0; background: #f5f2ec; font-size: 16px;">
-                  <option>PicoSure Pro: apa yang terjadi saat laser bekerja (1:10)</option>
-                  <option>Kasus Kulit #1: Melasma (0:42)</option>
-                  <option>Flek hitam: kenapa muncul dan apa pilihannya (0:56)</option>
-                  <option>Jerawat: empat faktor penyebabnya (0:30)</option>
-                </select>
+                <div style="display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; align-items: end;">
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 14px; font-weight: 500;">Video dari pustaka</label>
+                    <select aria-label="Pilih video" value="{{ b.clip }}" onChange="{{ b.setClip }}" style="min-height: 44px; padding: 0 12px; border: 1px solid #d1cdc4; border-radius: 0; background: #f5f2ec; font-size: 16px;">
+                      <option value="v1">PicoSure Pro: apa yang terjadi saat laser bekerja (0:53 · 9:16)</option>
+                      <option value="v5">[Judul video horizontal 16:9] (16:9)</option>
+                      <option value="v2">Kasus Kulit #1: Melasma (0:42 · 9:16)</option>
+                      <option value="v3">Flek hitam: kenapa muncul dan apa pilihannya (0:56 · 9:16)</option>
+                      <option value="v4">Jerawat: empat faktor penyebabnya (0:30 · 9:16)</option>
+                    </select>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 500;">Tampilan</span>
+                    <div role="group" aria-label="Orientasi video di halaman" style="display: flex;">
+                      <button onClick="{{ b.setV }}" aria-pressed="{{ b.oV }}" style="flex: 1 1 0; min-height: 44px; padding: 0 8px; background: {{ b.vBg }}; color: {{ b.vFg }}; border: 1px solid #212121; font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-align: center;">Vertikal 9:16</button>
+                      <button onClick="{{ b.setH }}" aria-pressed="{{ b.oH }}" style="flex: 1 1 0; min-height: 44px; padding: 0 8px; background: {{ b.hBg }}; color: {{ b.hFg }}; border: 1px solid #212121; border-left: 0; font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-align: center;">Horizontal 16:9</button>
+                    </div>
+                  </div>
+                </div>
+                <span style="font-size: 13px; line-height: 18px; color: {{ b.oNoteFg }};">{{ b.oNote }}</span>
               </sc-if>
             </div>
           </sc-for>
@@ -186,7 +200,15 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
                   </sc-if>
                   <sc-if value="{{ b.isNote }}" hint-placeholder-val="{{ false }}"><span style="padding: 6px 8px; background: #e9d2c2; font-size: 7.5px; line-height: 10px;">{{ b.text }}</span></sc-if>
                   <sc-if value="{{ b.isImage }}" hint-placeholder-val="{{ false }}"><span style="display: flex; align-items: center; justify-content: center; height: 90px; background: #eae6dd; color: #545454; font-size: 8px;">Foto · {{ b.altShort }}</span></sc-if>
-                  <sc-if value="{{ b.isVideo }}" hint-placeholder-val="{{ false }}"><span style="display: flex; align-items: center; justify-content: center; height: 90px; background: #212121; color: #ffffff; font-size: 8px;">Video</span></sc-if>
+                  <sc-if value="{{ b.isVideo }}" hint-placeholder-val="{{ false }}">
+                    <span style="display: flex; flex-direction: column; align-items: {{ b.miniAlign }}; gap: 3px; flex: 0 0 auto;">
+                      <span style="position: relative; display: block; width: {{ b.miniW }}; height: {{ b.miniH }}; overflow: hidden; background: #212121;">
+                        <img src="{{ b.poster }}" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover;">
+                        <span style="position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg></span>
+                      </span>
+                      <span style="font-size: 7px; line-height: 9px; color: #545454;">{{ b.vTitle }} · {{ b.ratio }}</span>
+                    </span>
+                  </sc-if>
                 </sc-for>
               </div>
             </div>
@@ -232,6 +254,7 @@ class Component extends DCLogic {
       blocks: [
         { id: 1, type: 'heading', text: 'Persiapan sebelum perawatan laser' },
         { id: 2, type: 'text', text: 'Beberapa langkah sederhana membantu kulit Anda siap untuk perawatan laser seperti PicoSure Pro.' },
+        { id: 5, type: 'video', clip: 'v1', orient: 'v' },
         { id: 3, type: 'list', items: ['Hentikan retinol dan AHA 3–7 hari sebelum tindakan.', 'Hindari paparan matahari dan produk tanning.', 'Beri tahu dokter jika baru melakukan skinbooster, Botox atau filler.', 'Jerawat aktif yang berat mungkin ditangani lebih dulu.'] },
         { id: 4, type: 'note', text: 'Dokter akan menyesuaikan persiapan dengan kondisi kulit Anda saat konsultasi.' }
       ]
@@ -254,6 +277,7 @@ class Component extends DCLogic {
     var b = { id: this.nextId++, type: type, text: '', items: [], alt: '' };
     if (type === 'heading') b.text = 'Judul baru';
     if (type === 'list') b.items = ['Poin pertama'];
+    if (type === 'video') { b.clip = 'v1'; b.orient = 'v'; }
     this.setState({ blocks: this.state.blocks.concat([b]) });
   }
   scan() {
@@ -279,6 +303,28 @@ class Component extends DCLogic {
     var LABEL = { heading: 'Judul', text: 'Paragraf', list: 'Daftar poin', note: 'Catatan', image: 'Gambar', video: 'Video' };
     var hits = this.scan();
     var now = new Date();
+    var LIB = {
+      v1: { title: 'PicoSure Pro', file: 'v', poster: '/_blob/74794fbf6779c2ea11d22569cab49ba0' },
+      v5: { title: '[Video horizontal]', file: 'h', poster: '/_blob/56fa8079951cce6f11e97db1c373ccc2' },
+      v2: { title: 'Kasus Kulit #1: Melasma', file: 'v', poster: '/_blob/287d899870863bb281d2386f6d49c55e' },
+      v3: { title: 'Flek hitam', file: 'v', poster: '/_blob/1a0aaf8e3f8130d8456bcc2f82653cb4' },
+      v4: { title: 'Jerawat: empat faktor', file: 'v', poster: '/_blob/287d899870863bb281d2386f6d49c55e' }
+    };
+    var RATIO = { v: '9:16', h: '16:9' };
+    var vid = (b) => {
+      var L = LIB[b.clip] || LIB.v1;
+      var o = b.orient || L.file;
+      var isV = o === 'v';
+      return {
+        clip: b.clip || 'v1', poster: L.poster, vTitle: L.title, ratio: RATIO[o],
+        oV: isV, oH: !isV,
+        vBg: isV ? '#212121' : 'transparent', vFg: isV ? '#ffffff' : '#212121',
+        hBg: !isV ? '#212121' : 'transparent', hFg: !isV ? '#ffffff' : '#212121',
+        miniW: isV ? '72px' : '100%', miniH: isV ? '128px' : '183px', miniAlign: isV ? 'center' : 'stretch',
+        oNote: o === L.file ? 'Mengikuti orientasi video (' + RATIO[L.file] + '). Di layar: ' + (isV ? 'tampil di tengah, setinggi 640 px.' : 'tampil selebar halaman.') : 'Berbeda dari video (' + RATIO[L.file] + '): video akan dipotong agar pas.',
+        oNoteFg: o === L.file ? '#545454' : '#c85c42'
+      };
+    };
     return {
       yes: true,
       title: s.title,
@@ -292,7 +338,10 @@ class Component extends DCLogic {
       setTab: (e) => this.setState({ tabLabel: e.target.value }),
       save: () => this.setState({ savedAt: ('0' + now.getHours()).slice(-2) + '.' + ('0' + now.getMinutes()).slice(-2) }),
       blockCount: s.blocks.length,
-      blocks: s.blocks.map((b, i) => ({
+      blocks: s.blocks.map((b, i) => Object.assign(b.type === 'video' ? vid(b) : {}, {
+        setClip: (e) => { var c = e.target.value; this.update(i, { clip: c, orient: (LIB[c] || LIB.v1).file }); },
+        setV: () => this.update(i, { orient: 'v' }),
+        setH: () => this.update(i, { orient: 'h' }),
         num: i + 1,
         typeLabel: LABEL[b.type] || b.type,
         isHeading: b.type === 'heading', isText: b.type === 'text', isList: b.type === 'list',

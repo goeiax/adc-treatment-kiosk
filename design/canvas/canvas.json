@@ -37,6 +37,13 @@
       "x": 4560,
       "y": 2340
     },
+    "Layar-Video-Horizontal.dc.html": {
+      "h": 1920,
+      "title": "Kiosk · screen saver video horizontal 16:9",
+      "w": 1080,
+      "x": 3480,
+      "y": 0
+    },
     "Layar-Halaman.dc.html": {
       "h": 1920,
       "title": "Kiosk · halaman buatan admin (Tentang ADC)",
@@ -81,7 +88,7 @@
     "Main.dc.html": {
       "h": 1920,
       "is_interactive": true,
-      "title": "Kiosk · screen saver (video) + band promo",
+      "title": "Kiosk · screen saver video vertikal 9:16 + band promo",
       "w": 1080,
       "x": 0,
       "y": 0
@@ -98,7 +105,7 @@
   "notes": {
     "row1": {
       "kind": "title1",
-      "maxW": 3400,
+      "maxW": 4560,
       "text": "Layar pasien — kiosk berdiri, portrait 9:16 (1080×1920)",
       "w": 240,
       "x": 0,
@@ -124,6 +131,7 @@
     "Main.dc.html",
     "Layar-Dashboard.dc.html",
     "Layar-Halaman.dc.html",
+    "Layar-Video-Horizontal.dc.html",
     "Admin-Dashboard.dc.html",
     "Admin-Perawatan-Form.dc.html",
     "Admin-Promo.dc.html",

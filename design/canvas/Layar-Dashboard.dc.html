@@ -23,57 +23,78 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
 
     <!-- Screen saver: video berjalan saat layar tidak digunakan -->
     <sc-if value="{{ showSaver }}" hint-placeholder-val="{{ true }}">
-      <button onClick="{{ wake }}" aria-label="Sentuh layar untuk melihat perawatan" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; height: 100%; background: #212121; overflow: hidden;">
-        <img src="{{ clip.poster }}" alt="{{ clip.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: {{ clip.fit }}; object-position: 50% 20%;">
-        <span style="position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background: linear-gradient(to top, rgba(33,33,33,0.9) 0%, rgba(33,33,33,0.55) 55%, rgba(33,33,33,0) 100%);"></span>
-        <span style="position: absolute; top: 32px; left: 32px; display: inline-flex; align-items: center; padding: 16px 20px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-          <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="ADC Aesthetic Derma Centre" style="width: 260px; max-width: 100%; height: auto; display: block;">
-        </span>
-        <span style="position: relative; display: flex; flex-direction: column; gap: 16px; padding: 0 40px 40px 40px; color: #ffffff;">
-          <span style="display: flex; align-items: center; gap: 12px; font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: #e9d2c2;">
-            <span>Video penjelasan</span>
-            <span style="width: 4px; height: 4px; border-radius: 999px; background: #e9d2c2;"></span>
-            <span style="font-variant-numeric: tabular-nums;">{{ clip.num }} / {{ clipCount }}</span>
-            <sc-if value="{{ clip.ai }}" hint-placeholder-val="{{ true }}">
-              <span style="margin-left: 8px; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.5); font-size: 13px; line-height: 16px; color: #ffffff;">Karakter virtual (AI)</span>
-            </sc-if>
+      <button onClick="{{ wake }}" aria-label="Sentuh layar untuk melihat perawatan" style="position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: hidden; background: {{ saverBg }};">
+
+        <!-- Vertikal 9:16: video tampil utuh, tanpa teks di atas video -->
+        <sc-if value="{{ clip.isV }}" hint-placeholder-val="{{ true }}">
+          <span style="position: absolute; left: 0; right: 0; top: 0; height: 1260px; display: flex; justify-content: center; background: #212121;">
+            <img src="{{ clip.poster }}" alt="{{ clip.alt }}" style="display: block; width: 709px; height: 1260px; object-fit: cover;">
           </span>
-          <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 52px; line-height: 60px; letter-spacing: 0;">{{ clip.title }}</span>
-          <span style="font-size: 20px; line-height: 28px; color: rgba(255,255,255,0.86); max-width: 820px;">{{ clip.desc }}</span>
-          <span style="display: block; height: 4px; background: rgba(255,255,255,0.3); overflow: hidden; margin-top: 8px;">
-            <span style="display: block; height: 100%; width: {{ clipPct }}; background: #ffffff;"></span>
-          </span>
-          <span style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
-            <span style="display: inline-flex; gap: 8px;">
-              <sc-for list="{{ clipDots }}" as="d" hint-placeholder-count="4">
-                <span style="width: 10px; height: 10px; border-radius: 999px; background: {{ d.bg }}; border: 1.5px solid #ffffff;"></span>
-              </sc-for>
+          <span style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px; display: flex; flex-direction: column; background: #212121; color: #ffffff;">
+            <span style="display: block; height: 4px; background: rgba(255,255,255,0.25);"><span style="display: block; height: 100%; width: {{ clipPct }}; background: #ffffff;"></span></span>
+            <span style="flex: 1 1 auto; display: flex; align-items: center; gap: 24px; padding: 0 40px;">
+              <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="ADC Aesthetic Derma Centre" style="width: 250px; height: auto; display: block; filter: invert(1);">
+              <span style="display: inline-flex; gap: 8px;">
+                <sc-for list="{{ clipDots }}" as="d" hint-placeholder-count="5">
+                  <span style="width: 10px; height: 10px; border-radius: 999px; background: {{ d.bgL }}; border: 1.5px solid #ffffff;"></span>
+                </sc-for>
+              </span>
+              <span style="margin-left: auto; display: inline-flex; align-items: center; justify-content: center; min-height: 64px; padding: 0 28px; background: #fcfbf9; color: #212121; font-size: 16px; line-height: 20px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Sentuh layar untuk melihat perawatan</span>
             </span>
-            <span style="display: inline-flex; align-items: center; justify-content: center; min-height: 64px; padding: 0 36px; background: #fcfbf9; color: #212121; font-size: 16px; line-height: 20px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Sentuh layar untuk melihat perawatan</span>
           </span>
-        </span>
+        </sc-if>
+
+        <!-- Horizontal 16:9: video di tengah, judul dan deskripsi di bawahnya -->
+        <sc-if value="{{ clip.isH }}" hint-placeholder-val="{{ false }}">
+          <span style="position: absolute; inset: 0; display: flex; flex-direction: column; gap: 24px; padding: 40px; box-sizing: border-box; background: #f5f2ec; color: #212121;">
+            <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="ADC Aesthetic Derma Centre" style="width: 300px; height: auto; display: block;">
+            <span style="display: block; width: 1000px; height: 563px; margin-top: 48px; overflow: hidden; background: #212121; box-shadow: 0 2px 8px rgba(0,0,0,0.06); flex: 0 0 auto;">
+              <img src="{{ clip.poster }}" alt="{{ clip.alt }}" style="display: block; width: 100%; height: 100%; object-fit: cover;">
+            </span>
+            <span style="display: block; height: 4px; background: #d1cdc4;"><span style="display: block; height: 100%; width: {{ clipPct }}; background: #212121;"></span></span>
+            <span style="font-size: 16px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan · {{ clip.num }} / {{ clipCount }} · {{ clip.dur }}</span>
+            <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0;">{{ clip.title }}</span>
+            <span style="font-size: 20px; line-height: 28px; color: #545454; max-width: 880px;">{{ clip.desc }}</span>
+            <span style="margin-top: auto; display: flex; align-items: center; justify-content: space-between;">
+              <span style="display: inline-flex; gap: 8px;">
+                <sc-for list="{{ clipDots }}" as="d" hint-placeholder-count="5">
+                  <span style="width: 10px; height: 10px; border-radius: 999px; background: {{ d.bgD }}; border: 1.5px solid #212121;"></span>
+                </sc-for>
+              </span>
+              <span style="display: inline-flex; align-items: center; justify-content: center; min-height: 64px; padding: 0 32px; background: #212121; color: #ffffff; font-size: 16px; line-height: 20px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Sentuh layar untuk melihat perawatan</span>
+            </span>
+          </span>
+        </sc-if>
       </button>
     </sc-if>
 
     <!-- Pemutar video layar penuh -->
     <sc-if value="{{ showPlayer }}" hint-placeholder-val="{{ false }}">
-      <div style="position: absolute; inset: 0; display: flex; flex-direction: column; background: #212121; color: #ffffff;">
-        <img src="{{ video.poster }}" alt="{{ video.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: {{ video.fit }}; object-position: 50% 20%;">
-        <div style="position: relative; display: flex; align-items: center; justify-content: space-between; padding: 32px;">
-          <span style="display: inline-flex; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(33,33,33,0.75); font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em;">
+      <div style="position: absolute; inset: 0; display: flex; flex-direction: column; background: {{ pv.playerBg }}; color: {{ pv.playerFg }};">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 24px 32px; flex: 0 0 auto;">
+          <span style="display: inline-flex; align-items: center; gap: 12px; padding: 12px 16px; background: {{ pv.chipBg }}; font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: 0.05em;">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"></circle><path d="M10 8.5v7l5.5-3.5z"></path></svg>
-            <span>Sedang diputar · {{ video.dur }}</span>
+            <span>Sedang diputar · {{ pv.dur }} · {{ pv.ratioLabel }}</span>
           </span>
-          <button onClick="{{ closePlayer }}" aria-label="Tutup video" style="display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; background: #fcfbf9; color: #212121; font-size: 16px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">
+          <button onClick="{{ closePlayer }}" aria-label="Tutup video" style="display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; background: {{ pv.closeBg }}; color: {{ pv.closeFg }}; font-size: 16px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"></path></svg>
             <span>Tutup</span>
           </button>
         </div>
-        <div style="position: relative; margin-top: auto; padding: 120px 40px 40px 40px; background: linear-gradient(to top, rgba(33,33,33,0.92), rgba(33,33,33,0));">
-          <div style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0;">{{ video.title }}</div>
-          <div style="margin-top: 12px; font-size: 20px; line-height: 28px; color: rgba(255,255,255,0.86);">{{ video.desc }}</div>
-          <div style="margin-top: 24px; height: 4px; background: rgba(255,255,255,0.3);"><div style="height: 100%; width: 32%; background: #ffffff;"></div></div>
-        </div>
+        <sc-if value="{{ pv.isV }}" hint-placeholder-val="{{ false }}">
+          <div style="flex: 1 1 auto; min-height: 0; display: flex; justify-content: center;">
+            <img src="{{ pv.poster }}" alt="{{ pv.alt }}" style="display: block; height: 100%; aspect-ratio: 9 / 16; object-fit: cover;">
+          </div>
+          <div style="flex: 0 0 4px; background: rgba(255,255,255,0.25);"><div style="height: 100%; width: 32%; background: #ffffff;"></div></div>
+        </sc-if>
+        <sc-if value="{{ pv.isH }}" hint-placeholder-val="{{ false }}">
+          <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 24px; padding: 64px 40px 40px 40px;">
+            <img src="{{ pv.poster }}" alt="{{ pv.alt }}" style="display: block; width: 1000px; height: 563px; object-fit: cover; background: #212121; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+            <div style="height: 4px; background: #d1cdc4;"><div style="height: 100%; width: 32%; background: #212121;"></div></div>
+            <div style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 44px; line-height: 52px; letter-spacing: 0;">{{ pv.title }}</div>
+            <div style="font-size: 20px; line-height: 28px; color: #545454; max-width: 880px;">{{ pv.desc }}</div>
+          </div>
+        </sc-if>
       </div>
     </sc-if>
 
@@ -102,21 +123,21 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
 
         <sc-if value="{{ showTreat }}" hint-placeholder-val="{{ true }}">
         <div style="display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; min-height: 0;">
-        <!-- Panel video -->
+        <!-- Panel video: ukuran thumbnail mengikuti orientasi video -->
         <div style="display: flex; gap: 24px; padding: 16px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
           <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ true }}">
-            <button onClick="{{ play }}" aria-label="Putar video penjelasan" style="position: relative; flex: 0 0 400px; width: 400px; height: 225px; overflow: hidden; background: #eae6dd;">
-              <img src="{{ video.poster }}" alt="{{ video.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%;">
-              <span style="position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;">
-                <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg>
+            <button onClick="{{ play }}" aria-label="Putar video penjelasan" style="position: relative; flex: 0 0 {{ vp.thumbW }}; width: {{ vp.thumbW }}; height: {{ vp.thumbH }}; overflow: hidden; background: #212121;">
+              <img src="{{ vp.poster }}" alt="{{ vp.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+              <span style="position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;">
+                <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg>
               </span>
-              <span style="position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #ffffff; font-size: 13px; line-height: 16px; font-variant-numeric: tabular-nums;">{{ video.dur }}</span>
+              <span style="position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #ffffff; font-size: 13px; line-height: 16px; font-variant-numeric: tabular-nums;">{{ vp.dur }}</span>
             </button>
             <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 0;">
-              <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan</span>
-              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: 0;">{{ video.title }}</span>
-              <span style="font-size: 18px; line-height: 26px; color: #545454;">{{ video.desc }}</span>
-              <sc-if value="{{ video.ai }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Video penjelasan · {{ vp.ratioLabel }}</span>
+              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: 0;">{{ vp.title }}</span>
+              <span style="font-size: 18px; line-height: 26px; color: #545454;">{{ vp.desc }}</span>
+              <sc-if value="{{ vp.ai }}" hint-placeholder-val="{{ false }}">
                 <span style="align-self: flex-start; padding: 4px 10px; background: #e9d2c2; font-size: 13px; line-height: 16px;">Karakter virtual (AI)</span>
               </sc-if>
             </div>
@@ -165,7 +186,6 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
           </div>
           <div style="font-size: 16px; line-height: 22px; color: #545454;"><span style="color: #212121; font-weight: 500;">Setelah perawatan: </span>{{ sel.after }}</div>
         </div>
-
         </div>
         </sc-if>
 
@@ -173,6 +193,16 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
         <sc-if value="{{ showPage }}" hint-placeholder-val="{{ false }}">
           <div class="hs" style="display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 2px;">
             <sc-for list="{{ page.blocks }}" as="b" hint-placeholder-count="4">
+              <sc-if value="{{ b.isVideo }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 8px; align-items: {{ b.vAlign }}; flex: 0 0 auto;">
+                  <button onClick="{{ b.play }}" aria-label="Putar video {{ b.vTitle }}" style="position: relative; width: {{ b.vW }}; height: {{ b.vH }}; overflow: hidden; background: #212121;">
+                    <img src="{{ b.vPoster }}" alt="{{ b.vAlt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+                    <span style="position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; background: #212121; color: #ffffff; display: inline-flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M9 7v10l8-5z"></path></svg></span>
+                    <span style="position: absolute; right: 8px; bottom: 8px; padding: 4px 8px; background: rgba(33,33,33,0.78); color: #ffffff; font-size: 13px; line-height: 16px;">{{ b.vDur }} · {{ b.vRatio }}</span>
+                  </button>
+                  <span style="font-size: 15px; line-height: 20px; color: #545454;">{{ b.vTitle }}</span>
+                </div>
+              </sc-if>
               <sc-if value="{{ b.isImage }}" hint-placeholder-val="{{ false }}">
                 <img src="{{ b.src }}" alt="{{ b.alt }}" style="display: block; width: 100%; height: 480px; object-fit: cover; object-position: 50% 45%; flex: 0 0 auto;">
               </sc-if>
@@ -257,6 +287,7 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{
   "startView": {"editor": "enum", "options": ["video", "dashboard", "halaman"], "default": "dashboard", "section": "Tampilan"},
+  "saverSample": {"editor": "enum", "options": ["vertikal", "horizontal"], "default": "vertikal", "section": "Tampilan"},
   "showPromoBand": {"editor": "boolean", "default": true, "section": "Tampilan"},
   "idleSeconds": {"editor": "int", "default": 90, "min": 10, "max": 600, "unit": "s", "section": "Waktu"},
   "slideSeconds": {"editor": "int", "default": 8, "min": 3, "max": 60, "unit": "s", "section": "Waktu"},
@@ -273,11 +304,13 @@ class Component extends DCLogic {
     ];
     var DD = 'Ditentukan dokter';
     var AD = 'Mengikuti anjuran dokter setelah tindakan.';
+    // orient: 'v' = vertikal 9:16, 'h' = horizontal 16:9 (diatur per video di admin)
     this.CLIPS = [
-      { id: 'v1', title: 'PicoSure Pro: apa yang terjadi saat laser bekerja', desc: 'Cara kerja laser picosecond, rasa saat tindakan, dan perawatan setelahnya.', dur: '1:10', secs: 70, poster: '/_blob/9b88038b9016ab1758c63bbd30c8f065', fit: 'contain', ai: false, alt: 'Pasien dan dokter di ruang perawatan PicoSure Pro' },
-      { id: 'v2', title: 'Kasus Kulit #1: Melasma', desc: 'Elle menjelaskan apa itu melasma, kenapa muncul kembali, dan bagaimana dokter menyusun programnya.', dur: '0:42', secs: 42, poster: '/_blob/287d899870863bb281d2386f6d49c55e', fit: 'cover', ai: true, alt: 'Elle, karakter virtual ADC, di lobi klinik' },
-      { id: 'v3', title: 'Flek hitam: kenapa muncul dan apa pilihannya', desc: 'Penyebab flek hitam dan pilihan perawatan yang dibahas bersama dokter.', dur: '0:56', secs: 56, poster: '/_blob/1a0aaf8e3f8130d8456bcc2f82653cb4', fit: 'cover', ai: true, alt: 'Elle, karakter virtual ADC, menjelaskan flek hitam' },
-      { id: 'v4', title: 'Jerawat: empat faktor penyebabnya', desc: 'Empat faktor di balik jerawat dan kenapa penanganannya dimulai dari diagnosis.', dur: '0:30', secs: 30, poster: '/_blob/287d899870863bb281d2386f6d49c55e', fit: 'cover', ai: true, alt: 'Elle, karakter virtual ADC, menjelaskan jerawat' }
+      { id: 'v1', orient: 'v', title: 'PicoSure Pro: apa yang terjadi saat laser bekerja', desc: 'Cara kerja laser picosecond, rasa saat tindakan, dan perawatan setelahnya.', dur: '0:53', secs: 53, poster: '/_blob/74794fbf6779c2ea11d22569cab49ba0', ai: false, alt: 'Pasien dan dokter di ruang perawatan PicoSure Pro' },
+      { id: 'v5', orient: 'h', title: '[Judul video horizontal 16:9]', desc: 'Contoh slot untuk video horizontal, misalnya video suasana klinik dari website.', dur: '[durasi]', secs: 40, poster: '/_blob/56fa8079951cce6f11e97db1c373ccc2', ai: false, alt: 'Lounge Aesthetic Derma Centre' },
+      { id: 'v2', orient: 'v', title: 'Kasus Kulit #1: Melasma', desc: 'Elle menjelaskan apa itu melasma, kenapa muncul kembali, dan bagaimana dokter menyusun programnya.', dur: '0:42', secs: 42, poster: '/_blob/287d899870863bb281d2386f6d49c55e', ai: true, alt: 'Elle, karakter virtual ADC, di lobi klinik' },
+      { id: 'v3', orient: 'v', title: 'Flek hitam: kenapa muncul dan apa pilihannya', desc: 'Penyebab flek hitam dan pilihan perawatan yang dibahas bersama dokter.', dur: '0:56', secs: 56, poster: '/_blob/1a0aaf8e3f8130d8456bcc2f82653cb4', ai: true, alt: 'Elle, karakter virtual ADC, menjelaskan flek hitam' },
+      { id: 'v4', orient: 'v', title: 'Jerawat: empat faktor penyebabnya', desc: 'Empat faktor di balik jerawat dan kenapa penanganannya dimulai dari diagnosis.', dur: '0:30', secs: 30, poster: '/_blob/287d899870863bb281d2386f6d49c55e', ai: true, alt: 'Elle, karakter virtual ADC, menjelaskan jerawat' }
     ];
     this.TREATS = [
       { id: 'picosure', cat: 'laser', name: 'PicoSure Pro', desc: 'Laser picosecond untuk flek, melasma, dan bekas jerawat.', price: 'Rp4.500.000', sessions: '3–5 sesi', duration: '±45 mnt anestesi + 15–20 mnt laser', downtime: 'Kemerahan ringan, hilang dalam hitungan jam', after: 'Skincare lembut, hindari sinar matahari, sunscreen setiap hari, tanpa makeup 3 hari.', video: 'v1' },
@@ -321,7 +354,7 @@ class Component extends DCLogic {
     // Halaman yang sudah dipublikasikan admin; tampil sebagai tab setelah "Perawatan".
     this.PAGES = [
       { id: 'tentang', label: 'Tentang ADC', blocks: [
-        { type: 'image', src: '/_blob/e9144e316dd7486cc1c0c899f4dfb498', alt: 'Lounge Aesthetic Derma Centre di Dago, Bandung' },
+        { type: 'video', clip: 'v5' },
         { type: 'heading', text: 'Klinik estetika medis di Dago, Bandung' },
         { type: 'text', text: 'Perawatan di ADC ditangani dokter spesialis kulit (Sp.DVE) dan dokter spesialis gizi klinik (Sp.GK), dengan teknologi yang dipilih sesuai kebutuhan kulit Anda.' },
         { type: 'list', items: ['PicoSure Pro Star Award Asia Pacific 2024', 'Klinik pertama di Bandung dengan Ultherapy PRIME', 'Jl. Ir. H. Juanda No. 88, Bandung', 'Sen–Jum 09.00–20.00 · Sab 09.00–18.00'] },
@@ -334,7 +367,8 @@ class Component extends DCLogic {
       tab: sv === 'halaman' ? 'tentang' : 'perawatan',
       idle: sv === 'video',
       playing: false,
-      clip: 0, clipT: 0,
+      playClip: null,
+      clip: props.saverSample === 'horizontal' ? 1 : 0, clipT: 0,
       promo: 0, promoT: 0, promoHold: 0,
       cat: 'laser', sel: 'picosure',
       sinceTap: 0,
@@ -358,7 +392,7 @@ class Component extends DCLogic {
       else next.clipT = t;
     } else {
       var st = s.sinceTap + 1;
-      if (st >= idleSecs) { next.idle = true; next.playing = false; next.sinceTap = 0; next.clipT = 0; next.tab = 'perawatan'; }
+      if (st >= idleSecs) { next.idle = true; next.playing = false; next.playClip = null; next.sinceTap = 0; next.clipT = 0; next.tab = 'perawatan'; }
       else next.sinceTap = st;
     }
     if (s.promoHold > 0) next.promoHold = s.promoHold - 1;
@@ -372,20 +406,37 @@ class Component extends DCLogic {
   renderVals() {
     var s = this.state;
     var slideSecs = this.props.slideSeconds || 8;
-    var clip = this.CLIPS[s.clip];
+    var byId = (id) => this.CLIPS.find((c) => c.id === id);
+    var orient = (c) => Object.assign({}, c, { isV: c.orient === 'v', isH: c.orient === 'h', ratioLabel: c.orient === 'v' ? 'Vertikal 9:16' : 'Horizontal 16:9' });
+    var clip = orient(this.CLIPS[s.clip]);
     var selT = this.TREATS.find((t) => t.id === s.sel) || this.TREATS[0];
-    var video = selT.video ? this.CLIPS.find((c) => c.id === selT.video) : null;
+    var video = selT.video ? orient(byId(selT.video)) : null;
     var catOf = this.CATS.find((c) => c.id === selT.cat);
     var promo = this.PROMOS[s.promo];
     var CARD = '0 2px 8px rgba(0,0,0,0.06)';
     var pg = this.PAGES.find((p) => p.id === s.tab);
     var tabList = [{ id: 'perawatan', label: 'Perawatan' }].concat(this.PAGES.map((p) => ({ id: p.id, label: p.label })));
+    var pv = orient(s.playClip ? byId(s.playClip) : (video || clip));
+    pv.playerBg = pv.isV ? '#212121' : '#f5f2ec';
+    pv.playerFg = pv.isV ? '#ffffff' : '#212121';
+    pv.chipBg = pv.isV ? 'rgba(255,255,255,0.12)' : '#eae6dd';
+    pv.closeBg = pv.isV ? '#fcfbf9' : '#212121';
+    pv.closeFg = pv.isV ? '#212121' : '#ffffff';
+    var vp = video ? Object.assign({}, video, { thumbW: video.isV ? '180px' : '400px', thumbH: video.isV ? '320px' : '225px' }) : { thumbW: '400px', thumbH: '225px' };
     return {
       showSaver: s.idle,
       showPlayer: !s.idle && s.playing,
       showDash: !s.idle && !s.playing,
       showTreat: !pg,
       showPage: !!pg,
+      showPromo: this.props.showPromoBand !== false,
+      saverBg: clip.isV ? '#212121' : '#f5f2ec',
+      clip: Object.assign(clip, { num: s.clip + 1 }),
+      clipCount: this.CLIPS.length,
+      clipPct: Math.min(100, Math.round((s.clipT / clip.secs) * 100)) + '%',
+      clipDots: this.CLIPS.map((c, i) => ({ bgL: i === s.clip ? '#ffffff' : 'transparent', bgD: i === s.clip ? '#212121' : 'transparent' })),
+      pv: pv,
+      vp: vp,
       tabs: tabList.map((t) => ({
         label: t.label,
         sel: t.id === s.tab,
@@ -394,17 +445,18 @@ class Component extends DCLogic {
         bar: t.id === s.tab ? '#212121' : 'transparent',
         pick: () => this.setState({ tab: t.id, sinceTap: 0 })
       })),
-      page: pg ? { label: pg.label, blocks: pg.blocks.map((b) => ({
-        isImage: b.type === 'image', isHeading: b.type === 'heading', isText: b.type === 'text',
-        isList: b.type === 'list', isNote: b.type === 'note',
-        src: b.src || '', alt: b.alt || '', text: b.text || '',
-        items: (b.items || []).map((x) => ({ text: x }))
-      })) } : { label: '', blocks: [] },
-      showPromo: this.props.showPromoBand !== false,
-      clip: Object.assign({}, clip, { num: s.clip + 1 }),
-      clipCount: this.CLIPS.length,
-      clipPct: Math.min(100, Math.round((s.clipT / clip.secs) * 100)) + '%',
-      clipDots: this.CLIPS.map((c, i) => ({ bg: i === s.clip ? '#ffffff' : 'transparent' })),
+      page: pg ? { label: pg.label, blocks: pg.blocks.map((b) => {
+        var c = b.type === 'video' ? orient(byId(b.clip)) : null;
+        return {
+          isVideo: !!c, isImage: b.type === 'image', isHeading: b.type === 'heading', isText: b.type === 'text',
+          isList: b.type === 'list', isNote: b.type === 'note',
+          src: b.src || '', alt: b.alt || '', text: b.text || '',
+          items: (b.items || []).map((x) => ({ text: x })),
+          vPoster: c ? c.poster : '', vAlt: c ? c.alt : '', vTitle: c ? c.title : '', vDur: c ? c.dur : '', vRatio: c ? c.ratioLabel : '',
+          vW: c && c.isV ? '360px' : '1000px', vH: c && c.isV ? '640px' : '563px', vAlign: c && c.isV ? 'center' : 'flex-start',
+          play: () => { if (c) this.setState({ playing: true, playClip: c.id, sinceTap: 0 }); }
+        };
+      }) } : { label: '', blocks: [] },
       timeStr: s.now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.'),
       dateStr: s.now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
       cats: this.CATS.map((c) => ({
@@ -423,14 +475,13 @@ class Component extends DCLogic {
       sel: Object.assign({}, selT, { catLabel: catOf ? catOf.label : '' }),
       hasVideo: !!video,
       noVideo: !video,
-      video: video || clip,
       promo: promo,
       promoDots: this.PROMOS.map((p, i) => ({ bg: i === s.promo ? '#212121' : 'transparent' })),
       promoPct: Math.min(100, Math.round((s.promoT / slideSecs) * 100)) + '%',
-      wake: () => this.setState({ idle: false, playing: false, sinceTap: 0 }),
-      sleep: () => this.setState({ idle: true, playing: false, clipT: 0, tab: 'perawatan' }),
-      play: () => this.setState({ playing: true, sinceTap: 0 }),
-      closePlayer: () => this.setState({ playing: false, sinceTap: 0 }),
+      wake: () => this.setState({ idle: false, playing: false, playClip: null, sinceTap: 0 }),
+      sleep: () => this.setState({ idle: true, playing: false, playClip: null, clipT: 0, tab: 'perawatan' }),
+      play: () => this.setState({ playing: true, playClip: null, sinceTap: 0 }),
+      closePlayer: () => this.setState({ playing: false, playClip: null, sinceTap: 0 }),
       promoPrev: () => this.setState({ promo: (s.promo + this.PROMOS.length - 1) % this.PROMOS.length, promoT: 0, promoHold: 20, sinceTap: 0 }),
       promoNext: () => this.setState({ promo: (s.promo + 1) % this.PROMOS.length, promoT: 0, promoHold: 20, sinceTap: 0 })
     };
