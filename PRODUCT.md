@@ -26,7 +26,7 @@ Treatment information vetted by ADC's own doctors, with "mulai dari" prices take
 - Device: a Windows PC with a portrait touch display in a kiosk browser, like the "Give Your Doctor a Heart" kiosk. Confirmed 2026-10-24. Signed in with an account that can view the artifact; the admin needs Editor.
 - Room: waiting room, sound off by default; patients may walk up mid-video. Idle returns to the screen saver (default 2 minutes).
 - Content sources: treatment names, categories and prices from the website's Treatments menu and Daftar Harga page (aestheticdermacentre.com, Shopify); promos entered by staff (the website's Promotions page is empty); videos from the Elle spokesperson series and the PicoSure Pro explainer.
-- Booking and questions go through the receptionist and WhatsApp 0821-3014-4778; the kiosk never navigates away.
+- Booking and questions go through the receptionist and WhatsApp +62 821-3014-4778 (shown on the kiosk as a peach information strip, never a link: a link on a public screen would open WhatsApp Web on the clinic display); the kiosk never navigates away.
 - Hours shown on screen: Sen–Jum 09.00–20.00, Sab 09.00–18.00; Jl. Ir. H. Juanda No. 88, Bandung.
 
 ## Capabilities and Constraints
@@ -42,9 +42,9 @@ Treatment information vetted by ADC's own doctors, with "mulai dari" prices take
 
 ## Brand Commitments
 
-- Name: ADC, Aesthetic Derma Centre. Logo: the official wordmark (single black ink, inverted on dark), never redrawn or recoloured.
-- Design system: "ADC Doctor Hearts" (https://claude.ai/code/artifact/794360bd-59d9-4f8b-a59b-37306a7d8ffe): surface-100 #f7efec, surface-200 #f1e3df, ink #3a3132, ink-muted #6b5f61, wine-600 #8e2f3b as the only accent, rose-200 #e9c6c3 as halo only; Cormorant Garamond for headlines, Jost for body; radius 10/16/pill. No new hues.
-- Voice: warm and quiet; we inform and thank, we do not hype. Tagline in use: "Treat Your Skin Kindly."
+- Name: ADC, Aesthetic Derma Centre. Logo: the official wordmark, black on light grounds, never redrawn, stretched or shadowed; logotype at least 250 px wide on screen.
+- Design system (since 2026-11-20): `C:\Alex Workspace\ADC Files\Branding\ADC_Design_System_Final.md` (v2.0), the only token source. Page #f5f2ec, cards #fcfbf9, text #212121, muted #545454, dividers #d1cdc4, promo band #eae6dd, peach #e9d2c2 for badges and highlights, gold #ab8c52 for admin hover only, greige #c0bcb4 with a #545454 border for secondary buttons, near-black #212121 for primary buttons. Archivo for headings (400–500, sentence case), Archivo Narrow for body and UI with 0.025em body tracking, 0.05em labels, 0.125em uppercase 600 buttons. Buttons, inputs, badges and toggles square; cards by shadow 0 2px 8px rgba(0,0,0,0.06), not hairlines; avatars and dots stay circles. No dark theme. The earlier "ADC Doctor Hearts" look (wine, blush, Cormorant, Jost) is retired for this product.
+- Voice: professional medical authority with aesthetic elegance; calm, not hype ("gentle, balance, calm, restorative"). Tagline in use: "Modern Technology for Modern People." Sentence case everywhere; numbers under ten spelled out in prose, prices and durations as digits; no emoji.
 - Elle: the clinic's fictional 3D-cartoon/photoreal spokesperson for education only, always labelled as a virtual character.
 - Approved visual design of this product: the Design canvas https://claude.ai/artifact/TaJF1szBgcrpF4EcEKs7Km (Main + four admin pages).
 
