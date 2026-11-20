@@ -174,7 +174,7 @@ function sessionCookie(req, user) {
 // a session older than a day gets a fresh cookie whenever the page loads or reconnects, so the display never reaches its expiry
 function renew(req, res, session) { if (Date.now() / 1000 - session.iat > DAY) res.setHeader('Set-Cookie', sessionCookie(req, session.user)); }
 const canWrite = (user, p) => user.role === 'editor' || (user.role === 'display' && /^heartTallies\/[^/]+$/.test(p));
-const publicUser = (u) => ({ id: u.id, name: u.name, role: u.role, canEdit: u.role === 'editor', isOwner: false, avatarUrl: '', color: u.role === 'editor' ? '#80002E' : '#888888', email: null });
+const publicUser = (u) => ({ id: u.id, name: u.name, role: u.role, canEdit: u.role === 'editor', isOwner: false, avatarUrl: '', color: u.role === 'editor' ? '#212121' : '#888888', email: null });
 
 /* ---------------- sign-in throttling ---------------- */
 const fails = new Map();   // client address -> { n, until }
@@ -193,25 +193,52 @@ function readCached(file) {
 // the page file stays the single source of the UI: it is re-read whenever it changes, so "git pull" updates the screen without a restart
 function kioskPage() { return SKEL + '<script>' + readCached(path.join(HERE, 'shim.js')) + '</script>' + readCached(cfg.pageFile) + '</body></html>'; }
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const SHELL = (title, body) => '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>' + title + '</title><style>' +
-  '*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#F7F2EE;color:#212121;font:16px/1.5 Archivo,"Segoe UI",system-ui,sans-serif}' +
-  'main{width:min(420px,calc(100vw - 32px));background:#fff;padding:40px 32px;box-shadow:0 2px 16px rgba(33,33,33,.08)}h1{font-size:24px;line-height:1.2;margin:0 0 8px;font-weight:600}p{margin:0 0 24px;color:#5c5c5c}' +
-  'label{display:block;font-size:14px;font-weight:600;margin:16px 0 6px}input{width:100%;height:48px;padding:0 12px;font:inherit;border:1px solid rgba(33,33,33,.42);border-radius:0;background:#fff;color:inherit}' +
-  'input:focus-visible,button:focus-visible{outline:3px solid #80002E;outline-offset:2px}button{width:100%;height:48px;margin-top:24px;font:inherit;font-weight:600;border:0;background:#80002E;color:#fff;cursor:pointer}' +
-  '.err{margin:0 0 8px;padding:12px;background:#FBE9E7;color:#8A1C12;font-size:14px}a{color:#80002E}' +
-  '</style></head><body><main>' + body + '</main></body></html>';
+// The sign-in and sign-out pages follow the page's own brand tokens (ADC Design System v2.0, see its :root): warm page, shadow
+// card, square controls, Archivo heading over Archivo Narrow body, ink buttons in the button voice. The logotype is taken from
+// the page file's <symbol id="adc-logo"> so it is never drawn twice.
+let logoCache = { src: null, svg: '' };
+function logoSvg() {
+  try {
+    const src = readCached(cfg.pageFile);
+    if (logoCache.src !== src) {
+      const m = /<symbol id="adc-logo" viewBox="([^"]+)">([\s\S]*?)<\/symbol>/.exec(src);
+      logoCache = { src, svg: m ? '<svg class="logo" viewBox="' + m[1] + '" role="img" aria-label="ADC Aesthetic Derma Centre">' + m[2] + '</svg>' : '' };
+    }
+  } catch (e) { return ''; }
+  return logoCache.svg;
+}
+const SHELL = (title, body) => '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>' + title + '</title>' +
+  '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+  '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Archivo+Narrow:wght@400;500;600&display=swap"><style>' +
+  ':root{--bg:#f5f2ec;--card:#fcfbf9;--text:#212121;--muted:#545454;--border:#d1cdc4;--gold:#ab8c52;--greige:#c0bcb4;--error:#c85c42;color-scheme:light}' +
+  '*{box-sizing:border-box}html,body{min-height:100%}' +
+  'body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 16px;background:var(--bg);color:var(--text);font-family:"Archivo Narrow","Archivo",sans-serif;font-size:16px;line-height:1.4;letter-spacing:.025em}' +
+  'main{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}' +
+  '.logo{display:block;width:250px;max-width:100%;height:auto;aspect-ratio:609.4/56.7;margin-bottom:16px}.logo path,.logo rect,.logo polygon{fill:#000}' +
+  'h1{margin:0;font-family:"Archivo","Helvetica Neue",Helvetica,sans-serif;font-weight:400;font-size:32px;line-height:40px;letter-spacing:0;text-wrap:balance}' +
+  'p{margin:0;color:var(--muted);text-wrap:pretty}p b{color:var(--text);font-weight:600}' +
+  '.card{width:100%;margin-top:16px;padding:24px;display:flex;flex-direction:column;gap:16px;background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:left}' +
+  'form{display:contents}.field{display:flex;flex-direction:column;gap:8px}label{font-size:14px;line-height:18px;font-weight:500}' +
+  'input{width:100%;min-height:44px;padding:0 12px;font:inherit;letter-spacing:inherit;color:inherit;border:1px solid var(--border);border-radius:0;background:var(--bg)}' +
+  'input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--text);outline-offset:2px}' +
+  '.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin:0;padding:0 24px;font:inherit;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.125em;text-transform:uppercase;text-decoration:none;border:1px solid transparent;border-radius:0;cursor:pointer}' +
+  '.btn.solid{margin-top:8px;background:var(--text);color:#fff}.btn.solid:hover{color:var(--gold)}' +
+  '.btn.outline{background:var(--greige);border-color:var(--muted);color:var(--text)}.btn.outline:hover{border-color:var(--gold)}' +
+  '.err{padding:12px;border:1px solid var(--error);background:var(--bg);color:var(--text);font-size:14px;line-height:20px}' +
+  '</style></head><body><main>' + logoSvg() + body + '</main></body></html>';
 function signInPage(error, next) {
-  return SHELL('Masuk · Layar Info Perawatan ADC', '<h1>Layar Info Perawatan ADC</h1><p>Masuk dengan akun admin untuk mengubah isi layar, atau akun layar untuk menayangkannya.</p>' +
+  return SHELL('Masuk · Layar Info Perawatan ADC', '<h1>Layar info perawatan</h1><p>Masuk dengan akun admin untuk mengubah isi layar, atau akun layar untuk menayangkannya.</p>' +
+    '<div class="card"><form method="post" action="/_auth/login"><input type="hidden" name="next" id="next" value="' + esc(next || '') + '">' +
     (error ? '<div class="err" role="alert">' + esc(error) + '</div>' : '') +
-    '<form method="post" action="/_auth/login"><input type="hidden" name="next" id="next" value="' + esc(next || '') + '">' +
-    '<label for="u">Nama pengguna</label><input id="u" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>' +
-    '<label for="p">Kata sandi</label><input id="p" name="password" type="password" autocomplete="current-password" required>' +
-    '<button type="submit">Masuk</button></form>' +
+    '<div class="field"><label for="u">Nama pengguna</label><input id="u" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus></div>' +
+    '<div class="field"><label for="p">Kata sandi</label><input id="p" name="password" type="password" autocomplete="current-password" required></div>' +
+    '<button class="btn solid" type="submit">Masuk</button></form></div>' +
     '<script>document.forms[0].addEventListener("submit",function(){if(location.hash)document.getElementById("next").value=location.hash;});</script>');
 }
 function signOutPage(user) {
   return SHELL('Keluar · Layar Info Perawatan ADC', '<h1>Keluar dari akun ini?</h1><p>Anda masuk sebagai <b>' + esc(user.name) + '</b>. Layar klinik sebaiknya tetap masuk.</p>' +
-    '<form method="post" action="/_auth/logout"><button type="submit">Keluar</button></form><p style="margin:24px 0 0"><a href="/">Kembali</a></p>');
+    '<div class="card"><form method="post" action="/_auth/logout"><button class="btn solid" type="submit" style="margin-top:0">Keluar</button></form>' +
+    '<a class="btn outline" href="/">Kembali</a></div>');
 }
 
 /* ---------------- http helpers ---------------- */

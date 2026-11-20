@@ -11,7 +11,7 @@ The page file is not changed and stays the single source of the UI. On claude.ai
 | `migrate.js` | One-off import of the claude.ai data and the media files. |
 | `export/live-2026-11-20/` | The artifact's database as exported on 20 Nov 2026 (44 documents). |
 | `config.example.json` | Copy to `config.json` (not in git) and set the two passwords. |
-| `test.js` | `npm test`: 32 checks of sign-in, access rules, live events, uploads. |
+| `test.js` | `npm test`: 34 checks of sign-in, access rules, live events, uploads. |
 
 ## Run it on this machine
 
@@ -259,7 +259,8 @@ Open `https://kiosk.example.com/#admin` in any browser and sign in with the **ed
 
 - User ids are the `id` values from `config.json` (`marketing`, `layar`). Older log entries written on claude.ai carry claude.ai ids and show as "Staf".
 - `isOwner` is always `false`; the admin shows the role as "Editor".
-- The display account opening `#admin` sees the page's existing notice, which still mentions the claude.ai Share menu. The page file was left untouched.
+- The display account opening `#admin` gets the page's notice reworded by `shim.js`: it says to sign in with the admin account and adds a "Ganti akun" button to `/_auth/logout`. The page's own sentence points at the claude.ai Share menu, and the page file is left untouched, so claude.ai and `harness/` still show the original wording.
+- The sign-in and sign-out pages are served by `server.js` in the page's brand tokens, with the logotype read from the page file.
 - The page loads the Archivo fonts from Google Fonts, so the display needs internet access for the brand typeface (it falls back to a system font without it).
 - One server process, files on local disk. That suits one clinic; it is not built to run as several instances behind a load balancer.
 

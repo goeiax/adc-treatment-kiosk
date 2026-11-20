@@ -156,5 +156,30 @@
     delete: async (id) => api('DELETE', '/_api/assets/' + encodeURIComponent(id))
   };
 
+  /* ---- the page's "no edit rights" notice ----
+     The page file is shared with claude.ai, where the way to get edit rights is the Share menu. On this server it is the
+     editor account, so the sentence is reworded after the page writes it and a button to change account is added. The page
+     only ever sets the text of #gateMsg, so the button stays in place. */
+  function selfHostedGate() {
+    const msg = document.getElementById('gateMsg');
+    if (!msg || !window.MutationObserver) return;
+    const reword = () => {
+      const gate = document.getElementById('gate');
+      if (gate && gate.hidden) return;                 // the untouched markup holds the same sentence while the notice is hidden
+      // shown for a moment on #admin while the page connects; here the database is this server, so it always arrives
+      if (/claude\.ai/.test(msg.textContent)) { msg.textContent = 'Menghubungkan ke server…'; return; }
+      if (!/menu Share/.test(msg.textContent)) return;
+      msg.textContent = 'Akun ini hanya menayangkan layar dan tidak dapat mengubah isinya. Untuk mengubah isi layar, masuk dengan akun admin.';
+      if (!document.getElementById('gateSwitch')) {
+        const a = document.createElement('a');
+        a.id = 'gateSwitch'; a.className = 'btn solid'; a.href = '/_auth/logout'; a.textContent = 'Ganti akun';
+        msg.insertAdjacentElement('afterend', a);
+      }
+    };
+    new MutationObserver(reword).observe(msg, { childList: true, characterData: true, subtree: true });
+    reword();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', selfHostedGate); else selfHostedGate();
+
   window.claude = { use: (n) => Promise.resolve({ db, user, assets }[n] || null) };
 })();

@@ -34,6 +34,7 @@ async function main() {
   // signed out
   let r = await call('', 'GET', '/');
   ok('signed out: / shows the sign-in form, not the page', r.status === 200 && /name="password"/.test(r.text) && !/window\.claude/.test(r.text));
+  ok('sign-in page is in the brand style: logotype, ink button, no maroon', /<svg class="logo"/.test(r.text) && /class="btn solid"/.test(r.text) && /--text:#212121/.test(r.text) && !/80002e/i.test(r.text));
   ok('signed out: the API answers 401', (await call('', 'GET', '/_api/doc?path=published/live')).status === 401);
   ok('signed out: blobs answer 401', (await call('', 'GET', '/_blob/' + '0'.repeat(32))).status === 401);
   ok('wrong password is refused', (await login('ed', 'nope')).status === 401);
@@ -44,6 +45,8 @@ async function main() {
   ok('display cookie lasts 400 days, editor 30', /Max-Age=34560000/.test(scr.raw) && /Max-Age=2592000/.test(ed.raw) && /HttpOnly/.test(scr.raw));
   r = await call(ed.cookie, 'GET', '/');
   ok('signed in: / is skeleton + shim + page', /window\.claude = \{ use/.test(r.text) && /Layar Info Perawatan ADC/.test(r.text) && r.text.indexOf('window.claude = { use') < r.text.indexOf('<title>Layar Info'));
+  r = await call(ed.cookie, 'GET', '/_auth/logout');
+  ok('sign-out page asks first, in the same style', r.status === 200 && /Keluar dari akun ini/.test(r.text) && /<svg class="logo"/.test(r.text) && !/80002e/i.test(r.text));
   const meE = (await call(ed.cookie, 'GET', '/_api/me')).json, meD = (await call(scr.cookie, 'GET', '/_api/me')).json;
   ok('user.me(): canEdit only for the editor', meE.canEdit === true && meD.canEdit === false && meE.id === 'ed' && typeof meE.name === 'string' && meE.isOwner === false);
   r = await call(ed.cookie, 'POST', '/_api/profiles', { ids: ['ed', 'scr', 'u_unknown'] });
