@@ -44,6 +44,16 @@ def seed(query=''):
         for pid in part[5:].split(','):
             for doc in [d.get('promos', {}).get(pid)] + [v for v in d.get('published', {}).get('live', {}).get('promos', []) if v['id'] == pid]:
                 if doc: doc['to'] = ''; doc['live'] = True
+    # ?pphoto=p5 attaches the PicoSure poster to that promo (draft and live); ?nopromo=1 switches every promo off and keeps the band visible
+    for part in [x for x in query.split('&') if x.startswith('pphoto=')]:
+        for pid in part[7:].split(','):
+            for doc in [d.get('promos', {}).get(pid)] + [v for v in d.get('published', {}).get('live', {}).get('promos', []) if v['id'] == pid]:
+                if doc: doc['photo'] = 'f6ec3cdc1df117e52002d6de587b2a0a'
+    if 'nopromo=1' in query.split('&'):
+        for doc in list(d.get('promos', {}).values()) + d.get('published', {}).get('live', {}).get('promos', []):
+            doc['live'] = False
+        for st in [d.get('config', {}).get('settings'), d.get('published', {}).get('live', {}).get('settings')]:
+            if st: st['hideBandWhenEmpty'] = False
     for part in [x for x in query.split('&') if x.startswith('h=')]:
         vid = part[2:]
         doc = d.get('videos', {}).get(vid)

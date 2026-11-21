@@ -78,6 +78,7 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
                 <span style="padding: 4px 8px; background: #eae6dd; color: #212121;">{{ p.chip }}</span>
                 <span>{{ p.valid }}</span>
                 <span>{{ p.kind }}</span>
+                <span>{{ p.photoLabel }}</span>
               </div>
             </div>
             <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: 0 0 auto;">
@@ -115,6 +116,10 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="ket" style="font-size: 14px; line-height: 18px; font-weight: 500;">Keterangan di bawah harga (opsional)</label>
+            <input id="ket" type="text" value="{{ fNote }}" onChange="{{ setNote }}" placeholder="mis. 6 sesi + Signature Facial" style="min-height: 44px; padding: 0 12px; border: 1px solid #d1cdc4; background: #f5f2ec; font-size: 16px;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
             <label for="mek" style="font-size: 14px; line-height: 18px; font-weight: 500;">Mekanisme (satu kalimat)</label>
             <textarea id="mek" rows="2" value="{{ fLede }}" onChange="{{ setLede }}" style="padding: 12px; border: 1px solid #d1cdc4; background: #f5f2ec; font-size: 16px; line-height: 24px; resize: vertical;"></textarea>
           </div>
@@ -140,11 +145,15 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
               <option>Program referral</option>
             </select>
           </div>
-          <label for="banner" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px; border: 1.5px dashed #c0bcb4; background: #f5f2ec; color: #545454; cursor: pointer;">
-            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 16l5-5 4 4 3-3 6 6"></path><circle cx="16" cy="9" r="1.5"></circle></svg>
-            <span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 16px; line-height: 22px; color: #212121; font-weight: 500;">Gambar banner (opsional)</span><span style="font-size: 13px; line-height: 16px;">JPG/PNG, 2:1, maks. 3 MB</span></span>
-          </label>
-          <input id="banner" type="file" accept="image/png,image/jpeg" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 14px; line-height: 18px; font-weight: 500;">Foto atau poster promo</span>
+            <label for="foto" style="display: flex; align-items: center; gap: 16px; padding: 12px; border: 1.5px dashed #c0bcb4; background: #f5f2ec; color: #545454; cursor: pointer;">
+              <span style="flex: 0 0 72px; width: 72px; height: 90px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: inline-flex; align-items: center; justify-content: center; color: #545454;"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 16l5-5 4 4 3-3 6 6"></path><circle cx="16" cy="9" r="1.5"></circle></svg></span>
+              <span style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 16px; line-height: 22px; color: #212121; font-weight: 500;">Seret foto ke sini atau pilih berkas</span><span style="font-size: 13px; line-height: 18px;">JPG atau PNG, potret 4:5 (1080 × 1350 px), maks. 5 MB</span></span>
+            </label>
+            <input id="foto" type="file" accept="image/png,image/jpeg" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">
+            <span style="font-size: 13px; line-height: 18px; color: #545454;">Tampil di kotak kanan band promo dan mengisi kotak itu sampai penuh. Tanpa foto, kotak menampilkan logo ADC.</span>
+          </div>
           <label style="display: flex; align-items: center; gap: 12px; font-size: 16px; min-height: 28px;"><input type="checkbox" defaultChecked="{{ yes }}" style="width: 20px; height: 20px; margin: 0; accent-color: #212121;"><span>Tayang di band promo setelah ditinjau dan dipublikasikan</span></label>
           <button class="bs" type="button" onClick="{{ add }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px; background: #c0bcb4; border: 1px solid #545454; color: #212121; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg><span>Tambah ke daftar</span></button>
         </form>
@@ -157,12 +166,18 @@ input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
               <span style="align-self: flex-start; padding: 0 4px; background: #e9d2c2; font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 400; font-size: 20px; line-height: 26px; letter-spacing: 0;">{{ fTitleLine }}</span>
               <span style="font-size: 12px; line-height: 16px; color: #545454;">{{ fLedeLine }}</span>
               <span style="font-size: 11px; line-height: 14px; color: #545454;">{{ fValidLine }}</span>
+              <span style="display: flex; flex-direction: column; gap: 2px; margin-top: auto; padding-top: 8px; border-top: 1px solid #d1cdc4;">
+                <span style="font-size: 10px; line-height: 12px; letter-spacing: 0.05em; color: #545454;">{{ fKind }}</span>
+                <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; font-size: 18px; line-height: 22px; letter-spacing: 0; font-variant-numeric: tabular-nums;">{{ fValueLine }}</span>
+                <span style="font-size: 11px; line-height: 14px; color: #545454;">{{ fNoteLine }}</span>
+              </span>
             </div>
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; flex: 0 0 110px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 8px; text-align: center;">
-              <span style="font-size: 10px; line-height: 12px; letter-spacing: 0.05em; color: #545454;">{{ fKind }}</span>
-              <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; font-size: 18px; line-height: 22px; letter-spacing: 0;">{{ fValueLine }}</span>
+            <div style="flex: 0 0 112px; width: 112px; height: 140px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; color: #545454;">
+              <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 16l5-5 4 4 3-3 6 6"></path><circle cx="16" cy="9" r="1.5"></circle></svg>
+              <span style="font-size: 11px; line-height: 14px;">Foto atau poster<br>4:5</span>
             </div>
           </div>
+          <span style="font-size: 13px; line-height: 18px; color: #545454;">Harga dan info tampil di bawah keterangan promo. Kotak kanan hanya untuk foto atau poster.</span>
         </section>
 
         <section style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
@@ -186,14 +201,14 @@ class Component extends DCLogic {
     super(props);
     this.state = {
       promos: [
-        { title: 'Ultherapy PRIME dengan skinbooster gratis', lede: 'Satu sesi skinbooster gratis untuk Ultherapy PRIME 500, 600 atau 700 shots.', chip: 'Ultherapy PRIME', valid: 'Berlaku 1–31 Okt 2026', kind: 'Bonus', status: 'Aktif', live: true },
-        { title: 'Paket PicoSure Glow enam sesi', lede: 'Enam sesi PicoSure Glow dengan Signature Facial gratis. Berlaku 6 bulan.', chip: 'PicoSure Pro', valid: 'Berlaku 1–31 Okt 2026', kind: 'Paket · Rp21.600.000', status: 'Aktif', live: true },
+        { title: 'Ultherapy PRIME dengan skinbooster gratis', lede: 'Satu sesi skinbooster gratis untuk Ultherapy PRIME 500, 600 atau 700 shots.', chip: 'Ultherapy PRIME', valid: 'Berlaku 1–31 Okt 2026', kind: 'Bonus', status: 'Aktif', live: true, photo: true },
+        { title: 'Paket PicoSure Glow enam sesi', lede: 'Enam sesi PicoSure Glow dengan Signature Facial gratis. Berlaku 6 bulan.', chip: 'PicoSure Pro', valid: 'Berlaku 1–31 Okt 2026', kind: 'Paket · Rp21.600.000', status: 'Aktif', live: true, photo: true },
         { title: 'Voucher bulan ulang tahun', lede: 'Voucher Rp100.000 untuk perawatan di bulan ulang tahun, minimum transaksi Rp1.000.000.', chip: 'Semua perawatan', valid: 'Sepanjang tahun', kind: 'Voucher · Rp100.000', status: 'Aktif', live: true },
         { title: 'Program referral', lede: 'Voucher Rp200.000 untuk Anda saat teman yang Anda ajak melakukan perawatan pertamanya.', chip: 'Program referral', valid: 'Berlaku 1–31 Okt 2026', kind: 'Voucher · Rp200.000', status: 'Aktif', live: true },
         { title: 'Paket hair loss November', lede: 'Paket Hair Growth Laser dengan Plazion gratis.', chip: 'Hair Growth Laser', valid: 'Mulai 1 Nov 2026', kind: 'Paket', status: 'Terjadwal', live: false },
         { title: 'Skincare Neostrata & LRP', lede: 'Sampel gratis untuk pembelian skincare Rp3.000.000.', chip: 'Produk skincare', valid: 'Berakhir 30 Sep 2026', kind: 'Produk', status: 'Berakhir', live: false }
       ],
-      fTitle: '', fKind: 'Paket', fValue: '', fLede: '', fFrom: '2026-12-01', fTo: '2026-12-31', fChip: 'Semua perawatan',
+      fTitle: '', fKind: 'Paket', fValue: '', fNote: '', fLede: '', fFrom: '2026-12-01', fTo: '2026-12-31', fChip: 'Semua perawatan',
       slideSecs: 8
     };
   }
@@ -222,6 +237,7 @@ class Component extends DCLogic {
         var b = badge[p.status] || badge.Terjadwal;
         return {
           title: p.title, lede: p.lede, chip: p.chip, valid: p.valid, kind: p.kind, status: p.status, live: p.live,
+          photoLabel: p.photo ? 'Foto terpasang' : 'Tanpa foto (logo ADC)',
           statusBg: b.bg, statusFg: b.fg, statusBorder: b.border,
           toggleLabel: p.live ? 'Tayang' : 'Tidak tayang',
           toggleFg: p.live ? '#212121' : '#545454',
@@ -232,19 +248,20 @@ class Component extends DCLogic {
           down: () => this.move(i, 1)
         };
       }),
-      fTitle: s.fTitle, fKind: s.fKind, fValue: s.fValue, fLede: s.fLede, fFrom: s.fFrom, fTo: s.fTo, fChip: s.fChip,
+      fTitle: s.fTitle, fKind: s.fKind, fValue: s.fValue, fNote: s.fNote, fLede: s.fLede, fFrom: s.fFrom, fTo: s.fTo, fChip: s.fChip,
       fKindLabel: kindLabel[s.fKind] || 'Promo',
       fTitleLine: s.fTitle || 'Judul promo',
       fLedeLine: s.fLede || 'Mekanisme promo dalam satu kalimat.',
       fValidLine: s.fFrom && s.fTo ? 'Berlaku ' + fmt(s.fFrom) + ' – ' + fmt(s.fTo) : 'Masa berlaku',
       fValueLine: s.fValue || '—',
-      setTitle: set('fTitle'), setKind: set('fKind'), setValue: set('fValue'), setLede: set('fLede'),
+      fNoteLine: s.fNote || 'Keterangan harga',
+      setTitle: set('fTitle'), setKind: set('fKind'), setValue: set('fValue'), setNote: set('fNote'), setLede: set('fLede'),
       setFrom: set('fFrom'), setTo: set('fTo'), setChip: set('fChip'),
       setSecs: (e) => this.setState({ slideSecs: parseInt(e.target.value, 10) || 8 }),
       add: () => {
         if (!s.fTitle.trim()) return;
         var p = { title: s.fTitle, lede: s.fLede || '—', chip: s.fChip, valid: 'Berlaku ' + fmt(s.fFrom) + ' – ' + fmt(s.fTo), kind: s.fKind + (s.fValue ? ' · ' + s.fValue : ''), status: 'Terjadwal', live: false };
-        this.setState({ promos: s.promos.concat([p]), fTitle: '', fValue: '', fLede: '' });
+        this.setState({ promos: s.promos.concat([p]), fTitle: '', fValue: '', fNote: '', fLede: '' });
       }
     };
   }

@@ -270,7 +270,19 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
           <span style="padding: 8px 12px; background: #fcfbf9; font-size: 15px; line-height: 20px; font-weight: 500;">{{ promo.chip }}</span>
           <span style="font-size: 13px; line-height: 16px; color: #545454;">{{ promo.valid }}</span>
         </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto;">
+        <!-- harga dan info: di bawah keterangan promo -->
+        <div style="display: flex; align-items: stretch; gap: 16px; margin-top: auto; padding-top: 16px; border-top: 1px solid #d1cdc4;">
+          <div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-width: 0;">
+            <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">{{ promo.valueLabel }}</span>
+            <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; font-size: 40px; line-height: 48px; letter-spacing: 0; font-variant-numeric: tabular-nums;">{{ promo.value }}</span>
+            <span style="font-size: 16px; line-height: 22px; color: #545454;">{{ promo.valueNote }}</span>
+          </div>
+          <span style="display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 0 0 auto; padding: 12px 16px; background: #e9d2c2; font-size: 14px; line-height: 18px;">
+            <span style="font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Tanya resepsionis</span>
+            <span style="font-variant-numeric: tabular-nums;">atau WhatsApp +62 821-3014-4778</span>
+          </span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
           <div style="display: inline-flex; gap: 8px;">
             <sc-for list="{{ promoDots }}" as="d" hint-placeholder-count="4">
               <span style="width: 10px; height: 10px; border-radius: 999px; background: {{ d.bg }}; border: 1.5px solid #212121;"></span>
@@ -282,14 +294,17 @@ button{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:
           </div>
         </div>
       </div>
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; flex: 0 0 360px; width: 360px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 24px; box-sizing: border-box; text-align: center;">
-        <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">{{ promo.valueLabel }}</span>
-        <span style="font-family: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; font-size: 40px; line-height: 48px; letter-spacing: 0; font-variant-numeric: tabular-nums;">{{ promo.value }}</span>
-        <span style="font-size: 16px; line-height: 22px; color: #545454;">{{ promo.valueNote }}</span>
-        <span style="margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 16px; background: #e9d2c2; font-size: 14px; line-height: 18px;">
-          <span style="font-weight: 600; letter-spacing: 0.125em; text-transform: uppercase;">Tanya resepsionis</span>
-          <span style="font-variant-numeric: tabular-nums;">atau WhatsApp +62 821-3014-4778</span>
-        </span>
+      <!-- kotak foto atau poster promo, rasio 4:5 (unggah 1080 x 1350); tanpa foto: logo ADC -->
+      <div style="position: relative; flex: 0 0 374px; width: 374px; background: #fcfbf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;">
+        <sc-if value="{{ promo.hasPhoto }}" hint-placeholder-val="{{ true }}">
+          <img src="{{ promo.photo }}" alt="{{ promo.photoAlt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{ promo.photoPos }};">
+        </sc-if>
+        <sc-if value="{{ promo.noPhoto }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 32px; box-sizing: border-box; text-align: center;">
+            <img src="/_blob/0846fc90ea28dc9adbbcd71a9a2ffaee" alt="ADC Aesthetic Derma Centre" style="width: 250px; max-width: 100%; height: auto; display: block;">
+            <span style="font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: 0.05em; color: #545454;">Modern Technology for Modern People.</span>
+          </div>
+        </sc-if>
       </div>
       <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #d1cdc4;"><div style="height: 100%; width: {{ promoPct }}; background: #212121;"></div></div>
     </div>
@@ -358,8 +373,8 @@ class Component extends DCLogic {
       { id: 'eyelid', cat: 'bleph', name: 'Eye Lid', desc: 'Tindakan bedah minor, diawali konsultasi dokter.', price: 'Tanya resepsionis', sessions: '1 kali', duration: DD, downtime: DD, after: AD, video: null }
     ];
     this.PROMOS = [
-      { eyebrow: 'Promo Oktober', title: 'Ultherapy PRIME', accent: 'dengan skinbooster gratis', lede: 'Satu sesi skinbooster gratis untuk Ultherapy PRIME 500, 600 atau 700 shots.', chip: 'Ultherapy PRIME', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Bonus', value: 'Gratis', valueNote: '1 sesi skinbooster' },
-      { eyebrow: 'Paket perawatan', title: 'Paket PicoSure Glow', accent: 'enam sesi', lede: 'Enam sesi PicoSure Glow dengan Signature Facial gratis. Paket berlaku 6 bulan sejak pembelian.', chip: 'PicoSure Pro', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Harga paket', value: 'Rp21.600.000', valueNote: '6 sesi + Signature Facial' },
+      { eyebrow: 'Promo Oktober', title: 'Ultherapy PRIME', accent: 'dengan skinbooster gratis', lede: 'Satu sesi skinbooster gratis untuk Ultherapy PRIME 500, 600 atau 700 shots.', chip: 'Ultherapy PRIME', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Bonus', value: 'Gratis', valueNote: '1 sesi skinbooster', photo: '/_blob/56fa8079951cce6f11e97db1c373ccc2', photoAlt: 'Ruang perawatan ADC', photoPos: '50% 50%' },
+      { eyebrow: 'Paket perawatan', title: 'Paket PicoSure Glow', accent: 'enam sesi', lede: 'Enam sesi PicoSure Glow dengan Signature Facial gratis. Paket berlaku 6 bulan sejak pembelian.', chip: 'PicoSure Pro', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Harga paket', value: 'Rp21.600.000', valueNote: '6 sesi + Signature Facial', photo: '/_blob/74794fbf6779c2ea11d22569cab49ba0', photoAlt: 'Pasien berkonsultasi sebelum perawatan PicoSure Pro', photoPos: '50% 30%' },
       { eyebrow: 'Bulan ulang tahun', title: 'Selamat ulang tahun', accent: 'dari ADC', lede: 'Voucher Rp100.000 untuk perawatan di bulan ulang tahun Anda, minimum transaksi Rp1.000.000.', chip: 'Semua perawatan', valid: 'Berlaku sepanjang bulan ulang tahun', valueLabel: 'Voucher', value: 'Rp100.000', valueNote: 'min. transaksi Rp1.000.000' },
       { eyebrow: 'Program referral', title: 'Ajak teman,', accent: 'dapat voucher', lede: 'Voucher Rp200.000 untuk Anda saat teman yang Anda ajak melakukan perawatan pertamanya di ADC.', chip: 'Program referral', valid: 'Berlaku 1–31 Oktober 2026', valueLabel: 'Voucher', value: 'Rp200.000', valueNote: 'untuk setiap teman baru' }
     ];
@@ -492,7 +507,7 @@ class Component extends DCLogic {
       sel: Object.assign({}, selT, { catLabel: catOf ? catOf.label : '' }),
       hasVideo: !!video,
       noVideo: !video,
-      promo: promo,
+      promo: Object.assign({ photoPos: '50% 50%' }, promo, { hasPhoto: !!promo.photo, noPhoto: !promo.photo }),
       promoDots: this.PROMOS.map((p, i) => ({ bg: i === s.promo ? '#212121' : 'transparent' })),
       promoPct: Math.min(100, Math.round((s.promoT / slideSecs) * 100)) + '%',
       wake: () => this.setState({ idle: false, playing: false, playClip: null, sinceTap: 0 }),
