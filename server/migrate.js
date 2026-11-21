@@ -3,6 +3,8 @@
 //
 //   node migrate.js                         import export/live-<latest date>/ and ../media
 //   node migrate.js --export <dir|writes.json> --media <dir> --assets-dir <dir> --data <dir> --force
+//   node migrate.js --assets-only           copy missing files (videos, posters, doctor photos) and write no document:
+//                                           safe on a server that is already in use
 //
 // Documents come from an export of the artifact's database: a folder laid out <collection>/<doc id>.json (what the
 // ArtifactData tool writes with out_dir; see README.md "Exporting the live database"), or a seed manifest such as
@@ -16,6 +18,7 @@ const HERE = __dirname, ROOT = path.dirname(HERE);
 const args = process.argv.slice(2);
 const opt = (name) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : null; };
 const FORCE = args.includes('--force');
+const ASSETS_ONLY = args.includes('--assets-only');
 const TYPES = { '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif', '.avif': 'image/avif' };
 const sortKeys = (x) => Array.isArray(x) ? x.map(sortKeys) : (x && typeof x === 'object') ? Object.keys(x).sort().reduce((o, k) => { o[k] = sortKeys(x[k]); return o; }, {}) : x;
 const readJson = (f) => JSON.parse(fs.readFileSync(f, 'utf8').replace(/^﻿/, ''));
@@ -90,7 +93,7 @@ const MEDIA = path.resolve(opt('media') || path.join(ROOT, 'media'));
 const EXTRA = opt('assets-dir') ? path.resolve(opt('assets-dir')) : (fs.statSync(SRC).isDirectory() ? path.join(SRC, '_assets') : null);
 
 const existing = fs.existsSync(DB) && fs.readdirSync(DB).length > 0;
-if (existing && !FORCE) {
+if (existing && !FORCE && !ASSETS_ONLY) {
   console.error(DB + ' already holds documents. This script is for the first import.\nRe-run with --force to overwrite documents that share a path with the export (others are left alone). Back up first.');
   process.exit(1);
 }
@@ -98,7 +101,7 @@ fs.mkdirSync(DB, { recursive: true }); fs.mkdirSync(ASSETS, { recursive: true })
 
 const docs = readExport(SRC);
 const perColl = {};
-for (const [p, d] of docs) {
+for (const [p, d] of ASSETS_ONLY ? [] : docs) {
   if (!d || typeof d !== 'object' || Array.isArray(d)) { console.error('skipped ' + p + ': not a JSON object'); continue; }
   const seg = p.split('/'); const file = path.join(DB, ...seg.slice(0, -1), seg[seg.length - 1] + '.json');
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -121,7 +124,8 @@ const unused = [...sources.keys()].filter((id) => !wanted.has(id));
 
 console.log('Export:  ' + SRC);
 console.log('Data:    ' + DATA);
-console.log('Documents written: ' + docs.length + '  (' + Object.keys(perColl).sort().map((c) => c + ' ' + perColl[c]).join(', ') + ')');
+if (ASSETS_ONLY) console.log('Documents: none written (--assets-only), the database is left as it is');
+else console.log('Documents written: ' + docs.length + '  (' + Object.keys(perColl).sort().map((c) => c + ' ' + perColl[c]).join(', ') + ')');
 console.log('Assets:  ' + copied + ' copied, ' + kept + ' already in place, ' + (bytes / 1048576).toFixed(1) + ' MB referenced in total');
 if (unused.length) console.log('Not imported (in the id map but no document or page uses them): ' + unused.length);
 if (missing.length) {

@@ -89,6 +89,18 @@ Copy the archives off the server as well (rsync, restic or the provider's snapsh
 
 It refuses to run over an existing database. `--force` overwrites documents that share a path with the export and leaves the others alone. Options: `--export <folder or writes.json>`, `--media <folder>`, `--assets-dir <folder>`, `--data <folder>`.
 
+### Files missing on a server that is already in use
+
+If videos play but the doctor photos on the hearts page are empty boxes (or any other file from `../media` is missing), the files were not copied into `data/assets/` at the first import. Pull the repo and copy only the files:
+
+```bash
+cd /opt/adc-kiosk && sudo git pull
+sudo KIOSK_CONFIG=/etc/adc-kiosk/config.json node /opt/adc-kiosk/server/migrate.js --assets-only
+sudo chown -R kiosk:kiosk /var/lib/adc-kiosk/assets
+```
+
+`--assets-only` writes no document, so promos, treatments, pages, hearts and published versions edited on the server stay as they are. It copies each file the export or the page references that is not yet in `data/assets/` and reports any it has no source for. Reload the screen afterwards; the service does not need a restart. Do not use `--force` for this: it overwrites documents with the export.
+
 ### Exporting the live database
 
 The export in `export/live-2026-11-20/` was read from the artifact `https://claude.ai/artifact/YaWie8hkPz4CsJd4XKUgj6` with Claude Code's ArtifactData tool, signed in as the artifact's owner. To take a fresh one, ask Claude Code:
