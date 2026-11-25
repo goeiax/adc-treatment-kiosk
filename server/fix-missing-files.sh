@@ -10,8 +10,18 @@ for a in "$@"; do if [ "$a" = "--check" ]; then CHECK=1; else CFG="$a"; fi; done
 DATA_ENV=""; CWD="$HERE"
 echo "== ADC kiosk: missing files, $(date '+%Y-%m-%d %H:%M') on $(hostname) =="
 if [ -z "$CFG" ]; then
-  PID="$(pgrep -f 'node.*server\.js' | head -1)"
-  if [ -n "$PID" ] && [ -r "/proc/$PID/environ" ]; then
+  # several apps on one machine can run "node server.js": take the one that runs THIS checkout's server.js
+  PID=""
+  for p in $(pgrep -f 'node.*server\.js'); do
+    c="$(readlink "/proc/$p/cwd" 2>/dev/null)"; s="$(tr '\0' '\n' < "/proc/$p/cmdline" 2>/dev/null | grep 'server\.js' | head -1)"
+    case "$s" in /*) ;; *) s="$c/$s" ;; esac
+    echo "found: pid $p running $s"
+    if [ "$(readlink -f "$s" 2>/dev/null)" = "$(readlink -f "$HERE/server.js")" ]; then PID="$p"; fi
+  done
+  if [ -z "$PID" ] && [ -f "$HERE/config.json" ]; then
+    echo "none of them runs $HERE/server.js, so using this checkout's own config"
+    CFG="$HERE/config.json"
+  elif [ -n "$PID" ] && [ -r "/proc/$PID/environ" ]; then
     CWD="$(readlink "/proc/$PID/cwd")"
     echo "running service: pid $PID, user $(ps -o user= -p "$PID" | tr -d ' '), folder $CWD"
     echo "service command: $(tr '\0' ' ' < "/proc/$PID/cmdline")"
