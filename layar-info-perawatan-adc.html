@@ -1240,14 +1240,14 @@ const Hearts = (() => {
     const p = cards[d.id].querySelector('.hz-photo'); const el = document.createElement('div'); el.className = 'hz-burst'; el.innerHTML = heartSvg();
     p.appendChild(el); setTimeout(() => el.remove(), 900);
   }
-  // confetti in the brand's own colours, thrown up from the heart; drawn in stage pixels, since the stage itself is scaled
+  // multicoloured confetti (maroon, orange, gold, teal, blue, purple, pink, peach), thrown up from the heart; drawn in stage pixels, since the stage itself is scaled
   const ctx = cv.getContext('2d'), hp = new Path2D(HEART_PATH); let parts = [], raf = 0;
   function confetti(d) {
     if (reduced) return;
     const z = zoneA.getBoundingClientRect(), sc = (z.width / zoneA.offsetWidth) || 1, r = cards[d.id].querySelector('.hz-heart svg').getBoundingClientRect();
     const ox = (r.left + r.width / 2 - z.left) / sc, oy = (r.top + r.height / 2 - z.top) / sc;
     const cs = getComputedStyle(document.documentElement);
-    const colors = ['--text', '--peach', '--greige', '--muted', '--peach'].map((v) => cs.getPropertyValue(v).trim());
+    const colors = ['#800020', '#e4572e', '#f2a541', '#2a9d8f', '#3d7fd9', '#8e5bd0', '#e56b9a', cs.getPropertyValue('--peach').trim()];   // multicoloured, at Alex's request
     for (let i = 0; i < 120; i++) {
       const a = -Math.PI / 2 + (Math.random() - .5) * 2.2, sp = 10 + Math.random() * 14;
       parts.push({ x: ox, y: oy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, s: 8 + Math.random() * 8, rot: Math.random() * 6.3, vr: (Math.random() - .5) * .35, c: colors[i % colors.length], heart: i % 4 === 0, t: 0 });
