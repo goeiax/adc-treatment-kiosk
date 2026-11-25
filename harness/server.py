@@ -54,6 +54,28 @@ def seed(query=''):
             doc['live'] = False
         for st in [d.get('config', {}).get('settings'), d.get('published', {}).get('live', {}).get('settings')]:
             if st: st['hideBandWhenEmpty'] = False
+    # doctors (harness only): ?doctors=16 adds extra doctors without photos up to that count; ?hidedoc=yogi hides one; ?nophoto=renata drops one photo
+    qs = query.split('&')
+    def put_doc(doc):
+        d.setdefault('doctors', {})[doc['id']] = dict(doc, updatedAt='2026-11-25T08:00:00Z', updatedBy='u_mkt')
+        live = d.get('published', {}).get('live', {}); live.setdefault('doctors', []); live['doctors'] = [x for x in live['doctors'] if x['id'] != doc['id']] + [doc]
+    BUILTIN = [('yogi', 'dr. Yogi', 'dr. Yogi Faldian, Sp.DVE', 'Spesialis kulit', '247f6bc85315b2a51c393b6e12487f36'), ('renata', 'dr. Renata', 'dr. Renata Yuliasari, Sp.DVE', 'Spesialis kulit', 'f0776784520b821cad94cded1cc602c5')]
+    for part in [x for x in qs if x.startswith('doctors=')]:
+        n = int(part[8:])
+        for i in range(12, n + 1):
+            put_doc({'id': 'dr-extra%d' % i, 'name': 'dr. Dokter %d' % i, 'full': 'dr. Dokter Ke-%d, Sp.DVE' % i, 'spec': 'Spesialis kulit', 'photo': None, 'shown': True, 'order': i})
+        for i in range(n + 1, 12):  # fewer than eleven: hide the last built-ins
+            ids = ['yogi', 'renata', 'erda', 'kamelia', 'nadila', 'syafira', 'keshia', 'stephanie', 'nita', 'shiela', 'annisa']
+            put_doc({'id': ids[i - 1], 'name': 'dr. ' + ids[i - 1].capitalize(), 'full': '', 'spec': 'Spesialis kulit', 'photo': None, 'shown': False, 'order': i})
+    for part in [x for x in qs if x.startswith('docphoto=')]:  # ?docphoto=yogi: an uploaded photo (the PicoSure poster) for that doctor
+        b = next((x for x in BUILTIN if x[0] == part[9:]), None)
+        if b: put_doc({'id': b[0], 'name': b[1], 'full': b[2], 'spec': b[3], 'photo': 'f6ec3cdc1df117e52002d6de587b2a0a', 'shown': True, 'order': 1})
+    for part in [x for x in qs if x.startswith('hidedoc=')]:
+        b = next((x for x in BUILTIN if x[0] == part[8:]), None)
+        if b: put_doc({'id': b[0], 'name': b[1], 'full': b[2], 'spec': b[3], 'photo': b[4], 'shown': False, 'order': 1})
+    for part in [x for x in qs if x.startswith('nophoto=')]:
+        b = next((x for x in BUILTIN if x[0] == part[8:]), None)
+        if b: put_doc({'id': b[0], 'name': b[1], 'full': b[2], 'spec': b[3], 'photo': None, 'shown': True, 'order': 2})
     for part in [x for x in query.split('&') if x.startswith('h=')]:
         vid = part[2:]
         doc = d.get('videos', {}).get(vid)
@@ -68,6 +90,9 @@ class H(http.server.SimpleHTTPRequestHandler):
         p = self.path.split('?')[0]; q = self.path.split('?')[1] if '?' in self.path else ''
         if p in ('/', '/index.html'):
             page = open(PAGE, encoding='utf-8').read()
+            # ?nodocphotos=1 simulates the clinic server where every built-in doctor photo returns 404
+            if 'nodocphotos=1' in q.split('&'):
+                for bid in [k for k, v in BLOBS.items() if v[0].startswith('doctors/')]: page = page.replace(bid, '0' * 32)
             shim = open(os.path.join(HERE, 'shim.js'), encoding='utf-8').read()
             body = (SKEL + '<script>window.__SEED__=' + json.dumps(seed(q), ensure_ascii=False) + ';</script><script>' + shim + '</script>' + DRIVER + page + '</body></html>').encode('utf-8')
             self.send_response(200); self.send_header('Content-Type', 'text/html; charset=utf-8'); self.send_header('Content-Length', str(len(body))); self.end_headers(); self.wfile.write(body); return
