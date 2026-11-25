@@ -99,6 +99,14 @@ sudo KIOSK_CONFIG=/etc/adc-kiosk/config.json node /opt/adc-kiosk/server/migrate.
 sudo chown -R kiosk:kiosk /var/lib/adc-kiosk/assets
 ```
 
+If the server was not installed at those paths (another folder, another port, no systemd unit), use the script that finds the running server's own config and data folder, then runs the same import into it:
+
+```bash
+cd <the folder the repo was cloned into> && sudo git pull && sudo bash server/fix-missing-files.sh
+```
+
+It prints the service it found, the data folder in use and the file counts before and after, and stops without copying if that folder has no `db/`. `--check` only prints.
+
 `--assets-only` writes no document, so promos, treatments, pages, hearts and published versions edited on the server stay as they are. It copies each file the export or the page references that is not yet in `data/assets/` and reports any it has no source for. Reload the screen afterwards; the service does not need a restart. Do not use `--force` for this: it overwrites documents with the export.
 
 ### Exporting the live database
