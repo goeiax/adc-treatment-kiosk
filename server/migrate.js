@@ -99,7 +99,10 @@ if (existing && !FORCE && !ASSETS_ONLY) {
 }
 fs.mkdirSync(DB, { recursive: true }); fs.mkdirSync(ASSETS, { recursive: true });
 
-const docs = readExport(SRC);
+// --assets-only on a server already in use: look at the documents that server holds, not at the export, so only files it
+// needs are copied (its own uploads are already there; the page's doctor photos are what is usually missing)
+const SCAN = ASSETS_ONLY && existing ? DB : SRC;
+const docs = readExport(SCAN);
 const perColl = {};
 for (const [p, d] of ASSETS_ONLY ? [] : docs) {
   if (!d || typeof d !== 'object' || Array.isArray(d)) { console.error('skipped ' + p + ': not a JSON object'); continue; }
@@ -122,7 +125,7 @@ for (const [id, where] of wanted) {
 }
 const unused = [...sources.keys()].filter((id) => !wanted.has(id));
 
-console.log('Export:  ' + SRC);
+console.log((SCAN === DB ? 'Scanned: the documents already in ' : 'Export:  ') + SCAN);
 console.log('Data:    ' + DATA);
 if (ASSETS_ONLY) console.log('Documents: none written (--assets-only), the database is left as it is');
 else console.log('Documents written: ' + docs.length + '  (' + Object.keys(perColl).sort().map((c) => c + ' ' + perColl[c]).join(', ') + ')');
