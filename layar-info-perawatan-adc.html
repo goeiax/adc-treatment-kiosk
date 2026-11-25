@@ -8,7 +8,7 @@
   :root {
     --bg: #f5f2ec; --card: #fcfbf9; --band: #eae6dd;
     --text: #212121; --muted: #545454;
-    --border: #d1cdc4; --peach: #e9d2c2; --gold: #ab8c52; --greige: #c0bcb4; --btn-border: #545454; --error: #c85c42;
+    --border: #d1cdc4; --peach: #e9d2c2; --gold: #ab8c52; --greige: #c0bcb4; --btn-border: #545454; --error: #c85c42; --heart: #800020;
     --shadow: 0 2px 8px rgba(0,0,0,0.06);
     --ff-head: "Archivo", "Helvetica Neue", Helvetica, sans-serif;
     --ff-body: "Archivo Narrow", "Archivo", sans-serif;
@@ -215,7 +215,7 @@
   .hz-grid[data-cols="5"] .hz-init { font-size: 44px; }
   .hz-name { margin-top: 8px; font-family: var(--ff-head); font-size: 20px; line-height: 26px; font-weight: 500; letter-spacing: 0; text-align: center; }
   .hz-spec { font-size: 15px; line-height: 20px; color: var(--muted); text-align: center; }
-  .hz-heart { position: relative; isolation: isolate; width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: center; color: var(--text); text-align: center; }
+  .hz-heart { position: relative; isolation: isolate; width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: center; color: var(--heart); text-align: center; }
   .hz-heart svg { width: 36px; height: 36px; overflow: visible; }
   .hz-heart path { fill: transparent; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; transition: fill .2s; }
   .hz-card.given .hz-heart path { fill: currentColor; }
@@ -228,7 +228,7 @@
   @keyframes hzhalo { from { transform: scale(.4); opacity: 1 } to { transform: scale(2.6); opacity: 0 } }
   .hz-burst { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
   .hz-burst svg { width: 50%; overflow: visible; animation: hzburst .8s cubic-bezier(.2, 1.4, .4, 1) forwards; }
-  .hz-burst path { fill: var(--text); stroke: var(--card); stroke-width: 1.2; stroke-linejoin: round; }
+  .hz-burst path { fill: var(--heart); stroke: var(--card); stroke-width: 1.2; stroke-linejoin: round; }
   @keyframes hzburst { 0% { transform: scale(0); opacity: 0 } 25% { transform: scale(1.15); opacity: 1 } 60% { transform: scale(1); opacity: 1 } 100% { transform: scale(1.05); opacity: 0 } }
   /* the instruction strip doubles as the thank-you and the countdown; it is information, not a button */
   .hz-bar { display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 80px; padding: 16px 32px; box-sizing: border-box; background: var(--text); color: #fff; text-align: center; }
